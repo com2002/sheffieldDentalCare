@@ -18,7 +18,8 @@ class DBController {
 	
 	//open connection to DB
 	private static void openConnection() throws SQLException {
-		 // connection to a database
+		closeConnection(); //close the connection before opening another
+		// connection to a database
 		try { 
 		 con = DriverManager.getConnection("jdbc:mysql://" + DB_Server + "/" + DB_Name, DB_User, DB_Password);
 		}
@@ -28,7 +29,7 @@ class DBController {
 	}
 	
 	//close connection to DB (whether it's open or closed it will be closed)
-	private static void closeConnection() throws SQLException {
+	public static void closeConnection() throws SQLException {
 		if (con != null) {
 			con.close();
 			con = null;
@@ -70,8 +71,8 @@ class DBController {
 			ex.printStackTrace();
 		}
 		finally {
-			if (stmt != null) stmt.close();
-			closeConnection();
+			// if (stmt != null) stmt.close();
+			//closeConnection();
 		}
 		return res;
 	}
