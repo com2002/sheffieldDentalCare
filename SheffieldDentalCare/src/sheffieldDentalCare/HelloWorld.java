@@ -8,7 +8,7 @@ public class HelloWorld {
 		System.out.println("Hello World");
 		System.out.println("Hello Friend");
 		System.out.println("Hello Lewis");
-		System.out.println("I changed my system name");
+		System.out.println("It didnt work, ill try again");
 	}
 
 }
