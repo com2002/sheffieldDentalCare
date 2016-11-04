@@ -2,6 +2,8 @@
 
 HOW TO USE DBController
 
+NOTE: ALWAYS USE db.closeConnection WHEN FINISHED INTERACTING WITH DB.
+
 I made this because it saves us having to write all that shit in the notes every time we want to interact with the DB.
 Our team's DB details are stored as attributes at the top of the class.
 
