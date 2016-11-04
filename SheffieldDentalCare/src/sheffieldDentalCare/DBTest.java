@@ -23,8 +23,8 @@ public class DBTest {
 		rs1.next();
 		System.out.println(rs1.getInt(1));
 		
-		rs1.next();
-		System.out.println(rs1.getInt(1));
+		rs.next();
+		System.out.println(rs.getInt(1));
 		db.closeConnection(); //close down connection
 		
 		
