@@ -125,8 +125,9 @@ public class DBBuilder {
 		dbc.closeConnection();
 	}
 	//test
-	public static void main(String args[]) throws SQLException {
+/*	public static void main(String args[]) throws SQLException {
 		DBBuilder dbb = new DBBuilder();
 		dbb.rebuild();
 	}
+*/
 }
