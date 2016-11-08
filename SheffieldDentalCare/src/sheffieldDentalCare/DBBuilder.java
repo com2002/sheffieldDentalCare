@@ -3,6 +3,32 @@ package sheffieldDentalCare;
 import java.sql.SQLException;
 
 public class DBBuilder {
+	public void dropTables() throws SQLException{
+		DBController dbc = new DBController();
+		int rowsUpdated = 0;
+		
+		String[] qs = new String[7];
+				
+		qs[0] = "DROP TABLE TreatmentCredits;";
+		qs[1] = "drop table HealthcarePlan;";
+		qs[2] = "drop table TreatmentsPerformed;";
+		qs[3] = "drop table Appointments;";
+		qs[4] = "drop table Patients;";
+		qs[5] = "drop table Address;";
+		qs[6] = "drop table Treatments;";
+		
+		for (int i=0;i<7;i++) {
+			try {
+				rowsUpdated = dbc.update(qs[i]);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println("Rows updated: "+rowsUpdated);
+		}
+	}
+	
 	public void rebuild() throws SQLException{
 		DBController dbc = new DBController();
 		
@@ -10,16 +36,19 @@ public class DBBuilder {
 				"addressID INT NOT NULL AUTO_INCREMENT,"+
 				"houseNumber INT,"+
 				"streetName VARCHAR(255),"+
-				"postCode VARCHAR(255),"+
-				"county VARCHAR(255),"+
+				"district VARCHAR(255),"+
+				"city VARCHAR(255),"+
+				"postCode VARCHAR(255),"+				
 				"PRIMARY KEY (addressID)"+
 				");";
 		
 		String q2 = "CREATE TABLE Patients("+
 				  "patientID INT NOT NULL AUTO_INCREMENT,"+
+				  "title VARCHAR(255) NOT NULL,"+
 				  "firstName VARCHAR(255) NOT NULL,"+
 				  "surName VARCHAR(255) NOT NULL,"+
 				  "dateOB DATE,"+
+				  "phoneNumber VARCHAR(255),"+
 				  "addressID INT,"+
 				  "PRIMARY KEY (patientID),"+
 				  "FOREIGN KEY (addressID) REFERENCES Address(addressID)"+
@@ -65,6 +94,13 @@ public class DBBuilder {
 				  "PRIMARY KEY (appointmentID),"+
 				  "FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID)"+
 				");";
+		
+		String q7 = "CREATE TABLE Treatments("
+				+ "treatmentName VARCHAR(255),"
+				+ "cost INT,"
+				+ "repair BOOLEAN,"
+				+ "PRIMARY KEY (treatmentName)"
+				+ ");";
 		
 		int rowsUpdated = 0;
 		
@@ -122,12 +158,22 @@ public class DBBuilder {
 		
 		System.out.println("Rows updated: "+rowsUpdated);
 		
+		try {
+			rowsUpdated = dbc.update(q7);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Rows updated: "+rowsUpdated);
+		
 		dbc.closeConnection();
 	}
 	//test
-/*	public static void main(String args[]) throws SQLException {
+	public static void main(String args[]) throws SQLException {
 		DBBuilder dbb = new DBBuilder();
+		dbb.dropTables();
 		dbb.rebuild();
 	}
-*/
+
 }
