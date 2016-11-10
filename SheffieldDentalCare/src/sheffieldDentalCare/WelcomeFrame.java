@@ -106,6 +106,14 @@ public class WelcomeFrame extends JFrame implements Frame {
 				new SecretaryFrame();
 				setVisible(false);
 			}
+			if (userType == "Dentist") {
+				new PartnerFrame();
+				setVisible(false);
+			}
+			if (userType == "Hygenist") {
+				new PartnerFrame();
+				setVisible(false);
+			}
 		}
 	}
 
