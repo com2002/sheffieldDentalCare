@@ -77,7 +77,7 @@ public class DBBuilder {
 		String q5 = "CREATE TABLE Appointments("+
 				  "appointmentID INT NOT NULL AUTO_INCREMENT,"+
 				  "patientID INT,"+
-				  "pHygenist BOOLEAN,"+
+				  "pHygienist BOOLEAN,"+
 				  "date DATE,"+
 				  "startTime TIME,"+
 				  "endTime TIME,"+
