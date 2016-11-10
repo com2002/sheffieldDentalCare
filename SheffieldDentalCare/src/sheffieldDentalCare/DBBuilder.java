@@ -79,8 +79,8 @@ public class DBBuilder {
 				  "patientID INT,"+
 				  "pHygenist BOOLEAN,"+
 				  "date DATE,"+
-				  "startTime INT,"+
-				  "endTime INT,"+
+				  "startTime TIME,"+
+				  "endTime TIME,"+
 				  "PRIMARY KEY (appointmentID),"+
 				  "FOREIGN KEY (patientID) REFERENCES Patients(patientID)"+
 				");";
