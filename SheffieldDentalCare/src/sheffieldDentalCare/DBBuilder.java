@@ -102,6 +102,16 @@ public class DBBuilder {
 				+ "PRIMARY KEY (treatmentName)"
 				+ ");";
 		
+		// Dummy data
+		String q8 = "INSERT INTO Address(houseNumber, streetName, district, city, postCode)"
+				+ "VALUES(123, 'Sesame Street', 'District', 'London', 'NW1 8AS');";
+		
+		String q9 = "INSERT INTO Patients(title, firstName, surName, dateOb, phoneNumber, addressID)"
+				+ "VALUES('Mr', 'Chandler', 'Bing', '1969-08-19', '07923415233', 1);";
+		
+		String q10 = "INSERT INTO Patients(title, firstName, surName, dateOb, phoneNumber, addressID)"
+				+ "VALUES('Mrs', 'Monica', 'Bing', '1964-06-15', '07784563187', 1);";
+		
 		int rowsUpdated = 0;
 		
 		try {
@@ -160,6 +170,33 @@ public class DBBuilder {
 		
 		try {
 			rowsUpdated = dbc.update(q7);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Rows updated: "+rowsUpdated);
+		
+		try {
+			rowsUpdated = dbc.update(q8);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Rows updated: "+rowsUpdated);
+		
+		try {
+			rowsUpdated = dbc.update(q9);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Rows updated: "+rowsUpdated);
+		
+		try {
+			rowsUpdated = dbc.update(q10);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
