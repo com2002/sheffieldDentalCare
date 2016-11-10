@@ -14,7 +14,7 @@ public class PartnerFrame extends JFrame implements Frame{
 	public void initComponents() {};
 	
 	public void initFrame() {
-		setTitle("Sheffield Dental Care - Secretary");
+		setTitle("Sheffield Dental Care - Partner");
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenDimensions = toolkit.getScreenSize();
 		setSize(screenDimensions.width/4, screenDimensions.height/4);
