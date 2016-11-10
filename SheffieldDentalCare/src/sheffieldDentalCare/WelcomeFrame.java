@@ -13,7 +13,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class WelcomeFrame extends JFrame {
+public class WelcomeFrame extends JFrame implements Frame {
 	// All components to be added to frame
 	private JLabel titleLbl = new JLabel("Welcome to Sheffield Dental Care");
 	private JLabel userTypeLbl = new JLabel("User");
@@ -21,34 +21,36 @@ public class WelcomeFrame extends JFrame {
 	private JButton enterBtn = new JButton("Enter");
 	private JButton exitBtn = new JButton("Exit");
 	
-	
 	public WelcomeFrame() {
+		initComponents();
 		initFrame();
 		addComponents();
+	}
+	
+	public void initComponents() {
+		// Add user type options
+		userTypeCbox.addItem("Secretary");
+		userTypeCbox.addItem("Dentist");
+		userTypeCbox.addItem("Hygienist");
 	}
 	
 	public void initFrame() {
 		setTitle("Sheffield Dental Care");
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenDimensions = toolkit.getScreenSize();
-		setSize(screenDimensions.width/5, screenDimensions.height/8);
-		setLocation(new Point(screenDimensions.width/4, screenDimensions.height/4));
+		setSize(screenDimensions.width/4, screenDimensions.height/4);
+		setLocationByPlatform(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 	
-	public void addComponents() {
-		// Add user type options
-		userTypeCbox.addItem("Secretary");
-		userTypeCbox.addItem("Dentist");
-		userTypeCbox.addItem("Hygienist");
-		
-		// Layout manager used is group layout
-		GroupLayout layout = new GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
+	public void addComponents() {	
+		JPanel mainPanel = new JPanel();
+		GroupLayout layout = new GroupLayout(mainPanel);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		
+		mainPanel.setLayout(layout);
+
 		// Add components to layout
 		// Position components in the horizontal
 		layout.setHorizontalGroup(
@@ -65,7 +67,7 @@ public class WelcomeFrame extends JFrame {
 						.addComponent(exitBtn)
 					)
 				)
-			)
+				)
 		);
 		
 		// Position components in the vertical
@@ -75,23 +77,29 @@ public class WelcomeFrame extends JFrame {
 					.addComponent(titleLbl)
 			    )
 			    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			    		.addComponent(userTypeLbl)
-			    		.addComponent(userTypeCbox)
+			    	.addComponent(userTypeLbl)
+			    	.addComponent(userTypeCbox)
 			    		
 			    )
 			    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			    		.addComponent(enterBtn)
-			    		.addComponent(exitBtn)
+			    	.addComponent(enterBtn)
+			    	.addComponent(exitBtn)
 			    )
 		);
 		
 		// Add action listener to Enter button
-		enterBtn.addActionListener(new enterBtnHandler());
-		exitBtn.addActionListener(new exitBtnHandler());
+		enterBtn.addActionListener(new EnterBtnHandler());
+		// Add action listener to Exit button
+		exitBtn.addActionListener(new ExitBtnHandler());
+		
+		Container contentPane = getContentPane();
+		contentPane.add(mainPanel);
 	}
 	
+	
+	/* Event Handlers */
 	// Event handler for Enter button
-	private class enterBtnHandler implements ActionListener {
+	private class EnterBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			String userType = userTypeCbox.getSelectedItem().toString();
 			if (userType == "Secretary") {
@@ -100,13 +108,15 @@ public class WelcomeFrame extends JFrame {
 			}
 		}
 	}
-	
-	private class exitBtnHandler implements ActionListener {
+
+	// Event handler for Exit button
+	private class ExitBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dispose();
 		}
 	}
 	
+	/* Main Function */
 	public static void main(String[] args) {
 		new WelcomeFrame();
 	}
