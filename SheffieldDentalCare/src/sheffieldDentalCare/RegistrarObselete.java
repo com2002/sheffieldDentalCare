@@ -80,12 +80,12 @@ public class RegistrarObselete {
 	
 	
 	//test method
-/*	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException {
 		RegistrarObselete reg = new RegistrarObselete();
-		System.out.println(reg.addAddress(27, "Maple Street", "RD12 6NG", "Middlesex"));
+		//System.out.println(reg.addAddress(27, "Maple Street", "RD12 6NG", "Middlesex"));
 		
-		System.out.println(reg.getAddressID(17,"RD12 6NG")); //should return 5
-	
-	}*/
+		//System.out.println(reg.getAddressID(17,"RD12 6NG")); //should return 5
+		//System.out.println(reg.getAddressID(4, "RH7 8AJ"));
+	}
 
 }
