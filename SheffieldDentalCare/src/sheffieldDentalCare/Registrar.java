@@ -14,7 +14,7 @@ public class Registrar {
 	 * @return the addressID of the added address as int
 	 * @throws SQLException
 	 */
-	private int addAddress(int housenum, String street, String district, String city, String pocode) throws SQLException {
+	public int addAddress(int housenum, String street, String district, String city, String pocode) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
 		int id = 0;
@@ -52,7 +52,7 @@ public class Registrar {
 	 * @return the patientID of the added patient
 	 * @throws SQLException
 	 */
-	private int addPatient(String title, String fname, String sname, String dob, String phone, int addressID) throws SQLException {
+	public int addPatient(String title, String fname, String sname, String dob, String phone, int addressID) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
 		int id = 0;
@@ -85,7 +85,7 @@ public class Registrar {
 	 * @return number of rows inserted to the TreatmentCredits table.
 	 * @throws SQLException
 	 */
-	private int subscribeTo(int patientID, String planName) throws SQLException {
+	public int subscribeTo(int patientID, String planName) throws SQLException {
 		int count = 0;
 		Connection con = null;
 		Statement stmt = null;
@@ -124,7 +124,7 @@ public class Registrar {
 	 * @param patientID
 	 * @throws SQLException
 	 */
-	private void unsubscribe(int patientID) throws SQLException {
+	public void unsubscribe(int patientID) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
 		try {
@@ -152,7 +152,7 @@ public class Registrar {
 	 * @return the addressID
 	 * @throws SQLException
 	 */
-	private int getAddressID(int houseNumber, String postcode) throws SQLException {
+	public int getAddressID(int houseNumber, String postcode) throws SQLException {
 		int id = 0;
 		Connection con = null;
 		Statement stmt = null;
@@ -188,7 +188,7 @@ public class Registrar {
 	 * @return the patientID
 	 * @throws SQLException
 	 */
-	private int getPatientID(String fName, String sName, String dob, int addressID) throws SQLException {
+	public int getPatientID(String fName, String sName, String dob, int addressID) throws SQLException {
 		int id = 0;
 		Connection con = null;
 		Statement stmt = null;
