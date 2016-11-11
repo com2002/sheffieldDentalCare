@@ -4,7 +4,17 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Calendar {
+public class DPCalendar {
+
+	private static boolean checkClash(String start1, String end1, String start2, String end2) {
+		//convert times in strings to ints
+		int s1 = Integer.parseInt((start1.replaceAll("[^\\d.]", "")));
+		int e1 = Integer.parseInt((end1.replaceAll("[^\\d.]", "")));
+		int s2 = Integer.parseInt((start2.replaceAll("[^\\d.]", "")));
+		int e2 = Integer.parseInt((end2.replaceAll("[^\\d.]", "")));
+		//check for overlaps
+		return (s1 <= s2 && s2 < e1) || (s2 <= s1 && s1 < e2);
+	}
 	
 	private int addAppointment(int patientID, boolean pHygienist, String date, String startTime, String endTime) throws SQLException {
 		Connection con = null;
@@ -37,7 +47,8 @@ public class Calendar {
 		Statement stmt = null;
 		int count = 0;
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://stusql.dcs.shef.ac.uk/team026", "team026", "11c7ef91");
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			count = stmt.executeUpdate("DELETE FROM Appointments "
 				  + "WHERE appointmentID = " + appointmentID + ";");
@@ -55,7 +66,7 @@ public class Calendar {
 	
 	// Test addAppointment
 	public static void main(String[] args) throws SQLException {
-		Calendar calendar = new Calendar();
+		DPCalendar calendar = new DPCalendar();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
 		String date = dateFormat.format(new Date());
 		String startTime = "18:00";
@@ -65,6 +76,7 @@ public class Calendar {
 		//int id = calendar.addAppointment(1, true, date, startTime, endTime);
 		//System.out.println("Appointment ID: " + id);
 		//System.out.println(calendar.deleteAppointment(id));
+		//System.out.println(checkClash("12:00","16:00","10:00","12:00"));
 	}
 
 }
