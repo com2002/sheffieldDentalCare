@@ -26,14 +26,31 @@ public class Calendar {
 			ex.printStackTrace();
 		} 
 		finally {
-			if (stmt != null) {
-				stmt.close();
-			}
-			if (con != null) {
-				con.close();
-			}
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
 		}
 		return appointmentID;
+	}
+	
+	private int deleteAppointment(int appointmentID) throws SQLException {
+		Connection con = null;
+		Statement stmt = null;
+		int count = 0;
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://stusql.dcs.shef.ac.uk/team026", "team026", "11c7ef91");
+			stmt = con.createStatement();
+			count = stmt.executeUpdate("DELETE FROM Appointments "
+				  + "WHERE appointmentID = " + appointmentID + ";");
+			System.out.println("Rows updated: " + count);
+		} 
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		} 
+		finally {
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
+		}
+		return count;
 	}
 	
 	// Test addAppointment
@@ -44,7 +61,10 @@ public class Calendar {
 		String startTime = "18:00";
 		String endTime = "18:20";
 		System.out.println(date);
-		System.out.println(calendar.addAppointment(2, true, date, startTime, endTime));
+		//System.out.println("Appointment ID: " + calendar.addAppointment(2, true, date, startTime, endTime));
+		//int id = calendar.addAppointment(1, true, date, startTime, endTime);
+		//System.out.println("Appointment ID: " + id);
+		//System.out.println(calendar.deleteAppointment(id));
 	}
 
 }
