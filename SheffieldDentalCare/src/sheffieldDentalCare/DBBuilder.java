@@ -112,7 +112,12 @@ public class DBBuilder {
 		String q10 = "INSERT INTO Patients(title, firstName, surName, dateOb, phoneNumber, addressID)"
 				+ "VALUES('Mrs', 'Monica', 'Bing', '1964-06-15', '07784563187', 1);";
 		
-		int rowsUpdated = 0;
+		//healthcareplans
+		String q11 = "insert into HealthcarePlan Values('nhsfPlan', 2, 2, 6, 0),('maintPlan', 2, 2, 0, 15),('ohPlan', 2, 4, 0, 21),('drPlan', 2, 4, 2, 36);";
+		//Treatments
+		String q12 = "insert into Treatments Values('hygVisit', 45, 0), ('amalF', 90, 1), ('resinF', 150, 1), ('crown', 500, 1);";
+			  
+				int rowsUpdated = 0;
 		
 		try {
 			rowsUpdated = dbc.update(q1);
@@ -197,6 +202,24 @@ public class DBBuilder {
 		
 		try {
 			rowsUpdated = dbc.update(q10);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Rows updated: "+rowsUpdated);
+		
+		try {
+			rowsUpdated = dbc.update(q11);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Rows updated: "+rowsUpdated);
+		
+		try {
+			rowsUpdated = dbc.update(q12);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
