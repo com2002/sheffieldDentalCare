@@ -11,7 +11,8 @@ public class Calendar {
 		Statement stmt = null;
 		int appointmentID = 0;
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://stusql.dcs.shef.ac.uk/team026", "team026", "11c7ef91");
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			int count = stmt.executeUpdate("INSERT INTO Appointments(patientID, pHygienist, date, startTime, endTime) "
 					  + "VALUES(" + patientID + ", " + pHygienist + ", '" + date + "', '" + startTime + "', '" + endTime + "');");
