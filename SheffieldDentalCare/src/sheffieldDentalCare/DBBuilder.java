@@ -93,11 +93,10 @@ public class DBBuilder {
 				+ ");";
 		
 		String q7 = "CREATE TABLE TreatmentsPerformed("+
-				  "treatmentID INT NOT NULL AUTO_INCREMENT,"+
 				  "appointmentID INT,"+
 				  "treatmentName VARCHAR(255),"+
 				  "paid BOOLEAN,"+
-				  "PRIMARY KEY (treatmentID),"+
+				  "PRIMARY KEY (appointmentID, treatmentName),"+
 				  "FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID),"+
 				  "FOREIGN KEY (treatmentName) REFERENCES Treatments(treatmentName)"+
 				");";
