@@ -5,11 +5,11 @@ import java.util.Calendar;
 public class AppointmentPlot extends Object {
 	
 	/**
-	 * AppointmentPlot.DATE returns date of appointment as a String format 'YYYY-MM-DD'
-	 * AppointmentPlot.APPOINTMENTID returns the appointment's ID as an int
-	 * AppointmentPlot.PATIENTID returns the patient's ID as an int
-	 * AppointmentPlot.STARTTIME returns the appointment's start time as an int in the form HHMM (or HMM if before 10am)
-	 * AppointmentPlot.ENDTIME retusn the appiontments end time as an int in the form HHMM (or HMM if before 10am)
+	 * <b>AppointmentPlot.DATE</b> returns date of appointment as a String format 'YYYY-MM-DD' <P>
+	 * <b>AppointmentPlot.APPOINTMENTID</b> returns the appointment's ID as an int <P>
+	 * <b>AppointmentPlot.PATIENTID</b> returns the patient's ID as an int <P>
+	 * <b>AppointmentPlot.STARTTIME</b> returns the appointment's start time as an int in the form HHMM (or HMM if before 10am) <P>
+	 * <b>AppointmentPlot.ENDTIME</b> retusn the appiontments end time as an int in the form HHMM (or HMM if before 10am) <P>
 	 * @param date
 	 * @param appointmentID
 	 * @param patientID
