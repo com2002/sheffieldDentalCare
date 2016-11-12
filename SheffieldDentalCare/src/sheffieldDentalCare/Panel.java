@@ -1,7 +1,6 @@
 package sheffieldDentalCare;
 
-public interface Frame {
+public interface Panel {
 	public void initComponents();
-	public void initFrame();
 	public void addComponents();
 }

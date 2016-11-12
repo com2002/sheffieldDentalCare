@@ -1,8 +1,11 @@
 package sheffieldDentalCare;
 
-import java.util.Calendar;
-
 public class AppointmentPlot extends Object {
+	public String DATE;
+	public int ENDTIME;
+	public int STARTTIME;
+	public int PATIENTID;
+	public int APPOINTMENTID;
 	
 	/**
 	 * <b>AppointmentPlot.DATE</b> returns date of appointment as a String format 'YYYY-MM-DD' <P>
@@ -21,12 +24,12 @@ public class AppointmentPlot extends Object {
 		if (startTime.length() > 5) startTime = startTime.substring(0, startTime.length()-3);
 		if (endTime.length() > 5) endTime = endTime.substring(0, endTime.length()-3);
 		
-		final String DATE = date;
-		final int APPOINTMENTID = appointmentID;
-		final int PATIENTID = patientID;
+		this.DATE = date;
+		this.APPOINTMENTID = appointmentID;
+		this.PATIENTID = patientID;
 		//convert times to ints of the form HHMM
-		final int STARTTIME = Integer.parseInt((startTime.replaceAll("[^\\d.]", "")));
-		final int ENDTIME = Integer.parseInt((endTime.replaceAll("[^\\d.]", "")));
+		this.STARTTIME = Integer.parseInt((startTime.replaceAll("[^\\d.]", "")));
+		this.ENDTIME = Integer.parseInt((endTime.replaceAll("[^\\d.]", "")));
 
 		}	
 }

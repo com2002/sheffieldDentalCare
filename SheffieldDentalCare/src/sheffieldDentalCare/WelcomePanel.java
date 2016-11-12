@@ -1,19 +1,8 @@
-/**
- * WelcomeFrame.java
- * 
- * WelcomeFrame class creates a frame and adds components for the user to select what
- * user they are. This will be the first window the user sees.
- * 
- */
-
 package sheffieldDentalCare;
-
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class WelcomeFrame extends JFrame implements Frame {
+public class WelcomePanel extends JPanel implements Panel {
 	// All components to be added to frame
 	private JLabel titleLbl = new JLabel("Welcome to Sheffield Dental Care");
 	private JLabel userTypeLbl = new JLabel("User");
@@ -21,35 +10,29 @@ public class WelcomeFrame extends JFrame implements Frame {
 	private JButton enterBtn = new JButton("Enter");
 	private JButton exitBtn = new JButton("Exit");
 	
-	public WelcomeFrame() {
+	public WelcomePanel() {
 		initComponents();
-		initFrame();
 		addComponents();
 	}
 	
+	public JComboBox<String> getUserTypeCbox() {return userTypeCbox;}
+	public JButton getEnterBtn() {return enterBtn;}
+	public JButton getExitBtn() {return exitBtn;}
+	
+	@Override
 	public void initComponents() {
 		// Add user type options
 		userTypeCbox.addItem("Secretary");
 		userTypeCbox.addItem("Dentist");
 		userTypeCbox.addItem("Hygienist");
 	}
-	
-	public void initFrame() {
-		setTitle("Sheffield Dental Care");
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Dimension screenDimensions = toolkit.getScreenSize();
-		setSize(screenDimensions.width/4, screenDimensions.height/4);
-		setLocationByPlatform(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
-	}
-	
-	public void addComponents() {	
-		JPanel mainPanel = new JPanel();
-		GroupLayout layout = new GroupLayout(mainPanel);
+
+	@Override
+	public void addComponents() {
+		GroupLayout layout = new GroupLayout(this);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		mainPanel.setLayout(layout);
+		this.setLayout(layout);
 
 		// Add components to layout
 		// Position components in the horizontal
@@ -86,46 +69,10 @@ public class WelcomeFrame extends JFrame implements Frame {
 			    	.addComponent(exitBtn)
 			    )
 		);
-		
-		// Add action listener to Enter button
-		enterBtn.addActionListener(new EnterBtnHandler());
-		// Add action listener to Exit button
-		exitBtn.addActionListener(new ExitBtnHandler());
-		
-		Container contentPane = getContentPane();
-		contentPane.add(mainPanel);
-	}
-	
-	
-	/* Event Handlers */
-	// Event handler for Enter button
-	private class EnterBtnHandler implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			String userType = userTypeCbox.getSelectedItem().toString();
-			if (userType == "Secretary") {
-				new SecretaryFrame();
-				setVisible(false);
-			}
-			if (userType == "Dentist") {
-				new PartnerFrame();
-				setVisible(false);
-			}
-			if (userType == "Hygenist") {
-				new PartnerFrame();
-				setVisible(false);
-			}
-		}
 	}
 
-	// Event handler for Exit button
-	private class ExitBtnHandler implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			dispose();
-		}
-	}
-	
-	/* Main Function */
 	public static void main(String[] args) {
-		new WelcomeFrame();
+		// TODO Auto-generated method stub
+
 	}
 }

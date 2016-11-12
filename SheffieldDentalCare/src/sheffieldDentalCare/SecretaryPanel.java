@@ -1,36 +1,26 @@
 package sheffieldDentalCare;
-
-import java.awt.*;
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class SecretaryFrame extends JFrame implements Frame {
+public class SecretaryPanel extends JPanel implements Panel {
 	private JLabel titleLbl = new JLabel("Secretary - Main");
 	private JButton patientsBtn = new JButton("Patients");
 	
-	public SecretaryFrame() {
-		initFrame();
+	public SecretaryPanel() {
 		addComponents();
 	}
-	
-	public void initComponents() {};
-	
-	public void initFrame() {
-		setTitle("Sheffield Dental Care - Secretary");
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Dimension screenDimensions = toolkit.getScreenSize();
-		setSize(screenDimensions.width/4, screenDimensions.height/4);
-		setLocationByPlatform(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
-	}
-	
+	@Override
+	public void initComponents() {}
+
+	@Override
 	public void addComponents() {
-		JPanel mainPanel = new JPanel();
-		GroupLayout layout = new GroupLayout(mainPanel);
+		GroupLayout layout = new GroupLayout(this);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		mainPanel.setLayout(layout);
+		this.setLayout(layout);
 		
 		// Add components to layout
 		// Position components in the horizontal
@@ -56,12 +46,10 @@ public class SecretaryFrame extends JFrame implements Frame {
 					.addComponent(patientsBtn)
 				)
 		);
-		
-		Container contentPane = getContentPane();
-		contentPane.add(mainPanel);
 	}
-	
+
 	public static void main(String[] args) {
-		new SecretaryFrame();
+		// TODO Auto-generated method stub
+
 	}
 }
