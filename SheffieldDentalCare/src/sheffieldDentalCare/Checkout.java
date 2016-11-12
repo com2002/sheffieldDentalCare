@@ -12,6 +12,12 @@ public class Checkout {
 		
 	}
 	
+	/**
+	 * adds a treatment to a given appointment
+	 * @param appointmentID
+	 * @param treatmentName
+	 * @throws SQLException
+	 */
 	public void addTreatmentToAppointment(int appointmentID, String treatmentName) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
