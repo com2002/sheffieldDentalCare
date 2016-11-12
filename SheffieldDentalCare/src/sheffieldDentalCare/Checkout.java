@@ -28,7 +28,7 @@ public class Checkout {
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			rowsAdded = stmt.executeUpdate("INSERT INTO TreatmentsPerformed "
-					+ "VALUES(" + appointmentID + "," + treatmentName + ", 0),;");
+					+ "VALUES(" + appointmentID + ",'" + treatmentName + "', 0);");
 		}
 		catch (SQLException ex) {
 			ex.printStackTrace();
