@@ -8,14 +8,14 @@ public class DBBuilder {
 		int rowsUpdated = 0;
 		
 		String[] qs = new String[7];
-				
-		qs[0] = "DROP TABLE TreatmentCredits;";
-		qs[1] = "drop table HealthcarePlan;";
-		qs[2] = "drop table TreatmentsPerformed;";
-		qs[3] = "drop table Appointments;";
-		qs[4] = "drop table Patients;";
-		qs[5] = "drop table Address;";
-		qs[6] = "drop table Treatments;";
+			
+		qs[0] = "DROP TABLE TreatmentsPerformed;";
+		qs[1] = "DROP TABLE Treatments;";
+		qs[2] = "DROP TABLE Appointments;";
+		qs[3] = "DROP TABLE TreatmentCredits;";
+		qs[4] = "DROP TABLE HealthcarePlan;";
+		qs[5] = "DROP TABLE Patients;";
+		qs[6] = "DROP TABLE Address;";
 		
 		for (int i=0;i<7;i++) {
 			try {
@@ -85,22 +85,22 @@ public class DBBuilder {
 				  "FOREIGN KEY (patientID) REFERENCES Patients(patientID)"+
 				");";
 		
-		String q6 = "CREATE TABLE TreatmentsPerformed("+
-				  "appointmentID INT,"+
-				  "hygCount INT,"+
-				  "cuCount INT,"+
-				  "repCount INT,"+
-				  "paid BOOLEAN,"+
-				  "PRIMARY KEY (appointmentID),"+
-				  "FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID)"+
-				");";
-		
-		String q7 = "CREATE TABLE Treatments("
+		String q6 = "CREATE TABLE Treatments("
 				+ "treatmentName VARCHAR(255),"
 				+ "cost INT,"
 				+ "repair BOOLEAN,"
 				+ "PRIMARY KEY (treatmentName)"
 				+ ");";
+		
+		String q7 = "CREATE TABLE TreatmentsPerformed("+
+				  "treatmentID INT NOT NULL AUTO_INCREMENT,"+
+				  "appointmentID INT,"+
+				  "treatmentName VARCHAR(255),"+
+				  "paid BOOLEAN,"+
+				  "PRIMARY KEY (treatmentID),"+
+				  "FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID),"+
+				  "FOREIGN KEY (treatmentName) REFERENCES Treatments(treatmentName)"+
+				");";
 		
 		// Dummy data
 		String q8 = "INSERT INTO Address(houseNumber, streetName, district, city, postCode)"
