@@ -22,7 +22,9 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 	private JLabel titleLbl = new JLabel();
 	private JLabel weeksLbl = new JLabel("Select Week Commencing");
 	public JComboBox<String> weeksCbox = new JComboBox<String>();
-	private JScrollPane weekTimetable;
+	private DefaultTableModel tblModel;
+	private JTable tbl;
+	private JScrollPane scrollPane;
 	
 	public ViewAppointmentsPanel(String ut, Boolean ph, String vt) {
 		userType = ut;
@@ -45,15 +47,20 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 		for (int i = 1; i <= 52; i++) {	
 			cal.set(Calendar.WEEK_OF_YEAR, i);
 			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-			weeksCbox.addItem("Week " + i + ": " + sdf.format(cal.getTime()));
 			// Set default selected item of drop down list
 			Calendar cal2 = Calendar.getInstance();
 			// If current week number is equivalent to added week number then set as default
 			if (cal2.get(Calendar.WEEK_OF_YEAR) == cal.get(Calendar.WEEK_OF_YEAR)) {
+				weeksCbox.addItem("Week " + i + ": " + sdf.format(cal.getTime()) + " (Current)");
 				weeksCbox.setSelectedIndex(i-1);
+			} else {
+				weeksCbox.addItem("Week " + i + ": " + sdf.format(cal.getTime()));
 			}
 		}
-		weekTimetable = new JScrollPane(createWeekTimetable());
+		tblModel = initTblModel();
+		tbl = new JTable();
+		tbl.setModel(tblModel);
+		scrollPane = new JScrollPane(tbl);
 	}
 
 	@Override
@@ -77,7 +84,7 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 						.addComponent(weeksCbox)
 					)
 				)
-				.addComponent(weekTimetable)
+				.addComponent(scrollPane)
 				)
 		);
 				
@@ -93,11 +100,12 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 				    		
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(weekTimetable)
+					.addComponent(scrollPane)
 				)
 		);
+		
+		weeksCbox.addActionListener(new WeeksCboxHandler());
 	}
-	
 	
 	private int getWeekNo() {
 		String week = weeksCbox.getSelectedItem().toString();
@@ -110,8 +118,9 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 		return Integer.parseInt(weekNo);
 	}
 	
-	public JTable createWeekTimetable() {
+	public DefaultTableModel initTblModel() {
 		int weekNo = getWeekNo();
+		// Set column names as dates starting from week selected
 		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM");
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.WEEK_OF_YEAR, weekNo);
@@ -124,12 +133,12 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 			cal.add(Calendar.DATE, 1);
 		}
 		
+		// Set up times
 		String strTime = "09:00";
 		Date startTime = null;
 		try {
 			startTime = new SimpleDateFormat("H:mm").parse(strTime);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Calendar cal2 = Calendar.getInstance();
@@ -144,21 +153,25 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 				}
 			}
 		}
-
-	    DefaultTableModel tblModel = new DefaultTableModel(data, cols);
-	    JTable weekTimetable = new JTable (tblModel);
-		return weekTimetable;
+		DefaultTableModel model = new DefaultTableModel(data, cols);
+		return model;
 	}
-
+	
+	// Event handler for drop down list for weeks
 	private class WeeksCboxHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			
+			System.out.println("Drop down list changed");
+			tblModel = initTblModel();
+			tbl.setModel(tblModel);
+			tbl.invalidate();
+			invalidate();
+			validate();
+			repaint();
 		}
 	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
 	}
-
-
 }
