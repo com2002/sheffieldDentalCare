@@ -1,12 +1,18 @@
 package sheffieldDentalCare;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.GroupLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class ViewAppointmentsPanel extends JPanel implements Panel {
@@ -15,8 +21,8 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 	private String viewType;
 	private JLabel titleLbl = new JLabel();
 	private JLabel weeksLbl = new JLabel("Select Week Commencing");
-	private JComboBox<String> weeksCbox = new JComboBox<String>();
-	private JTable appointmentsTbl = new JTable(9,6);
+	public JComboBox<String> weeksCbox = new JComboBox<String>();
+	private JScrollPane weekTimetable;
 	
 	public ViewAppointmentsPanel(String ut, Boolean ph, String vt) {
 		userType = ut;
@@ -47,6 +53,7 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 				weeksCbox.setSelectedIndex(i-1);
 			}
 		}
+		weekTimetable = new JScrollPane(createWeekTimetable());
 	}
 
 	@Override
@@ -70,7 +77,7 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 						.addComponent(weeksCbox)
 					)
 				)
-				.addComponent(appointmentsTbl)
+				.addComponent(weekTimetable)
 				)
 		);
 				
@@ -86,12 +93,68 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 				    		
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(appointmentsTbl)
+					.addComponent(weekTimetable)
 				)
 		);
-		
 	}
 	
+	
+	private int getWeekNo() {
+		String week = weeksCbox.getSelectedItem().toString();
+		String weekNo = week.substring(5, 7);
+		//System.out.println(weekNo.contains(":"));
+		if (weekNo.contains(":")) {
+			weekNo = weekNo.replace(":", "");
+		}
+		//System.out.println(weekNo + "=");
+		return Integer.parseInt(weekNo);
+	}
+	
+	public JTable createWeekTimetable() {
+		int weekNo = getWeekNo();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.WEEK_OF_YEAR, weekNo);
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		String[] cols = new String[6];
+		cols[0] = "";
+		for (int i = 1; i < 6; i++) {
+			cols[i] = dateFormat.format(cal.getTime());
+			System.out.println(dateFormat.format(cal.getTime()));
+			cal.add(Calendar.DATE, 1);
+		}
+		
+		String strTime = "09:00";
+		Date startTime = null;
+		try {
+			startTime = new SimpleDateFormat("H:mm").parse(strTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(startTime);
+		String[][] data = new String[9][6];
+		SimpleDateFormat timeFormat = new SimpleDateFormat("H:mm");
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 6; j++) {
+				if (j == 0) {
+					data[i][j] = timeFormat.format(cal2.getTime());
+					cal2.add(Calendar.HOUR, 1);
+				}
+			}
+		}
+
+	    DefaultTableModel tblModel = new DefaultTableModel(data, cols);
+	    JTable weekTimetable = new JTable (tblModel);
+		return weekTimetable;
+	}
+
+	private class WeeksCboxHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
