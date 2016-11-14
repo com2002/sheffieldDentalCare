@@ -40,14 +40,46 @@ public class Checkout {
 		return rowsAdded;
 	}
 
-	public void payAppointment(int appointmentID) throws SQLException {
+	public int payAppointment(int appointmentID) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
+		int count = 0;
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
+			stmt = con.createStatement();
+			count = stmt.executeUpdate("UPDATE TreatmentPerformed SET paid = TRUE "
+					+ "WHERE appointmentID = " + appointmentID + "';");
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
+		}
+		return count;
 	}
 	
-	public void payTreatment(int treatmentID) throws SQLException {
+	public int payTreatment(int appointmentID, String treatmentName) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
+		int count = 0;
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
+			stmt = con.createStatement();
+			count = stmt.executeUpdate("UPDATE TreatmentPerformed SET paid = TRUE "
+					+ "WHERE appointmentID = " + appointmentID + " AND treatmentName LIKE '" + treatmentName + "';");
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
+		}
+		return count;
 	}
 	
 }
