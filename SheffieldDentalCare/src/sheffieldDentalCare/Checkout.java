@@ -40,6 +40,12 @@ public class Checkout {
 		return rowsAdded;
 	}
 
+	/**
+	 * sets that all treatments from a specific appointment have been paid for
+	 * @param appointmentID
+	 * @throws SQLException
+	 * @returns number of rows updated
+	 */
 	public int payAppointment(int appointmentID) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
@@ -61,6 +67,13 @@ public class Checkout {
 		return count;
 	}
 	
+	/**
+	 * sets that a specific treatment has been paid for
+	 * @param appointmentID
+	 * @param treatmentName
+	 * @throws SQLException
+	 * @returns number of rows updated
+	 */
 	public int payTreatment(int appointmentID, String treatmentName) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
