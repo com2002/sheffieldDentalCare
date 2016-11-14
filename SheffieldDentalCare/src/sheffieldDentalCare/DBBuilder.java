@@ -65,9 +65,9 @@ public class DBBuilder {
 		
 		String q4 = "CREATE TABLE TreatmentCredits("+
 				  "patientID INT,"+
-				  "cuCount INT,"+
-				  "hygCount INT,"+
-				  "repCount INT,"+
+				  "checkupCount INT,"+
+				  "hygieneCount INT,"+
+				  "repairCount INT,"+
 				  "planName VARCHAR(255),"+
 				  "PRIMARY KEY(patientID),"+
 				  "FOREIGN KEY(patientID) REFERENCES Patients(patientID),"+
@@ -88,7 +88,7 @@ public class DBBuilder {
 		String q6 = "CREATE TABLE Treatments("
 				+ "treatmentName VARCHAR(255),"
 				+ "cost INT,"
-				+ "repair BOOLEAN,"
+				+ "pCosmetic BOOLEAN,"
 				+ "PRIMARY KEY (treatmentName)"
 				+ ");";
 		
@@ -114,7 +114,7 @@ public class DBBuilder {
 		//healthcareplans
 		String q11 = "insert into HealthcarePlan Values('nhsfPlan', 2, 2, 6, 0),('maintPlan', 2, 2, 0, 15),('ohPlan', 2, 4, 0, 21),('drPlan', 2, 4, 2, 36);";
 		//Treatments
-		String q12 = "insert into Treatments Values('hygVisit', 45, 0), ('amalF', 90, 1), ('resinF', 150, 1), ('crown', 500, 1);";
+		String q12 = "insert into Treatments Values('hygVisit', 45, 0), ('amalF', 90, 0), ('resinF', 150, 0), ('crown', 500, 1);";
 			  
 				int rowsUpdated = 0;
 		
