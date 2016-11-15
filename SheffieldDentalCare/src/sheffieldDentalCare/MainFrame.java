@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
 		setTitle("Sheffield Dental Care");
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenDimensions = toolkit.getScreenSize();
-		setSize(screenDimensions.width/4, screenDimensions.height/4);
+		setSize(screenDimensions.width/2, screenDimensions.height/2);
 		setLocationByPlatform(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Add action listener to Enter button from WelcomePanel
@@ -25,7 +25,7 @@ public class MainFrame extends JFrame {
 		// Add action listener to Exit button from WelcomePanel
 		welcomePanel.getExitBtn().addActionListener(new ExitBtnHandler());
 		setContentPane(welcomePanel);
-		pack();
+		//pack();
 		setVisible(true);
 	}
 	
