@@ -1,7 +1,7 @@
 package sheffieldDentalCare;
 import java.sql.*;
 
-@SuppressWarnings("unused")
+// @SuppressWarnings("unused")
 class DBController {
 	//DB Details
 	static String DB_Server = "stusql.dcs.shef.ac.uk";

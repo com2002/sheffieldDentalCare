@@ -17,23 +17,37 @@ public class Registrar {
 	public int addAddress(int housenum, String street, String district, String city, String pocode) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
+		Statement stmt2 = null;
 		int id = 0;
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
-			System.out.println("Rows updates: " + 
-					stmt.executeUpdate("INSERT INTO Address(houseNumber, streetName, district, city, postCode)" +
-									   "VALUES(" + housenum + ",'"+ street + "','" + district + "','" + city + "','" + pocode +"');"));
-			ResultSet res = stmt.executeQuery("SELECT MAX(addressID) FROM Address;");
-			while (res.next()) {
-				id = res.getInt(1);				
+			stmt2 = con.createStatement();
+			ResultSet existsRes = stmt2.executeQuery("SELECT COUNT(*) AS total FROM Address "
+					+ "WHERE houseNumber = '"+housenum+"' AND postCode = '"+pocode+"';");
+			//if address doesn't already exist
+			if (existsRes.getInt("total") == 0) {
+				System.out.println("Adding new address...");			
+				System.out.println("Rows updates: " + 
+						stmt.executeUpdate("INSERT INTO Address(houseNumber, streetName, district, city, postCode)" +
+										   "VALUES(" + housenum + ",'"+ street + "','" + district + "','" + city + "','" + pocode +"');"));
+				ResultSet res = stmt.executeQuery("SELECT MAX(addressID) FROM Address;");
+				while (res.next()) {
+					id = res.getInt(1);				
+				}
+			}
+			else {
+				System.out.println("Address already exists. Existing addressID returned.");
+				existsRes.next();
+				id = existsRes.getInt("addressID");
 			}
 		}
 		catch (SQLException ex){
 			ex.printStackTrace();
 		}
 		finally {
+			if (stmt2 != null) stmt2.close();
 			if (stmt != null) stmt.close();
 			if (con != null) con.close();
 		}
