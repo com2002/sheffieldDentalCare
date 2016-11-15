@@ -1,17 +1,37 @@
 package sheffieldDentalCare;
+
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 @SuppressWarnings("serial")
 public class PartnerPanel extends JPanel implements Panel {
 	private JLabel titleLbl = new JLabel("Partner - Main");
+	private JPanel checkoutPanel = new JPanel();
+	private JPanel appointmentsPanel;
+	private JSplitPane splitPane;
 	
 	public PartnerPanel() {
+		initComponents();
 		addComponents();
 	}
+	
 	@Override
-	public void initComponents() {}
+	public void initComponents() {
+		//System.out.println(MainFrame.USER_TYPE);
+		// Depending on current user, output their calendar
+		if (MainFrame.USER_TYPE == "Dentist") {
+			// Created as week view for now for testing purposes
+			appointmentsPanel = new ViewAppointmentsPanel("Week", "Dentist");
+		} else {
+			// Created as week view for now for testing purposes
+			appointmentsPanel = new ViewAppointmentsPanel("Week", "Hygienist");
+		}
+		// Add panels to split pane
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, checkoutPanel, appointmentsPanel);
+		splitPane.setDividerLocation(0.5);
+	}
 
 	@Override
 	public void addComponents() {
@@ -26,20 +46,23 @@ public class PartnerPanel extends JPanel implements Panel {
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(titleLbl)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(splitPane)
+					)
+				)
 				)
 		);
-				
+
 		// Position components in the vertical
 		layout.setVerticalGroup(
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(titleLbl)
 				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(splitPane)
+				)
 		);
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 }
