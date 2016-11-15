@@ -1,19 +1,37 @@
 package sheffieldDentalCare;
+
 import javax.swing.GroupLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class SecretaryPanel extends JPanel implements Panel {
 	private JLabel titleLbl = new JLabel("Secretary - Main");
-	private JButton patientsBtn = new JButton("Patients");
+	private JTabbedPane patientsTPane = new JTabbedPane();
+	private JTabbedPane appointmentsTPane = new JTabbedPane();
+	private JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, patientsTPane, appointmentsTPane);
+	RegisterPanel registerPanel = new RegisterPanel();
+	ViewAppointmentsPanel dentistPanel = new ViewAppointmentsPanel("Secretary", false, "Week");
+	ViewAppointmentsPanel hygienistPanel = new ViewAppointmentsPanel("Secretary", true, "Week");
 	
 	public SecretaryPanel() {
+		initComponents();
 		addComponents();
 	}
+	
 	@Override
-	public void initComponents() {}
+	public void initComponents() {
+		splitPane.setDividerLocation(0.5);
+		// Add register panel to patientsTPane
+		patientsTPane.add("Register New Patient", registerPanel);
+		// Create tabbed pane for appointments side
+		// Add week to view calendar for dentist to appointmentsTPane
+		appointmentsTPane.add("Dentist", dentistPanel);
+		// Add week to view calendar for hygienist
+		appointmentsTPane.add("Hygienist", hygienistPanel);
+	}
 
 	@Override
 	public void addComponents() {
@@ -21,7 +39,7 @@ public class SecretaryPanel extends JPanel implements Panel {
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		this.setLayout(layout);
-		
+
 		// Add components to layout
 		// Position components in the horizontal
 		layout.setHorizontalGroup(
@@ -30,7 +48,7 @@ public class SecretaryPanel extends JPanel implements Panel {
 					.addComponent(titleLbl)
 				.addGroup(layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(patientsBtn)
+						.addComponent(splitPane)
 					)
 				)
 				)
@@ -43,7 +61,7 @@ public class SecretaryPanel extends JPanel implements Panel {
 					.addComponent(titleLbl)
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(patientsBtn)
+					.addComponent(splitPane)
 				)
 		);
 	}
