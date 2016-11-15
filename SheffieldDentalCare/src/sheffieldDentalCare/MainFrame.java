@@ -9,9 +9,7 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 	WelcomePanel welcomePanel = new WelcomePanel();
-	SecretaryPanel secretaryPanel = new SecretaryPanel();
-	PartnerPanel partnerPanel = new PartnerPanel();
-	private String userType = "";
+	public static String USER_TYPE;
 	
 	public MainFrame() {
 		setTitle("Sheffield Dental Care");
@@ -33,23 +31,24 @@ public class MainFrame extends JFrame {
 	// Event handler for Enter button
 	private class EnterBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			userType = welcomePanel.getUserTypeCbox().getSelectedItem().toString();
-			if (userType == "Secretary") {
+			USER_TYPE = welcomePanel.getUserTypeCbox().getSelectedItem().toString();
+			if (USER_TYPE == "Secretary") {
+				SecretaryPanel secretaryPanel = new SecretaryPanel();
 				setContentPane(secretaryPanel);
 				validate();
 				repaint();
-			}
-			if (userType == "Dentist") {
-				setContentPane(partnerPanel);
+			} else if (USER_TYPE == "Dentist") {
+				PartnerPanel dentistPanel = new PartnerPanel();
+				setContentPane(dentistPanel);
+				validate();
+				repaint();
+			} else {
+				PartnerPanel hygienistPanel = new PartnerPanel();
+				setContentPane(hygienistPanel);
 				validate();
 				repaint();
 			}
-			if (userType == "Hygienist") {
-				setContentPane(partnerPanel);
-				validate();
-				repaint();
-			}
-			System.out.println(userType);
+			//System.out.println(USER_TYPE);
 		}
 	}
 
