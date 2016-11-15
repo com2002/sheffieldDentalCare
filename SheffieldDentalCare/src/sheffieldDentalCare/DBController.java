@@ -18,12 +18,15 @@ class DBController {
 	
 	//open connection to DB
 	public static void openConnection() throws SQLException {
-		// connection to a database
-		try { 
-		 con = DriverManager.getConnection("jdbc:mysql://" + DB_Server + "/" + DB_Name, DB_User, DB_Password);
-		}
-		catch (SQLException ex) {
-		 ex.printStackTrace();
+		if (con == null) {
+			// connection to a database
+			try { 
+			 con = DriverManager.getConnection("jdbc:mysql://" + DB_Server + "/" + DB_Name, DB_User, DB_Password);
+			 
+			}
+			catch (SQLException ex) {
+			 ex.printStackTrace();
+			}
 		}
 	}
 	
