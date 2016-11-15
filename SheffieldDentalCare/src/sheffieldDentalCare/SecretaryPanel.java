@@ -11,10 +11,7 @@ public class SecretaryPanel extends JPanel implements Panel {
 	private JLabel titleLbl = new JLabel("Secretary - Main");
 	private JTabbedPane patientsTPane = new JTabbedPane();
 	private JTabbedPane appointmentsTPane = new JTabbedPane();
-	private JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, patientsTPane, appointmentsTPane);
-	RegisterPanel registerPanel = new RegisterPanel();
-	ViewAppointmentsPanel dentistPanel = new ViewAppointmentsPanel("Secretary", false, "Week");
-	ViewAppointmentsPanel hygienistPanel = new ViewAppointmentsPanel("Secretary", true, "Week");
+	private JSplitPane splitPane;
 	
 	public SecretaryPanel() {
 		initComponents();
@@ -23,6 +20,10 @@ public class SecretaryPanel extends JPanel implements Panel {
 	
 	@Override
 	public void initComponents() {
+		RegisterPanel registerPanel = new RegisterPanel();
+		ViewAppointmentsPanel dentistPanel = new ViewAppointmentsPanel("Week", "Dentist");
+		ViewAppointmentsPanel hygienistPanel = new ViewAppointmentsPanel("Week", "Hygienist");
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, patientsTPane, appointmentsTPane);
 		splitPane.setDividerLocation(0.5);
 		// Add register panel to patientsTPane
 		patientsTPane.add("Register New Patient", registerPanel);
@@ -64,10 +65,5 @@ public class SecretaryPanel extends JPanel implements Panel {
 					.addComponent(splitPane)
 				)
 		);
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 }
