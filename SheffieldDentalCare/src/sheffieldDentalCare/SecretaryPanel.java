@@ -30,7 +30,7 @@ public class SecretaryPanel extends JPanel implements Panel {
 		// Create tabbed pane for appointments side
 		// Add week to view calendar for dentist to appointmentsTPane
 		appointmentsTPane.add("Dentist", dentistPanel);
-		// Add week to view calendar for hygienist
+		// Add week to view calendar for hygienist to appointmentsTPane
 		appointmentsTPane.add("Hygienist", hygienistPanel);
 	}
 
