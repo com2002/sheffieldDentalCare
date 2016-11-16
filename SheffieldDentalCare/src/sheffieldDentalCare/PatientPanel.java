@@ -4,10 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 
 public class PatientPanel extends JPanel {
-	
+	private FindPatientPanel searchPanel = new FindPatientPanel();
 	
 	public PatientPanel() {
-		FindPatientPanel searchPanel = new FindPatientPanel();
 		add(searchPanel);
 	}
 	
