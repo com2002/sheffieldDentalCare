@@ -6,21 +6,16 @@ import java.util.Date;
 import javax.swing.*;
 
 public class FindPatientPanel extends JPanel {
-	private boolean searchPerformed;
-	private String firstName;
-	private String surname;
-	private String dOB;
-	private int houseNo;
-	private String postcode;
+	private boolean searchPerformed = false;
+	private String firstName = null;
+	private String surname = null;
+	private String dOB = null;
+	private int houseNo = 0;
+	private String postcode = null;
+	private String houseNoString = null;
+	private PatientDetailsPanel resultsPanel;
 	
 	public FindPatientPanel() {
-		searchPerformed = false;
-		firstName = null;
-		surname = null;
-		dOB = null;
-		houseNo = 0;
-		postcode = null;
-		
 		setLayout(new GridLayout(0,1));
 	
 		// first name input panel
@@ -62,7 +57,7 @@ public class FindPatientPanel extends JPanel {
 				firstName = firstNameField.getText();
 				surname = surnameField.getText();
 				dOB = dOBField.getText();
-				String houseNoString = houseNoField.getText();
+				houseNoString = houseNoField.getText();
 				postcode = postcodeField.getText();
 				
 				String[] textFields = {firstName, surname, dOB, houseNoString, postcode};
@@ -70,7 +65,9 @@ public class FindPatientPanel extends JPanel {
 				if (allFieldsInput(textFields) && validDOB(dOB) && validHouseNo(houseNoString)) {
 					System.out.println("Search Accepted");
 					searchPerformed = true;
+					updatePanel();
 				}
+				
 			}
 		});
 		
@@ -81,6 +78,19 @@ public class FindPatientPanel extends JPanel {
 		add(houseNoPanel);
 		add(postcodePanel);
 		add(findPatientButton);
+		
+		resultsPanel = new PatientDetailsPanel(searchPerformed, firstName, surname, 
+				dOB, houseNoString, postcode);
+		add(resultsPanel);
+	}
+	
+	private void updatePanel() {
+		this.remove(resultsPanel);
+		resultsPanel = new PatientDetailsPanel(searchPerformed, firstName, surname, 
+				dOB, houseNoString, postcode);
+		this.add(resultsPanel);
+		this.validate();
+		this.repaint();
 	}
 	
 	private boolean allFieldsInput(String[] textFields) {
