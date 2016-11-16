@@ -2,6 +2,8 @@ package sheffieldDentalCare;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,6 +14,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
@@ -122,7 +125,7 @@ public class WeekViewAppointments extends ViewAppointments {
 	public void makeTbl() {
 		int weekNo = getWeekNo();
 		// Set column names as dates starting from week selected
-		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.WEEK_OF_YEAR, weekNo);
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -130,7 +133,6 @@ public class WeekViewAppointments extends ViewAppointments {
 		cols[0] = "";
 		for (int i = 1; i < 6; i++) {
 			cols[i] = dateFormat.format(cal.getTime());
-			System.out.println(dateFormat.format(cal.getTime()));
 			cal.add(Calendar.DATE, 1);
 		}
 		
@@ -144,16 +146,51 @@ public class WeekViewAppointments extends ViewAppointments {
 		}
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setTime(startTime);
-		String[][] data = new String[108][6];
-		SimpleDateFormat timeFormat = new SimpleDateFormat("H:mm");
-		for (int i = 0; i < 108; i++) {
+		Object[][] data = new Object[9][6];
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+		// Get appointments
+		DPCalendar dpCal = new DPCalendar();
+		AppointmentPlot[] appPlot = null;
+		try {
+			if (calendarFor == "Dentist") {
+				// Date fixed for now as testing
+				appPlot = dpCal.getAppointments(false, "2016-11-14");
+			} else {
+				// Date fixed for now as testing
+				appPlot = dpCal.getAppointments(true, "2016-11-14");
+			}
+		} catch (SQLException | ParseException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (j == 0) {
 					data[i][j] = timeFormat.format(cal2.getTime());
-					cal2.add(Calendar.MINUTE, 5);
+				}
+				for (int k = 0; k < appPlot.length; k++)  {
+					// Date format from database
+					SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					// Wanted date format
+					String date = null;
+					try {
+						date = dateFormat.format(dbDateFormat.parse(appPlot[k].DATE));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println("DB Date: " + date);
+					System.out.println("DB Time: " + appPlot[k].STARTTIME);
+					System.out.println("Col Date: " + cols[j]);
+					System.out.println("Row Time: " + timeFormat.format(cal2.getTime()));
+					System.out.println("");
+					if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal2.getTime()))) {
+						data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + " PatientID: " + appPlot[k].PATIENTID;
+					}
 				}
 			}
+			cal2.add(Calendar.HOUR, 1);
 		}
+
 		// Add data and column names to a table model
 		setTblModel(new DefaultTableModel(data, cols));
 	}
