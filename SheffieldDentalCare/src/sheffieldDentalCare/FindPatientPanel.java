@@ -53,6 +53,7 @@ public class FindPatientPanel extends JPanel {
 		add(dOBPanel);
 		add(houseNoPanel);
 		add(postcodePanel);
+		add(findPatientButton);
 	}
 	
 }
