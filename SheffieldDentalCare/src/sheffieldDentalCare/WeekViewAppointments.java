@@ -1,19 +1,30 @@
 package sheffieldDentalCare;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
 
 public class WeekViewAppointments extends ViewAppointments {
 	private String calendarFor;
-	private JLabel weeksLbl = new JLabel("Select Week Commencing");
-	public JComboBox<String> weeksCbox = new JComboBox<String>();
+	private JLabel selectWeekLbl = new JLabel("Select Week Commencing");
+	private JLabel viewLbl = new JLabel("View");
+	private JComboBox<String> patientsCbox = new JComboBox<String>();
+	private JComboBox<String> weekCbox = new JComboBox<String>();
+	private JRadioButton allPatientsRBtn = new JRadioButton("All Patients");
+	private JRadioButton singlePatientRBtn = new JRadioButton("Single Patient");
+	public JButton viewBtn = new JButton("View");
 	
 	public WeekViewAppointments(String cf) {
 		calendarFor = cf;
@@ -23,6 +34,16 @@ public class WeekViewAppointments extends ViewAppointments {
 	
 	public void makeSelectionPanel() {
 		JPanel panel = new JPanel();
+		// Set default selected as by week
+		allPatientsRBtn.setSelected(true);
+		allPatientsRBtn.setActionCommand("All Patients");
+		singlePatientRBtn.setActionCommand("Single Patient");
+		// Create radio button group
+		ButtonGroup rBtnGroup = new ButtonGroup();
+		rBtnGroup.add(allPatientsRBtn);
+		rBtnGroup.add(singlePatientRBtn);
+		// Set patients drop down list as disabled by default
+		patientsCbox.setEnabled(false);
 		// Populate drop down list with start date of each week in the current year
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		Calendar cal = Calendar.getInstance();
@@ -33,13 +54,13 @@ public class WeekViewAppointments extends ViewAppointments {
 			Calendar cal2 = Calendar.getInstance();
 			// If current week number is equivalent to added week number then set as default
 			if (cal2.get(Calendar.WEEK_OF_YEAR) == cal.get(Calendar.WEEK_OF_YEAR)) {
-				weeksCbox.addItem("Week " + i + ": " + sdf.format(cal.getTime()) + " (Current)");
-				weeksCbox.setSelectedIndex(i-1);
+				weekCbox.addItem("Week " + i + ": " + sdf.format(cal.getTime()) + " (Current)");
+				weekCbox.setSelectedIndex(i-1);
 			} else {
-				weeksCbox.addItem("Week " + i + ": " + sdf.format(cal.getTime()));
+				weekCbox.addItem("Week " + i + ": " + sdf.format(cal.getTime()));
 			}
 		}
-		
+
 		GroupLayout layout = new GroupLayout(panel);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
@@ -52,12 +73,27 @@ public class WeekViewAppointments extends ViewAppointments {
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(weeksLbl)
+						.addComponent(selectWeekLbl)
 					)
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(weeksCbox)
+						.addComponent(weekCbox)
 					)
 				)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(viewLbl)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(allPatientsRBtn)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(singlePatientRBtn)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(patientsCbox)
+					)
+				)
+				.addComponent(viewBtn)
 				)
 		);
 				
@@ -65,12 +101,22 @@ public class WeekViewAppointments extends ViewAppointments {
 		layout.setVerticalGroup(
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-				    .addComponent(weeksLbl)
-				    .addComponent(weeksCbox)
-				    		
+				    .addComponent(selectWeekLbl)
+				    .addComponent(weekCbox)
+				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(viewLbl)
+					.addComponent(allPatientsRBtn)
+					.addComponent(singlePatientRBtn)
+					.addComponent(patientsCbox)
+				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+				    .addComponent(viewBtn)
 				)
 		);
 		setSelectionPanel(panel);
+		allPatientsRBtn.addActionListener(new RBtnHandler());
+		singlePatientRBtn.addActionListener(new RBtnHandler());
 	}
 
 	public void makeTbl() {
@@ -98,13 +144,13 @@ public class WeekViewAppointments extends ViewAppointments {
 		}
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setTime(startTime);
-		String[][] data = new String[9][6];
+		String[][] data = new String[108][6];
 		SimpleDateFormat timeFormat = new SimpleDateFormat("H:mm");
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 108; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (j == 0) {
 					data[i][j] = timeFormat.format(cal2.getTime());
-					cal2.add(Calendar.HOUR, 1);
+					cal2.add(Calendar.MINUTE, 5);
 				}
 			}
 		}
@@ -114,11 +160,33 @@ public class WeekViewAppointments extends ViewAppointments {
 	
 	private int getWeekNo() {
 		// Get week number from drop down list
-		String week = weeksCbox.getSelectedItem().toString();
+		String week = weekCbox.getSelectedItem().toString();
 		String weekNo = week.substring(5, 7);
 		if (weekNo.contains(":")) {
 			weekNo = weekNo.replace(":", "");
 		}
 		return Integer.parseInt(weekNo);
+	}
+	
+	private void setSelectionCboxBySinglePatient() {
+		// Populate drop down list with all patients
+		patientsCbox.setEnabled(true);
+		patientsCbox.addItem("Steven Universe");
+	}
+	
+	// Event handler for drop down list for weeks
+	private class RBtnHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Radio button changed");
+			System.out.println(e.getActionCommand());
+			if (e.getActionCommand() == "Single Patient") {
+				setSelectionCboxBySinglePatient();
+				// Show only all of a patient's appointment for that week
+			} else {
+				patientsCbox.setEnabled(false);
+				// Show all patients for that week
+			}
+
+		}
 	}
 }
