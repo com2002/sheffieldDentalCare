@@ -1,23 +1,14 @@
 package sheffieldDentalCare;
 
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 
-public class PatientPanel extends JPanel implements Panel {
-
-	@Override
-	public void initComponents() {
-		// TODO Auto-generated method stub
-		
+public class PatientPanel extends JPanel {
+	
+	
+	public PatientPanel() {
+		FindPatientPanel searchPanel = new FindPatientPanel();
+		add(searchPanel);
 	}
-
-	@Override
-	public void addComponents() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
+	
 }
