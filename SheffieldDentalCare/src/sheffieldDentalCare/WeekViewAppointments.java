@@ -171,10 +171,11 @@ public class WeekViewAppointments extends ViewAppointments {
 	private void setSelectionCboxBySinglePatient() {
 		// Populate drop down list with all patients
 		patientsCbox.setEnabled(true);
+		// For testing purposes
 		patientsCbox.addItem("Steven Universe");
 	}
 	
-	// Event handler for drop down list for weeks
+	// Event handler for radio buttons
 	private class RBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Radio button changed");
