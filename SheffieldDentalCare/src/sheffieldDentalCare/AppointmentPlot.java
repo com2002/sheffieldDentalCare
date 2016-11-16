@@ -2,8 +2,8 @@ package sheffieldDentalCare;
 
 public class AppointmentPlot extends Object {
 	public String DATE;
-	public int ENDTIME;
-	public int STARTTIME;
+	public String ENDTIME;
+	public String STARTTIME;
 	public int PATIENTID;
 	public int APPOINTMENTID;
 	
@@ -12,7 +12,7 @@ public class AppointmentPlot extends Object {
 	 * <b>AppointmentPlot.APPOINTMENTID</b> returns the appointment's ID as an int <P>
 	 * <b>AppointmentPlot.PATIENTID</b> returns the patient's ID as an int <P>
 	 * <b>AppointmentPlot.STARTTIME</b> returns the appointment's start time as an int in the form HHMM (or HMM if before 10am) <P>
-	 * <b>AppointmentPlot.ENDTIME</b> retusn the appiontments end time as an int in the form HHMM (or HMM if before 10am) <P>
+	 * <b>AppointmentPlot.ENDTIME</b> returns the appointments end time as an int in the form HHMM (or HMM if before 10am) <P>
 	 * @param date
 	 * @param appointmentID
 	 * @param patientID
@@ -27,9 +27,8 @@ public class AppointmentPlot extends Object {
 		this.DATE = date;
 		this.APPOINTMENTID = appointmentID;
 		this.PATIENTID = patientID;
-		//convert times to ints of the form HHMM
-		this.STARTTIME = Integer.parseInt((startTime.replaceAll("[^\\d.]", "")));
-		this.ENDTIME = Integer.parseInt((endTime.replaceAll("[^\\d.]", "")));
+		this.STARTTIME = startTime;
+		this.ENDTIME = endTime;
 
-		}	
+	}	
 }
