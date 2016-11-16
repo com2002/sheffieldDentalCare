@@ -79,13 +79,13 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 				)
 		);
 		
-		weekView.weeksCbox.addActionListener(new WeeksCboxHandler());
+		weekView.viewBtn.addActionListener(new ViewBtnHandler());
 	}
 	
 	// Event handler for drop down list for weeks
-	private class WeeksCboxHandler implements ActionListener {
+	private class ViewBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Drop down list changed");
+			System.out.println("Selection options changed");
 			weekView.makeTbl();
 			tblModel = weekView.getTblModel();
 			tbl.setModel(tblModel);
