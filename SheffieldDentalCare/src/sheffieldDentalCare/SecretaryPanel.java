@@ -22,7 +22,6 @@ public class SecretaryPanel extends JPanel implements Panel {
 	public void initComponents() {
 		RegisterPanel registerPanel = new RegisterPanel();
 		PatientPanel patientPanel = new PatientPanel();
-		
 		ViewAppointmentsPanel dentistPanel = new ViewAppointmentsPanel("Week", "Dentist");
 		ViewAppointmentsPanel hygienistPanel = new ViewAppointmentsPanel("Week", "Hygienist");
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, patientsTPane, appointmentsTPane);
