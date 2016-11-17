@@ -160,6 +160,47 @@ public class DPCalendar {
 		return applots;		
 	}
 	
+	public AppointmentPlot[] getAppointmentsForDate(boolean pHygeinist, String date) throws SQLException, ParseException {
+		AppointmentPlot[] applots = null;
+		String day = new String();
+		Connection con = null;
+		Statement stmt = null;
+		// Set up given date in db date format
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.setTime(sdf.parse(date));	
+		day = sdf.format(c.getTime());
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
+			stmt = con.createStatement();
+			//pull up all appointments of the specified partner from the week
+			String q = "SELECT * FROM Appointments WHERE pHygienist = "+pHygeinist+" AND "
+					+ "date = '" + day + "';";
+			//get the length of the result set initialise list
+			ResultSet rss = stmt.executeQuery(q);
+			int rsLength = 0;
+			while (rss.next()) {
+				rsLength++;
+			}
+			ResultSet rs = stmt.executeQuery(q);			
+			applots = new AppointmentPlot[rsLength];
+			int j = 0;
+			while (rs.next()) {
+				applots[j] = new AppointmentPlot(rs.getString("date"), rs.getInt("appointmentID"), rs.getInt("patientID"), rs.getString("startTime"), rs.getString("endTime"));
+				j++;
+			}		
+		} 
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		} 
+		finally {
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
+		}
+		return applots;		
+	}
+	
 	// Test addAppointment
 	public static void main(String[] args) throws SQLException, ParseException {
 		DPCalendar calendar = new DPCalendar();
@@ -168,17 +209,18 @@ public class DPCalendar {
 		String startTime = "18:00";
 		String endTime = "18:20";
 		System.out.println(date);
-		System.out.println("Appointment ID: " + calendar.addAppointment(2, true, date, startTime, endTime));
+		//System.out.println("Appointment ID: " + calendar.addAppointment(2, true, date, startTime, endTime));
 		//int id = calendar.addAppointment(2, true, date, startTime, endTime);
 		//System.out.println("Appointment ID: " + id);
 		//System.out.println(calendar.deleteAppointment(id));
-		System.out.println(timeClash("17:50", "18:50","18:00","18:20"));
-		System.out.println(calendar.checkAvailability(1, true, "2016-11-12", "17:50", "18:50"));
-		
-		AppointmentPlot ap = calendar.getAppointments(true, "2016-11-10")[0];
-		System.out.println(ap.ENDTIME);
+		//System.out.println(timeClash("17:50", "18:50","18:00","18:20"));
+		//System.out.println(calendar.checkAvailability(1, true, "2016-11-12", "17:50", "18:50"));
+		//System.out.println(ap.ENDTIME);
 		//calendar.getDentistAppointments(true, "2016-11-30");
-		
+		AppointmentPlot[] ap = calendar.getAppointmentsForDate(true, "2016-11-15");
+		for (int i = 0; i < ap.length; i++) {
+			System.out.println(ap[i].STARTTIME + " - " + ap[i].ENDTIME + " " + ap[i].PATIENTID);
+		}		
 	}
 
 }
