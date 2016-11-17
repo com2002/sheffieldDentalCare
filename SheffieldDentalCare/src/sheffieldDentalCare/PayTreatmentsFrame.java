@@ -91,23 +91,29 @@ public class PayTreatmentsFrame extends JFrame {
 				} 
 				else {
 					appID = (int)appsTable.getValueAt(appsTable.getSelectedRow(), 0);
-					//TODO spit out a confirmation dialog box
-					int p = JOptionPane.showConfirmDialog(null, "<html>Are you sure you wish to set all outstanding <br>treatments in the selected appointment as paid?</html>", "Confirmation", JOptionPane.YES_NO_OPTION);
-					if (p==0) {
-						Checkout checkout = new Checkout();
-						try {
-							checkout.payAppointment(appID);
-							drawAppsTable();
-						} catch (SQLException e1) {
-							JOptionPane.showMessageDialog(null, "Server error!", "Error", JOptionPane.ERROR_MESSAGE);
-							e1.printStackTrace();
+					if (Integer.valueOf(appsTable.getValueAt(appsTable.getSelectedRow(), 3).toString()) == 0) {
+								JOptionPane.showMessageDialog(null, "<html>The treatments performed in the selected <br>appointment have already been paid.</html>", "Appointment Paid", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						int p = JOptionPane.showConfirmDialog(null, "<html>Are you sure you wish to set all outstanding <br>treatments in the selected appointment as paid?</html>", "Confirmation", JOptionPane.YES_NO_OPTION);
+						if (p==0) {
+							Checkout checkout = new Checkout();
+							try {						
+								checkout.payAppointment(appID);
+								drawAppsTable();
+								JOptionPane.showMessageDialog(null, "<html>The treatments performed in the "
+										+ "selected <br>appointment have now been paid.</html>", 
+										"Appointment Paid", JOptionPane.INFORMATION_MESSAGE);
+							}
+						 	catch (SQLException e1) {
+						 		JOptionPane.showMessageDialog(null, "Server error!", "Error", JOptionPane.ERROR_MESSAGE);
+						 		e1.printStackTrace();
+						 	}
+						}
+						else {
+							System.out.println("No selected");
 						}
 					}
-					else {System.out.println("No selected");}
-					//if user selects Yes continue to pay the appointment off. then redraw the appsTable
-					//if user closes or selects cancel, close window and do nothing.
 				}
-				
 			}
 		});
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
@@ -192,5 +198,24 @@ public class PayTreatmentsFrame extends JFrame {
 		catch (SQLException ex){
 			ex.printStackTrace();
 		}	
+	}
+	
+	private void drawTreatmentsTable() {
+		Connection con = null;
+		Statement stmt = null;
+		try {
+		con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+				DBController.DB_User, DBController.DB_Password);
+		stmt = con.createStatement();
+		//TODO PULL DATA FOR THE APPOINTMENTID
+		//ResultSet rs = 
+		
+	//	tmentTable.setModel(MyDbConverter.resultSetToMyTableModel(rs)));
+		if (stmt != null) stmt.close();
+		if (con != null) con.close();
+		}
+		catch (SQLException ex){
+			ex.printStackTrace();
+		}
 	}
 }
