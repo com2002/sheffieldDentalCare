@@ -2,14 +2,15 @@ package sheffieldDentalCare;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Date;
 import javax.swing.*;
 
 public class FindPatientPanel extends JPanel {
 	private boolean searchPerformed = false;
 	private String firstName = null;
 	private String surname = null;
-	private String dOB = null;
+	private String dOBDay = null;
+	private String dOBMonth = null;
+	private String dOBYear = null;
 	private int houseNo = 0;
 	private String postcode = null;
 	private String houseNoString = null;
@@ -31,10 +32,17 @@ public class FindPatientPanel extends JPanel {
 		
 		// DoB input panel
 		JPanel dOBPanel = new JPanel();
-		JTextField dOBField = new JTextField(20);
-		dOBPanel.add(new JLabel("Date of Birth:", JLabel.RIGHT));
-		dOBPanel.add(dOBField);
-		
+		JTextField dOBDayField = new JTextField(2);
+		JTextField dOBMonthField = new JTextField(2);
+		JTextField dOBYearField = new JTextField(4);
+		dOBPanel.add(new JLabel("Date of Birth: ", JLabel.RIGHT));
+		dOBPanel.add(new JLabel("Day", JLabel.RIGHT));
+		dOBPanel.add(dOBDayField);
+		dOBPanel.add(new JLabel("Month", JLabel.RIGHT));
+		dOBPanel.add(dOBMonthField);
+		dOBPanel.add(new JLabel("Year", JLabel.RIGHT));
+		dOBPanel.add(dOBYearField);
+
 		// house number input panel
 		JPanel houseNoPanel = new JPanel();
 		JTextField houseNoField = new JTextField(20);
@@ -51,22 +59,28 @@ public class FindPatientPanel extends JPanel {
 		JButton findPatientButton = new JButton("Find Patient");
 		findPatientButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Button Clicked");
-				
+				// get patient details from input fields
 				firstName = firstNameField.getText();
 				surname = surnameField.getText();
-				dOB = dOBField.getText();
+				dOBDay = dOBDayField.getText();
+				dOBMonth = dOBMonthField.getText();
+				dOBYear = dOBYearField.getText();
 				houseNoString = houseNoField.getText();
 				postcode = postcodeField.getText();
 				
-				String[] textFields = {firstName, surname, dOB, houseNoString, postcode};
-				
-				if (allFieldsInput(textFields) && validDOB(dOB) && validHouseNo(houseNoString)) {
-					System.out.println("Search Accepted");
+				// check that all the fields contain valid data for the specific details
+				String[] textFields = {firstName, surname, dOBDay, dOBMonth, dOBYear, houseNoString, postcode};
+				if (allFieldsInput(textFields) && validDOB(dOBDay, dOBMonth, dOBYear) 
+						&& validHouseNo(houseNoString)) {
+					if (dOBDay.length()==1) {
+						dOBDay="0"+dOBDay;
+					}
+					if (dOBMonth.length()==1) {
+						dOBMonth="0"+dOBMonth;
+					}
 					searchPerformed = true;
 					patientPanel.updatePanel();
 				}
-				
 			}
 		});
 		
@@ -77,31 +91,58 @@ public class FindPatientPanel extends JPanel {
 		add(houseNoPanel);
 		add(postcodePanel);
 		add(findPatientButton);
-		
 	}
 	
 	private boolean allFieldsInput(String[] textFields) {
-		boolean fieldsInput = true;
 		for (int x=0; x<textFields.length; x++) {
 			if ((textFields[x]).isEmpty()) {
-				fieldsInput = false;
+				return false;
 			}
 		}
-		return fieldsInput;
-	}
-	
-	private boolean validDOB(String dOB) {
 		return true;
 	}
 	
+	// check that the given date of birth is valid 
+	private boolean validDOB(String day, String month, String year) {
+		int dayInt = 0;
+		int monthInt = 0;
+		int yearInt = 0;
+		// check day input is an int
+		try {
+			dayInt = Integer.parseInt(day);
+		} catch (NumberFormatException f) {
+			System.out.println("Invalid day");
+			return false;
+		}
+		// check month input is an int
+		try {
+			monthInt = Integer.parseInt(month);
+		} catch (NumberFormatException f) {
+			System.out.println("Invalid month");
+			return false;
+		}
+		// check year input is an int
+		try {
+			yearInt = Integer.parseInt(year);
+		} catch (NumberFormatException f) {
+			System.out.println("Invalid year");
+			return false;
+		}
+		if (dayInt<1 || dayInt>31 || monthInt<1 || monthInt>12 || yearInt<1900 || yearInt>2016) {
+			System.out.println("Invalid date input");
+			return false;
+		}
+		return true;
+	}
+	
+	// check that the house number given is an int
 	private boolean validHouseNo(String houseNoString) {
-		boolean validHouseNo = true;
 		try {
 			houseNo = Integer.parseInt(houseNoString);
 		} catch (NumberFormatException f) {
-			validHouseNo = false;
+			return false;
 		}
-		return validHouseNo;
+		return true;
 	}
 	
 	public boolean searchPerformed() {
@@ -117,6 +158,7 @@ public class FindPatientPanel extends JPanel {
 	}
 	
 	public String getDOB() {
+		String dOB = dOBYear+"-"+dOBMonth+"-"+dOBDay;
 		return dOB;
 	}
 	
