@@ -1,6 +1,9 @@
 package sheffieldDentalCare;
 
 import java.sql.*;
+import java.util.ArrayList;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 public class Registrar {
 	
@@ -227,6 +230,35 @@ public class Registrar {
 			if (con != null) con.close();
 		}
 		return id;
+	}
+	
+	public ArrayList<String> getForAllPatientsSomeDetails() throws SQLException {
+		ArrayList<String> data = new ArrayList<String>();
+		Connection con = null;
+		Statement stmt = null;
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
+			stmt = con.createStatement();
+			String query = "SELECT Patients.patientID, Patients.firstName, Patients.surName, "
+					     + "Patients.dateOb, Address.houseNumber, Address.postCode "
+					     + "FROM Patients, Address "
+					     + "WHERE Patients.addressID = Address.addressID;";
+			
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				data.add(Integer.toString(rs.getInt(1)) + ": " + rs.getString(2) + " " + rs.getString(3)
+				        + ", " + rs.getString(4) + ", " + rs.getInt(5) + ", " + rs.getString(6));
+			}
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
+		}
+		return data;
 		}
 	
 	//test
@@ -249,6 +281,12 @@ public class Registrar {
 		//System.out.println(reg.getAddressID(4, "RH7 8AJ"));
 		
 		//get a patients ID by their name, dob, housenumber and postcode
-		System.out.println(reg.getPatientID("harry", "potter", "1980-07-31", reg.getAddressID(4, "rh7 8aj")));
+		//System.out.println(reg.getPatientID("harry", "potter", "1980-07-31", reg.getAddressID(4, "rh7 8aj")));
+		
+		ArrayList<String> data = new ArrayList<String>();
+		data = reg.getForAllPatientsSomeDetails();
+		for (int i = 0; i < data.size(); i++) {
+			System.out.println(data.get(i));
+		}	
 	}
 }
