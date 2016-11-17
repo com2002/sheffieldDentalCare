@@ -1,5 +1,6 @@
 /*************************************************************************************************
- * Base
+ * Based on rs2xml.jar's DbUtils' source code (Edited to suit my requirements)
+ * rs2xml.jar is available here: https://sourceforge.net/projects/finalangelsanddemons/
  *************************************************************************************************/
 package sheffieldDentalCare;
 
