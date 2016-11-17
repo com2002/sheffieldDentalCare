@@ -19,6 +19,7 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 	private DefaultTableModel tblModel;
 	private JScrollPane scrollPane;
 	private WeekViewAppointments weekView;
+	private DayViewAppointments dayView;
 	
 	public ViewAppointmentsPanel(String vt, String cf) {
 		viewType = vt;
@@ -38,6 +39,12 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 			weekView = new WeekViewAppointments(calendarFor);
 			selectionPanel = weekView.getSelectionPanel();
 			tblModel = weekView.getTblModel();
+			tbl = new JTable(tblModel);
+			scrollPane = new JScrollPane(tbl);
+		} else {
+			dayView = new DayViewAppointments(calendarFor);
+			selectionPanel = dayView.getSelectionPanel();
+			tblModel = dayView.getTblModel();
 			tbl = new JTable(tblModel);
 			scrollPane = new JScrollPane(tbl);
 		}
@@ -78,16 +85,24 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 					.addComponent(scrollPane)
 				)
 		);
-		
-		weekView.viewBtn.addActionListener(new ViewBtnHandler());
+		if (viewType == "Week") {
+			weekView.viewBtn.addActionListener(new ViewBtnHandler());
+		} else {
+			dayView.viewBtn.addActionListener(new ViewBtnHandler());
+		}
 	}
 	
 	// Event handler for drop down list for weeks
 	private class ViewBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Selection options changed");
-			weekView.makeTbl();
-			tblModel = weekView.getTblModel();
+			if (viewType == "Week") {
+				weekView.makeTbl();
+				tblModel = weekView.getTblModel();
+			} else {
+				dayView.makeTbl();
+				tblModel = dayView.getTblModel();
+			}
 			tbl.setModel(tblModel);
 			tbl.invalidate();
 			invalidate();
