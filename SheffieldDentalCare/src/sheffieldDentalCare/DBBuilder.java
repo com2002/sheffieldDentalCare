@@ -120,8 +120,11 @@ public class DBBuilder {
 		
 		// Appointments
 		String q12 = "INSERT INTO Appointments(patientID, pHygienist,date, startTime, endTime)"
-				+ "VALUES(1, false, '2016-11-15','10:00', '11:00'),(2, true, '2016-11-15','9:00', '9:20'),(3, true, '2016-11-15','9:20', '9:40');";
-		
+				+ "VALUES(1, false, '2016-11-8','15:00', '16:00'),"
+				+ "(1, false, '2016-11-15','10:00', '11:00'),"
+				+ "(1, true, '2016-11-10','10:20', '10:40'),"
+				+ "(2, true, '2016-11-15','9:00', '9:20'),"
+				+ "(3, true, '2016-11-15','9:20', '9:40');";
 		int rowsUpdated = 0;
 		
 		try {
