@@ -23,10 +23,10 @@ public class PartnerPanel extends JPanel implements Panel {
 		// Depending on current user, output their calendar
 		if (MainFrame.USER_TYPE == "Dentist") {
 			// Created as week view for now for testing purposes
-			appointmentsPanel = new ViewAppointmentsPanel("Week", "Dentist");
+			appointmentsPanel = new ViewAppointmentsPanel("Day", "Dentist");
 		} else {
 			// Created as week view for now for testing purposes
-			appointmentsPanel = new ViewAppointmentsPanel("Week", "Hygienist");
+			appointmentsPanel = new ViewAppointmentsPanel("Day", "Hygienist");
 		}
 		// Add panels to split pane
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, checkoutPanel, appointmentsPanel);
