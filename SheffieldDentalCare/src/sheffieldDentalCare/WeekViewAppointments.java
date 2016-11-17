@@ -26,9 +26,11 @@ public class WeekViewAppointments extends ViewAppointments {
 	private JRadioButton allPatientsRBtn = new JRadioButton("All Patients");
 	private JRadioButton singlePatientRBtn = new JRadioButton("Single Patient");
 	public JButton viewBtn = new JButton("View");
+	private ArrayList<String> patients = new ArrayList<String>();
 	
 	public WeekViewAppointments(String cf) {
 		calendarFor = cf;
+		setPatients();
 		makeSelectionPanel();
 		makeTbl();
 	}
@@ -46,17 +48,9 @@ public class WeekViewAppointments extends ViewAppointments {
 		// Set patients drop down list as disabled by default
 		patientsCbox.setEnabled(false);
 		// Populate drop down list with all patients
-		Registrar reg = new Registrar();
-		ArrayList<String> data = new ArrayList<String>();
-		try {
-			data = reg.getForAllPatientsSomeDetails();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for (int i = 0; i < data.size(); i++) {
-			patientsCbox.addItem(data.get(i));
-			System.out.println(data.get(i));
+		for (int i = 0; i < patients.size(); i++) {
+			patientsCbox.addItem(patients.get(i));
+			System.out.println(patients.get(i));
 		}
 		// Populate drop down list with start date of each week in the current year
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -176,7 +170,7 @@ public class WeekViewAppointments extends ViewAppointments {
 		}
 		int patientID = 0;
 		if (singlePatientRBtn.isSelected()) {
-			patientID = getPatientID();
+			patientID = getPatientID(patientsCbox.getSelectedItem().toString());
 		}
 		for (int i = 0; i < 27; i++) {
 			for (int j = 0; j < 6; j++) {
@@ -208,7 +202,13 @@ public class WeekViewAppointments extends ViewAppointments {
 						}
 					} else {
 						if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal2.getTime()))) {
-							data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + " PatientID: " + appPlot[k].PATIENTID;
+							String patient = null;
+							for (int l = 0; l < patients.size(); l++) {
+								if (appPlot[k].PATIENTID == getPatientID(patients.get(l))) {
+									patient = patients.get(l);
+								}
+							}
+							data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + ": " + patient;
 						}
 					}
 				}
@@ -229,14 +229,23 @@ public class WeekViewAppointments extends ViewAppointments {
 		return Integer.parseInt(weekNo);
 	}
 	
-	private int getPatientID() {
-		// Get week number from drop down list
-		String patient = patientsCbox.getSelectedItem().toString();
+	private int getPatientID(String p) {
+		String patient = p;
 		int patientID = 0;
 		int indexOfColon = patient.indexOf(":");
 		patientID = Integer.parseInt(patient.substring(0, indexOfColon));
 		System.out.println(patientID);
 		return patientID;
+	}
+	
+	private void setPatients() {
+		Registrar reg = new Registrar();
+		try {
+			patients = reg.getForAllPatientsSomeDetails();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	// Event handler for radio buttons
