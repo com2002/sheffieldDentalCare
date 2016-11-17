@@ -130,7 +130,7 @@ public class DBBuilder {
 				+ "(3, true, '2016-11-15','9:20', '9:40');";
 		
 		// TreatmentsPerformed
-		String q13 = "INSERT INTO TreatmentsPerformed VALUES(1, 'hygVisit', 1, 0),(1,'amalF', 0, 0),(2,'resinF', 0, 0);";
+		String q13 = "INSERT INTO TreatmentsPerformed VALUES(1, 'hygVisit', 0, 0),(1,'amalF', 1, 1),(2,'resinF', 0, 0);";
 		int rowsUpdated = 0;
 		
 		try {

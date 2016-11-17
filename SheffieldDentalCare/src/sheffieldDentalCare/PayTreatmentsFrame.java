@@ -78,7 +78,7 @@ public class PayTreatmentsFrame extends JFrame {
 					appID = (int)appsTable.getValueAt(appsTable.getSelectedRow(), 0);
 					lblAppointmentid.setText("AppointmentID: "+Integer.toString(appID));
 					System.out.println(appID);
-					//TODO Load the treatments into the treatment table
+					drawTreatmentsTable();
 				}
 			}
 		});
@@ -100,6 +100,7 @@ public class PayTreatmentsFrame extends JFrame {
 							try {						
 								checkout.payAppointment(appID);
 								drawAppsTable();
+								drawTreatmentsTable();
 								JOptionPane.showMessageDialog(null, "<html>The treatments performed in the "
 										+ "selected <br>appointment have now been paid.</html>", 
 										"Appointment Paid", JOptionPane.INFORMATION_MESSAGE);
@@ -108,6 +109,46 @@ public class PayTreatmentsFrame extends JFrame {
 						 		JOptionPane.showMessageDialog(null, "Server error!", "Error", JOptionPane.ERROR_MESSAGE);
 						 		e1.printStackTrace();
 						 	}
+						}
+						else {
+							System.out.println("No selected");
+						}
+					}
+				}
+			}
+		});
+		
+		JButton btnPaySelectedTreatment = new JButton("Pay selected Treatment");
+		btnPaySelectedTreatment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+				//Get treatment name and appointmentID
+				//Change paid to true for this treatment performed.
+				if (tmentTable.getSelectedRow() < 0) {
+					System.out.println("no row selected");
+				} 
+				else {
+					boolean tmentPaid = (boolean)tmentTable.getValueAt(tmentTable.getSelectedRow(), 3);
+					if (tmentPaid) {
+						JOptionPane.showMessageDialog(null, "<html>This treatment has already been paid.</html>", "Treatment Paid", JOptionPane.INFORMATION_MESSAGE);
+					}
+					else {
+						String tmentName = (String)tmentTable.getValueAt(tmentTable.getSelectedRow(), 0);					
+						System.out.println(tmentName);
+						int p = JOptionPane.showConfirmDialog(null, "<html>Are you sure you wish to set this treatment as paid?</html>", "Confirmation", JOptionPane.YES_NO_OPTION);
+						if (p==0) {
+							Checkout checkout = new Checkout();
+							try {						
+								checkout.payTreatment(appID,tmentName);
+								drawTreatmentsTable();
+								drawAppsTable();
+								JOptionPane.showMessageDialog(null, "<html>The treatment selected has now been paid.</html>", 
+										"Appointment Paid", JOptionPane.INFORMATION_MESSAGE);
+							}
+							catch (SQLException e1) {
+								JOptionPane.showMessageDialog(null, "Server error!", "Error", JOptionPane.ERROR_MESSAGE);
+								e1.printStackTrace();
+							}
 						}
 						else {
 							System.out.println("No selected");
@@ -133,6 +174,7 @@ public class PayTreatmentsFrame extends JFrame {
 							.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 655, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnPaySelectedTreatment)
 								.addComponent(btnLoadSelApp)
 								.addComponent(lblAppointmentid, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE))))
 					.addContainerGap(26, Short.MAX_VALUE))
@@ -147,25 +189,26 @@ public class PayTreatmentsFrame extends JFrame {
 							.addComponent(lblPatientid, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
 							.addGap(83)
 							.addComponent(btnPayApp)))
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblAppointmentid, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
 							.addGap(5)
-							.addComponent(btnLoadSelApp))))
+							.addComponent(btnLoadSelApp)
+							.addGap(10)
+							.addComponent(btnPaySelectedTreatment))))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(52)
 					.addComponent(btnLoadData, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(453, Short.MAX_VALUE))
+					.addContainerGap(446, Short.MAX_VALUE))
 		);
 		
 		tmentTable = new JTable();
 		tmentTable.getTableHeader().setReorderingAllowed(false);
+		tmentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane_1.setViewportView(tmentTable);
 		tmentTable.setFillsViewportHeight(true);
-		tmentTable.setColumnSelectionAllowed(true);
-		tmentTable.setCellSelectionEnabled(true);
-		scrollPane_1.setColumnHeaderView(tmentTable);
 		
 		appsTable = new JTable();
 		appsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -207,10 +250,11 @@ public class PayTreatmentsFrame extends JFrame {
 		con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 				DBController.DB_User, DBController.DB_Password);
 		stmt = con.createStatement();
-		//TODO PULL DATA FOR THE APPOINTMENTID
-		//ResultSet rs = 
 		
-	//	tmentTable.setModel(MyDbConverter.resultSetToMyTableModel(rs)));
+		ResultSet rs = stmt.executeQuery("SELECT treatmentName as TreatmentName, cost as Cost, paidByPlan as PaidByHealthcarePlan, paid as PaidFor FROM "
+				+ "(SELECT * from TreatmentsPerformed Natural JOIN Treatments WHERE appointmentID = "+appID+") as als;");
+		
+		tmentTable.setModel(MyDbConverter.resultSetToMyTableModel(rs));
 		if (stmt != null) stmt.close();
 		if (con != null) con.close();
 		}
