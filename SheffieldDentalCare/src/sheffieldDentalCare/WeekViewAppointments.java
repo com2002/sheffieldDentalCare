@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.ButtonGroup;
@@ -44,6 +45,19 @@ public class WeekViewAppointments extends ViewAppointments {
 		rBtnGroup.add(singlePatientRBtn);
 		// Set patients drop down list as disabled by default
 		patientsCbox.setEnabled(false);
+		// Populate drop down list with all patients
+		Registrar reg = new Registrar();
+		ArrayList<String> data = new ArrayList<String>();
+		try {
+			data = reg.getForAllPatientsSomeDetails();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (int i = 0; i < data.size(); i++) {
+			patientsCbox.addItem(data.get(i));
+			System.out.println(data.get(i));
+		}
 		// Populate drop down list with start date of each week in the current year
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		Calendar cal = Calendar.getInstance();
@@ -120,8 +134,8 @@ public class WeekViewAppointments extends ViewAppointments {
 	}
 
 	public void makeTbl() {
-		DefaultTableModel tblModel = null;
 		int weekNo = getWeekNo();
+		int patientID = getPatientID();
 		// Set column names as dates starting from week selected
 		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
 		Calendar cal = Calendar.getInstance();
@@ -133,76 +147,6 @@ public class WeekViewAppointments extends ViewAppointments {
 			cols[i] = dateFormat.format(cal.getTime());
 			cal.add(Calendar.DATE, 1);
 		}
-		if (calendarFor == "Dentist") {
-			tblModel = setDentistTblModel(cols);
-		} else {
-			tblModel = setHygienistTblModel(cols);
-		}
-		// Add data and column names to a table model
-		setTblModel(tblModel);
-	}
-	
-	private DefaultTableModel setDentistTblModel(String[] cols) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
-		// Set up times
-		String strTime = "09:00";
-		Date startTime = null;
-		try {
-			startTime = new SimpleDateFormat("HH:mm").parse(strTime);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		Calendar cal2 = Calendar.getInstance();
-		cal2.setTime(startTime);
-		Object[][] data = new Object[9][6];
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		// Date format from database
-		SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		// Get appointments
-		DPCalendar dpCal = new DPCalendar();
-		AppointmentPlot[] appPlot = null;
-		try {
-			String weekCommencingDate = dbDateFormat.format(dateFormat.parse(cols[1]));
-			//System.out.println(weekCommencingDate);
-			appPlot = dpCal.getAppointments(false, weekCommencingDate);
-		} catch (SQLException | ParseException e) {
-			e.printStackTrace();
-		}
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 6; j++) {
-				if (j == 0) {
-					data[i][j] = timeFormat.format(cal2.getTime());
-				}
-				for (int k = 0; k < appPlot.length; k++)  {
-					// Wanted date format
-					String date = null;
-					Date time = null;
-					try {
-						date = dateFormat.format(dbDateFormat.parse(appPlot[k].DATE));
-						time = new SimpleDateFormat("HH:mm").parse(appPlot[k].STARTTIME);
-						Calendar cal3 = Calendar.getInstance();
-						cal3.setTime(time);
-						System.out.println(timeFormat.format(cal3.getTime()));
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					System.out.println("DB Date: " + date);
-					System.out.println("DB Time: " + appPlot[k].STARTTIME);
-					System.out.println("Col Date: " + cols[j]);
-					System.out.println("Row Time: " + timeFormat.format(cal2.getTime()));
-					System.out.println("");
-					if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal2.getTime()))) {
-						data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + " PatientID: " + appPlot[k].PATIENTID;
-					}
-				}
-			}
-			cal2.add(Calendar.HOUR, 1);
-		}
-		return new DefaultTableModel(data, cols);
-	}
-	private DefaultTableModel setHygienistTblModel(String[] cols) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
 		// Set up times
 		String strTime = "09:00";
 		Date startTime = null;
@@ -223,7 +167,11 @@ public class WeekViewAppointments extends ViewAppointments {
 		try {
 			String weekCommencingDate = dbDateFormat.format(dateFormat.parse(cols[1]));
 			//System.out.println(weekCommencingDate);
-			appPlot = dpCal.getAppointments(true, weekCommencingDate);
+			if (calendarFor == "Hygienist") {
+				appPlot = dpCal.getAppointments(true, weekCommencingDate);
+			} else {
+				appPlot = dpCal.getAppointments(false, weekCommencingDate);
+			}
 		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -258,8 +206,10 @@ public class WeekViewAppointments extends ViewAppointments {
 			}
 			cal2.add(Calendar.MINUTE, 20);
 		}
-		return new DefaultTableModel(data, cols);
+		// Add data and column names to a table model
+		setTblModel(new DefaultTableModel(data, cols));
 	}
+	
 	private int getWeekNo() {
 		// Get week number from drop down list
 		String week = weekCbox.getSelectedItem().toString();
@@ -270,11 +220,14 @@ public class WeekViewAppointments extends ViewAppointments {
 		return Integer.parseInt(weekNo);
 	}
 	
-	private void setSelectionCboxBySinglePatient() {
-		// Populate drop down list with all patients
-		patientsCbox.setEnabled(true);
-		// For testing purposes
-		patientsCbox.addItem("Steven Universe");
+	private int getPatientID() {
+		// Get week number from drop down list
+		String patient = patientsCbox.getSelectedItem().toString();
+		int patientID = 0;
+		int indexOfColon = patient.indexOf(":");
+		patientID = Integer.parseInt(patient.substring(0, indexOfColon));
+		System.out.println(patientID);
+		return patientID;
 	}
 	
 	// Event handler for radio buttons
@@ -283,7 +236,7 @@ public class WeekViewAppointments extends ViewAppointments {
 			System.out.println("Radio button changed");
 			System.out.println(e.getActionCommand());
 			if (e.getActionCommand() == "Single Patient") {
-				setSelectionCboxBySinglePatient();
+				patientsCbox.setEnabled(true);
 				// Show only all of a patient's appointment for that week
 			} else {
 				patientsCbox.setEnabled(false);
