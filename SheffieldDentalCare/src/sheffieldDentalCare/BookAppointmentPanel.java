@@ -1,0 +1,191 @@
+package sheffieldDentalCare;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerModel;
+
+@SuppressWarnings("serial")
+public class BookAppointmentPanel extends JPanel {
+	private JLabel titleLbl = new JLabel("Book Appointment");
+	private JLabel withLbl = new JLabel("With");
+	private JRadioButton dentistRBtn = new JRadioButton("Dentist");
+	private JComboBox<String> dentistCbox = new JComboBox<String>();
+	private JRadioButton hygienistRBtn = new JRadioButton("Hygienist");
+	private JLabel dateLbl = new JLabel("Date");
+	private SpinnerModel dateModel;
+	private JSpinner dateSpinner = new JSpinner();
+	private JLabel startTimeLbl = new JLabel("Start Time");
+	private JComboBox<String> startTimeCbox = new JComboBox<String>();
+	private JButton bookBtn = new JButton("Book"); 
+	
+	public BookAppointmentPanel() {
+		initComponents();
+		addComponents();
+	}
+	
+	private void initComponents() {
+		// Set dentist radio button by default as selected
+		dentistRBtn.setSelected(true);
+		dentistRBtn.setActionCommand("Dentist");
+		hygienistRBtn.setActionCommand("Hygienist");
+		// Create radio button group
+		ButtonGroup rBtnGroup = new ButtonGroup();
+		rBtnGroup.add(dentistRBtn);
+		rBtnGroup.add(hygienistRBtn);
+		// Add types of appointments for dentist drop down list
+		dentistCbox.addItem("Check-Up (20 minutes)");
+		dentistCbox.addItem("Treatment (60 minutes)");
+		// Set up date selector
+		dateModel = new SpinnerDateModel();
+		dateSpinner = new JSpinner(dateModel);
+		JSpinner.DateEditor de = new JSpinner.DateEditor(dateSpinner, "E dd-MM-yyyy");
+		dateSpinner.setEditor(de);
+		// Add times to start time drop down list
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+		String strTime = "09:00";
+		Date startTime = null;
+		try {
+			startTime = new SimpleDateFormat("HH:mm").parse(strTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(startTime);
+		for (int i = 0; i < 27; i++) {
+			startTimeCbox.addItem(timeFormat.format(cal.getTime()));
+			cal.add(Calendar.MINUTE, 20);
+		}
+	}
+	
+	private void addComponents() {
+		GroupLayout layout = new GroupLayout(this);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		this.setLayout(layout);
+
+		// Add components to layout
+		// Position components in the horizontal
+		layout.setHorizontalGroup(
+			layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(titleLbl)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(withLbl)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(dentistRBtn)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(dentistCbox)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(hygienistRBtn)
+					)
+				)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(dateLbl)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(dateSpinner)
+					)
+				)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(startTimeLbl)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(startTimeCbox)
+					)
+					)
+				.addComponent(bookBtn)
+				)
+		);
+				
+		// Position components in the vertical
+		layout.setVerticalGroup(
+			layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(titleLbl)
+				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(withLbl)
+					.addComponent(dentistRBtn)
+					.addComponent(dentistCbox)
+					.addComponent(hygienistRBtn)
+				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(dateLbl)
+					.addComponent(dateSpinner)
+				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(startTimeLbl)
+					.addComponent(startTimeCbox)
+				)
+				.addComponent(bookBtn)
+		);
+		dentistRBtn.addActionListener(new RBtnHandler());
+		hygienistRBtn.addActionListener(new RBtnHandler());
+		bookBtn.addActionListener(new BookBtnHandler());
+	}
+	
+	// Event handler for radio buttons
+	private class RBtnHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Radio button changed");
+			System.out.println(e.getActionCommand());
+			if (e.getActionCommand() == "Hygienist") {
+				dentistCbox.setEnabled(false);
+			} else {
+				dentistCbox.setEnabled(true);
+			}
+		}
+	}
+	
+	// Event handler for radio buttons
+	private class BookBtnHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Book button clicked");
+			// Confirm with user booking of appointment
+			int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to this appointment?", "Confirm Appointment", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			System.out.println(n);
+			if (n == 0) {
+				System.out.println("Yes");
+			} else {
+				System.out.println("No");
+			}
+		}
+	}
+	
+	// Test panel
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("Test Book Appoinment");
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Dimension screenDimensions = toolkit.getScreenSize();
+		frame.setSize(screenDimensions.width/2, screenDimensions.height/2);
+		frame.setLocationByPlatform(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		BookAppointmentPanel bookApp = new BookAppointmentPanel();
+		frame.setContentPane(bookApp);
+		frame.setVisible(true);
+	}
+
+}
