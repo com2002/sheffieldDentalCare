@@ -135,7 +135,6 @@ public class WeekViewAppointments extends ViewAppointments {
 
 	public void makeTbl() {
 		int weekNo = getWeekNo();
-		int patientID = getPatientID();
 		// Set column names as dates starting from week selected
 		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
 		Calendar cal = Calendar.getInstance();
@@ -175,6 +174,10 @@ public class WeekViewAppointments extends ViewAppointments {
 		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
+		int patientID = 0;
+		if (singlePatientRBtn.isSelected()) {
+			patientID = getPatientID();
+		}
 		for (int i = 0; i < 27; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (j == 0) {
@@ -199,8 +202,14 @@ public class WeekViewAppointments extends ViewAppointments {
 					System.out.println("Col Date: " + cols[j]);
 					System.out.println("Row Time: " + timeFormat.format(cal2.getTime()));
 					System.out.println("");
-					if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal2.getTime()))) {
-						data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + " PatientID: " + appPlot[k].PATIENTID;
+					if (singlePatientRBtn.isSelected()) {
+						if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal2.getTime())) && patientID == appPlot[k].PATIENTID) {
+							data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME;
+						}
+					} else {
+						if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal2.getTime()))) {
+							data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + " PatientID: " + appPlot[k].PATIENTID;
+						}
 					}
 				}
 			}
