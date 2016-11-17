@@ -13,9 +13,8 @@ public class FindPatientPanel extends JPanel {
 	private int houseNo = 0;
 	private String postcode = null;
 	private String houseNoString = null;
-	private PatientDetailsPanel resultsPanel;
 	
-	public FindPatientPanel() {
+	public FindPatientPanel(PatientPanel patientPanel) {
 		setLayout(new GridLayout(0,1));
 	
 		// first name input panel
@@ -65,7 +64,7 @@ public class FindPatientPanel extends JPanel {
 				if (allFieldsInput(textFields) && validDOB(dOB) && validHouseNo(houseNoString)) {
 					System.out.println("Search Accepted");
 					searchPerformed = true;
-					updatePanel();
+					patientPanel.updatePanel();
 				}
 				
 			}
@@ -79,18 +78,6 @@ public class FindPatientPanel extends JPanel {
 		add(postcodePanel);
 		add(findPatientButton);
 		
-		resultsPanel = new PatientDetailsPanel(searchPerformed, firstName, surname, 
-				dOB, houseNoString, postcode);
-		add(resultsPanel);
-	}
-	
-	private void updatePanel() {
-		this.remove(resultsPanel);
-		resultsPanel = new PatientDetailsPanel(searchPerformed, firstName, surname, 
-				dOB, houseNoString, postcode);
-		this.add(resultsPanel);
-		this.validate();
-		this.repaint();
 	}
 	
 	private boolean allFieldsInput(String[] textFields) {
@@ -119,6 +106,26 @@ public class FindPatientPanel extends JPanel {
 	
 	public boolean searchPerformed() {
 		return searchPerformed;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	
+	public String getSurname() {
+		return surname;
+	}
+	
+	public String getDOB() {
+		return dOB;
+	}
+	
+	public String getHouseNo() {
+		return houseNoString;
+	}
+	
+	public String getPostcode() {
+		return postcode;
 	}
 	
 }
