@@ -66,15 +66,8 @@ public class PayTreatmentsFrame extends JFrame {
 						+ "FROM TreatmentsPerformed NATURAL JOIN Treatments) AS srt "
 						+ "WHERE Appointments.appointmentID = srt.appointmentID AND patientID = "+ patientID +") AS srr GROUP BY appointmentID;");
 				
-				//MyTableModel tm;
-				//tm = (MyTableModel)DbUtils.resultSetToTableModel(rs);
-				
 				appsTable.setModel(MyDbConverter.resultSetToMyTableModel(rs));
 				
-				//Test
-				//rs.next();
-				//System.out.println(rs.getInt(3));
-				////Test end
 				if (stmt != null) stmt.close();
 				if (con != null) con.close();
 				}

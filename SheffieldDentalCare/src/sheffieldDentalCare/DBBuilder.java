@@ -125,6 +125,9 @@ public class DBBuilder {
 				+ "(1, true, '2016-11-10','10:20', '10:40'),"
 				+ "(2, true, '2016-11-15','9:00', '9:20'),"
 				+ "(3, true, '2016-11-15','9:20', '9:40');";
+		
+		// TreatmentsPerformed
+		String q13 = "INSERT INTO TreatmentsPerformed VALUES(1, 'hygVisit', 1),(1,'amalF',0),(2,'resinF',0);";
 		int rowsUpdated = 0;
 		
 		try {
@@ -228,6 +231,15 @@ public class DBBuilder {
 		
 		try {
 			rowsUpdated = dbc.update(q12);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Rows updated: "+rowsUpdated);
+		
+		try {
+			rowsUpdated = dbc.update(q13);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
