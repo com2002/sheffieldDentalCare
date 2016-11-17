@@ -121,6 +121,8 @@ public class DBBuilder {
 		// Appointments
 		String q12 = "INSERT INTO Appointments(patientID, pHygienist,date, startTime, endTime)"
 				+ "VALUES(1, false, '2016-11-8','15:00', '16:00'),"
+				+ "(1, false, '2016-11-14','14:00', '14:20'),"
+				+ "(2, false, '2016-11-14','14:40', '15:00'),"
 				+ "(1, false, '2016-11-15','10:00', '11:00'),"
 				+ "(1, true, '2016-11-10','10:20', '10:40'),"
 				+ "(2, true, '2016-11-15','9:00', '9:20'),"
