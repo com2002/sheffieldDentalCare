@@ -91,7 +91,7 @@ public class DayViewAppointments extends ViewAppointments {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
 		// Set up date
-		Object[][] data = new Object[27][2];
+		Object[][] data = new Object[24][2];
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		// Date format from database
 		SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -108,7 +108,7 @@ public class DayViewAppointments extends ViewAppointments {
 		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i < 24; i++) {
 			for (int j = 0; j < 2; j++) {
 				if (j == 0) {
 					data[i][j] = timeFormat.format(cal.getTime());
