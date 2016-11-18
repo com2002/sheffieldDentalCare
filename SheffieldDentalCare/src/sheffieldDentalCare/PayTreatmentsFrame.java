@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 
+@SuppressWarnings("serial")
 public class PayTreatmentsFrame extends JFrame {
 	private JTable appsTable;
 	public int patientID;
@@ -47,7 +48,7 @@ public class PayTreatmentsFrame extends JFrame {
 	public PayTreatmentsFrame(int patientID) {
 		this.patientID = patientID;
 			
-		setTitle("View/Pay Appointments and Treatments by Patient");
+		setTitle("View/Pay Appointments and Treatments by Patient. Current Patient's ID is: "+patientID);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1010, 602);
 		
@@ -121,9 +122,7 @@ public class PayTreatmentsFrame extends JFrame {
 		JButton btnPaySelectedTreatment = new JButton("Pay selected Treatment");
 		btnPaySelectedTreatment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
-				//Get treatment name and appointmentID
-				//Change paid to true for this treatment performed.
+				
 				if (tmentTable.getSelectedRow() < 0) {
 					System.out.println("no row selected");
 				} 
