@@ -1,3 +1,4 @@
+
 package sheffieldDentalCare;
 
 import java.awt.EventQueue;
@@ -20,7 +21,6 @@ import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 
-@SuppressWarnings("serial")
 public class PayTreatmentsFrame extends JFrame {
 	private JTable appsTable;
 	public int patientID;
@@ -34,7 +34,6 @@ public class PayTreatmentsFrame extends JFrame {
 			public void run() {
 				try {
 					PayTreatmentsFrame frame = new PayTreatmentsFrame(1);
-					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,9 +47,10 @@ public class PayTreatmentsFrame extends JFrame {
 	public PayTreatmentsFrame(int patientID) {
 		this.patientID = patientID;
 			
-		setTitle("View/Pay Appointments and Treatments by Patient. Current Patient's ID is: "+patientID);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("View/Pay Appointments and Treatments by Patient");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1010, 602);
+		setVisible(true);
 		
 		JButton btnLoadData = new JButton("<html>Load Patient's <br>Appointments</html>");
 		btnLoadData.addActionListener(new ActionListener() {
@@ -122,7 +122,9 @@ public class PayTreatmentsFrame extends JFrame {
 		JButton btnPaySelectedTreatment = new JButton("Pay selected Treatment");
 		btnPaySelectedTreatment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				//TODO
+				//Get treatment name and appointmentID
+				//Change paid to true for this treatment performed.
 				if (tmentTable.getSelectedRow() < 0) {
 					System.out.println("no row selected");
 				} 
@@ -262,3 +264,4 @@ public class PayTreatmentsFrame extends JFrame {
 		}
 	}
 }
+

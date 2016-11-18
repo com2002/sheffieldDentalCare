@@ -1,6 +1,8 @@
 package sheffieldDentalCare;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -86,8 +88,23 @@ public class PatientDetailsPanel extends JPanel {
 			JPanel appointmentsActions = new JPanel();
 			appointmentsActions.setLayout(new GridLayout(0,3));
 			JButton bookAppointmentBtn = new JButton("Book");
+			bookAppointmentBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					new BookAppointmentFrame(patientID);
+				}
+			});
 			JButton payAppointmentsBtn = new JButton("Pay");
+			payAppointmentsBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					new PayTreatmentsFrame(patientID);
+				}
+			});
 			JButton cancelAppointmentsBtn = new JButton("Cancel");
+			cancelAppointmentsBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
 			appointmentsActions.add(bookAppointmentBtn);
 			appointmentsActions.add(payAppointmentsBtn);
 			appointmentsActions.add(cancelAppointmentsBtn);
@@ -162,7 +179,25 @@ public class PatientDetailsPanel extends JPanel {
 	}
 	
 	private void displayPlanDetails() {
-		this.add(new JLabel("Healthcare Plan: " + planName, JLabel.LEFT));
+		String planNameString;
+		if (planName==null) {
+			planNameString = "None";
+		}
+		else {
+			switch (planName) {
+        	case "nhsfPlan":  planNameString = "NHS Free Plan";
+        		break;
+        	case "maintPlan":  planNameString = "Maintenance Plan";
+         		break;
+        	case "ohPlan":  planNameString = "Oral Health Plan";
+        		break;
+        	case "drPlan": planNameString = "Dental Repair Plan";
+        		break;
+        	default: planNameString = "None";
+        		break;
+		}
+    }
+		this.add(new JLabel("Healthcare Plan: " + planNameString, JLabel.LEFT));
 		if (planName!=null) {
 			this.add(new JLabel("Check-up Credits Remaining: " + checkupCount, JLabel.LEFT));
 			this.add(new JLabel("Date of Birth:        " + dOB, JLabel.LEFT));
