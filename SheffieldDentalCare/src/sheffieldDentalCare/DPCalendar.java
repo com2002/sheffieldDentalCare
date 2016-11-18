@@ -57,8 +57,16 @@ public class DPCalendar {
 		//check for overlaps
 		return (s1 <= s2 && s2 < e1) || (s2 <= s1 && s1 < e2);
 	}
-	
-	private int addAppointment(int patientID, boolean pHygienist, String date, String startTime, String endTime) throws SQLException {
+	/**
+	 * @param patientID
+	 * @param pHygeinist true for hygienist appointments, false for dentist appointments.
+	 * @param date as a string in the format yyyy-MM-dd
+	 * @param startTime as a string in the format HH:mm
+	 * @param endTime as a string in the format HH:mm
+	 * @return an int of the number of rows added
+	 * @throws SQLException
+	 */
+	public int addAppointment(int patientID, boolean pHygienist, String date, String startTime, String endTime) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
 		int appointmentID = 0;
@@ -84,7 +92,7 @@ public class DPCalendar {
 		return appointmentID;
 	}
 	
-	private int deleteAppointment(int appointmentID) throws SQLException {
+	public int deleteAppointment(int appointmentID) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
 		int count = 0;
@@ -206,8 +214,8 @@ public class DPCalendar {
 		DPCalendar calendar = new DPCalendar();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
 		String date = dateFormat.format(new Date());
-		String startTime = "18:00";
-		String endTime = "18:20";
+		//String startTime = "18:00";
+		//String endTime = "18:20";
 		System.out.println(date);
 		//System.out.println("Appointment ID: " + calendar.addAppointment(2, true, date, startTime, endTime));
 		//int id = calendar.addAppointment(2, true, date, startTime, endTime);
