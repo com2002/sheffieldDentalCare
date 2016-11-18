@@ -150,7 +150,7 @@ public class WeekViewAppointments extends ViewAppointments {
 		}
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setTime(startTime);
-		Object[][] data = new Object[27][6];
+		Object[][] data = new Object[24][6];
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		// Date format from database
 		SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -172,7 +172,7 @@ public class WeekViewAppointments extends ViewAppointments {
 		if (singlePatientRBtn.isSelected()) {
 			patientID = getPatientID(patientsCbox.getSelectedItem().toString());
 		}
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i < 24; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (j == 0) {
 					data[i][j] = timeFormat.format(cal2.getTime());

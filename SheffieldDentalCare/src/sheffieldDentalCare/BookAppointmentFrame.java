@@ -63,7 +63,7 @@ public class BookAppointmentFrame extends JFrame {
 		rBtnGroup.add(hygienistRBtn);
 		// Add types of appointments for dentist drop down list
 		dentistCbox.addItem("Check-Up (20 minutes)");
-		dentistCbox.addItem("Treatment (60 minutes)");
+		dentistCbox.addItem("Treatment (1 hour)");
 		// Set up date selector
 		dateModel = new SpinnerDateModel();
 		dateSpinner = new JSpinner(dateModel);
@@ -206,8 +206,9 @@ public class BookAppointmentFrame extends JFrame {
 				boolean pHygienist = false;
 				// Set end time according to user selection
 				String endTime = null;
-				if (e.getActionCommand() == "Dentist") {
-					if (dentistCbox.getSelectedItem() == "Check-Up (20 minutes)") {
+				if (dentistRBtn.isSelected()) {
+					System.out.println(dentistCbox.getSelectedItem().toString());
+					if (dentistCbox.getSelectedItem().toString() == "Check-Up (20 minutes)") {
 						cal.add(Calendar.MINUTE, 20);
 						endTime = timeFormat.format(cal.getTime());
 					} else {
@@ -229,7 +230,6 @@ public class BookAppointmentFrame extends JFrame {
 					System.out.println(endTime);
 					availability = dpCal.checkAvailability(patientID, pHygienist, strDate, strStartTime, endTime);
 					System.out.println(availability);
-					
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -237,11 +237,27 @@ public class BookAppointmentFrame extends JFrame {
 				if (availability.equals("")) {
 					System.out.println("Available");
 					// Add appointment to database
-					String confirmMsg = "Appointment booked on " + strDate + " between " + strStartTime + " and " + endTime + ".";
-					JOptionPane.showMessageDialog(null, confirmMsg, "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+					int addedRows = 0;
+					try {
+						addedRows = dpCal.addAppointment(patientID, pHygienist, strDate, strStartTime, endTime);
+						System.out.println("Added Rows: " + addedRows);
+					} catch (SQLException e1) {
+						// Output error message
+						JOptionPane.showMessageDialog(null, e1.toString(), "Error - Database", JOptionPane.ERROR_MESSAGE);
+						e1.printStackTrace();
+					} finally {
+						// Output confirmation for user
+						String confirmMsg = null;
+						if (!pHygienist) {
+							confirmMsg = "Appointment booked on " + strDate + " between " + strStartTime + " and " + endTime + " with the dentist.";
+						} else {
+							confirmMsg = "Appointment booked on " + strDate + " between " + strStartTime + " and " + endTime + " with the hygienist.";
+						}
+						JOptionPane.showMessageDialog(null, confirmMsg, "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+					}
 				} else {
 					System.out.println("Not Available");
-					// Output error message
+					// Output error message if not available to book appointment
 					JOptionPane.showMessageDialog(null, availability, "Error - Appointment Clash", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
