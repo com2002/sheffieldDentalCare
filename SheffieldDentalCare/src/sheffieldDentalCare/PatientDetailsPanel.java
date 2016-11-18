@@ -44,11 +44,6 @@ public class PatientDetailsPanel extends JPanel {
 	}
 	
 	private void displayResults() {
-		/*this.add(new JLabel("Results will appear here", JLabel.CENTER));
-		this.add(new JLabel("Name: " + firstName + " " + surname, JLabel.LEFT));
-		this.add(new JLabel("Date of Birth: " + dOB, JLabel.LEFT));
-		this.add(new JLabel("House Number: " + houseNo, JLabel.LEFT));
-		this.add(new JLabel("Postcode: " + postcode, JLabel.LEFT));*/
 		if (addressExists() && patientExists()) {
 			try {
 				getPatientDetails();
@@ -59,6 +54,14 @@ public class PatientDetailsPanel extends JPanel {
 				return;
 			}
 			this.add(new JLabel("Patient found", JLabel.CENTER));
+			this.add(new JLabel("Patient ID: " + patientID, JLabel.LEFT));
+			this.add(new JLabel("Name: " + title + " " + firstName + " " + surname, JLabel.LEFT));
+			this.add(new JLabel("Date of Birth: " + dOB, JLabel.LEFT));
+			this.add(new JLabel("Address: ", JLabel.LEFT));
+			this.add(new JLabel(houseNo + " " + streetName, JLabel.CENTER));
+			this.add(new JLabel("" + district, JLabel.CENTER));
+			this.add(new JLabel("" + city, JLabel.CENTER));
+			this.add(new JLabel("" + postcode, JLabel.CENTER));
 		}
 		else {
 			this.add(new JLabel("Patient not found", JLabel.CENTER));
@@ -106,7 +109,7 @@ public class PatientDetailsPanel extends JPanel {
 					+ "AND p.surName = '" + surname + "' "
 					+ "AND p.dateOB = '" + dOB + "' "
 					+ "AND a.houseNumber = " + houseNo
-					+ " AND a.postCode = '" + postcode + "';");
+					+ " AND a.postCode LIKE '" + postcode + "';");
 			while(res.next()) {
 				title = res.getString(1);
 				phoneNumber = res.getString(2);
