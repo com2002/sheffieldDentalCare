@@ -33,7 +33,6 @@ public class PayTreatmentsFrame extends JFrame {
 			public void run() {
 				try {
 					PayTreatmentsFrame frame = new PayTreatmentsFrame(1);
-					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,8 +47,9 @@ public class PayTreatmentsFrame extends JFrame {
 		this.patientID = patientID;
 			
 		setTitle("View/Pay Appointments and Treatments by Patient");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1010, 602);
+		setVisible(true);
 		
 		JButton btnLoadData = new JButton("<html>Load Patient's <br>Appointments</html>");
 		btnLoadData.addActionListener(new ActionListener() {

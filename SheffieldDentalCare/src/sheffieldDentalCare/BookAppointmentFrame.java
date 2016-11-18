@@ -44,7 +44,7 @@ public class BookAppointmentFrame extends JFrame {
 		Dimension screenDimensions = toolkit.getScreenSize();
 		setSize(screenDimensions.width/2, screenDimensions.height/2);
 		setLocationByPlatform(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		//pack();
 		setVisible(true);
 		patientID = p;
