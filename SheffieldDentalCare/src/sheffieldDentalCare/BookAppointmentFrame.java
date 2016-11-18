@@ -1,9 +1,11 @@
 package sheffieldDentalCare;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,7 +24,8 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 
 @SuppressWarnings("serial")
-public class BookAppointmentPanel extends JPanel {
+public class BookAppointmentFrame extends JFrame {
+	private int patientID = 0;
 	private JLabel titleLbl = new JLabel("Book Appointment");
 	private JLabel withLbl = new JLabel("With");
 	private JRadioButton dentistRBtn = new JRadioButton("Dentist");
@@ -35,7 +38,16 @@ public class BookAppointmentPanel extends JPanel {
 	private JComboBox<String> startTimeCbox = new JComboBox<String>();
 	private JButton bookBtn = new JButton("Book"); 
 	
-	public BookAppointmentPanel() {
+	public BookAppointmentFrame(int p) {
+		setTitle("Book Appointment");
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Dimension screenDimensions = toolkit.getScreenSize();
+		setSize(screenDimensions.width/2, screenDimensions.height/2);
+		setLocationByPlatform(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//pack();
+		setVisible(true);
+		patientID = p;
 		initComponents();
 		addComponents();
 	}
@@ -75,11 +87,14 @@ public class BookAppointmentPanel extends JPanel {
 	}
 	
 	private void addComponents() {
-		GroupLayout layout = new GroupLayout(this);
+		Container contentPane = getContentPane();
+		JPanel panel = new JPanel();
+		GroupLayout layout = new GroupLayout(panel);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		this.setLayout(layout);
-
+		panel.setLayout(layout);
+		contentPane.add(panel);
+		
 		// Add components to layout
 		// Position components in the horizontal
 		layout.setHorizontalGroup(
@@ -142,8 +157,10 @@ public class BookAppointmentPanel extends JPanel {
 				)
 				.addComponent(bookBtn)
 		);
+		// Add event listeners for radio buttons
 		dentistRBtn.addActionListener(new RBtnHandler());
 		hygienistRBtn.addActionListener(new RBtnHandler());
+		// Add event listener for book button
 		bookBtn.addActionListener(new BookBtnHandler());
 	}
 	
@@ -169,23 +186,72 @@ public class BookAppointmentPanel extends JPanel {
 			System.out.println(n);
 			if (n == 0) {
 				System.out.println("Yes");
+				DPCalendar dpCal = new DPCalendar();
+				//SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
+				SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+				Date date =	(Date) dateSpinner.getValue();
+				String strDate = dbDateFormat.format(date);
+				// Calculate end time
+				Calendar cal = Calendar.getInstance();
+				String strStartTime = startTimeCbox.getSelectedItem().toString();
+				Date startTime = null;
+				try {
+					startTime = timeFormat.parse(strStartTime);
+				} catch (ParseException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				cal.setTime(startTime);
+				boolean pHygienist = false;
+				// Set end time according to user selection
+				String endTime = null;
+				if (e.getActionCommand() == "Dentist") {
+					if (dentistCbox.getSelectedItem() == "Check-Up (20 minutes)") {
+						cal.add(Calendar.MINUTE, 20);
+						endTime = timeFormat.format(cal.getTime());
+					} else {
+						cal.add(Calendar.HOUR, 1);
+						endTime = timeFormat.format(cal.getTime());
+					}
+				} else {
+					pHygienist = true;
+					cal.add(Calendar.MINUTE, 20);
+					endTime = timeFormat.format(cal.getTime());
+				}
+				// Check availability
+				String availability = null;
+				try {
+					System.out.println(patientID);
+					System.out.println(pHygienist);
+					System.out.println(strDate);
+					System.out.println(strStartTime);
+					System.out.println(endTime);
+					availability = dpCal.checkAvailability(patientID, pHygienist, strDate, strStartTime, endTime);
+					System.out.println(availability);
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if (availability.equals("")) {
+					System.out.println("Available");
+					// Add appointment to database
+					String confirmMsg = "Appointment booked on " + strDate + " between " + strStartTime + " and " + endTime + ".";
+					JOptionPane.showMessageDialog(null, confirmMsg, "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					System.out.println("Not Available");
+					// Output error message
+					JOptionPane.showMessageDialog(null, availability, "Error - Appointment Clash", JOptionPane.ERROR_MESSAGE);
+				}
 			} else {
 				System.out.println("No");
 			}
 		}
 	}
 	
-	// Test panel
+	// Test frame
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Test Book Appoinment");
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Dimension screenDimensions = toolkit.getScreenSize();
-		frame.setSize(screenDimensions.width/2, screenDimensions.height/2);
-		frame.setLocationByPlatform(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		BookAppointmentPanel bookApp = new BookAppointmentPanel();
-		frame.setContentPane(bookApp);
-		frame.setVisible(true);
+		new BookAppointmentFrame(1);
 	}
-
 }

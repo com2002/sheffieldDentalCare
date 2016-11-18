@@ -48,6 +48,8 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 			tbl = new JTable(tblModel);
 			scrollPane = new JScrollPane(tbl);
 		}
+		tbl.getTableHeader().setReorderingAllowed(false);
+		tbl.setCellSelectionEnabled(false);
 	}
 
 	@Override
