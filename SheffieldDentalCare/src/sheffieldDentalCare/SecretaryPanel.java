@@ -22,6 +22,7 @@ public class SecretaryPanel extends JPanel implements Panel {
 	public void initComponents() {
 		RegisterPanel registerPanel = new RegisterPanel();
 		PatientPanel patientPanel = new PatientPanel();
+		BookAbsencePanel bookAbsencePanel = new BookAbsencePanel();
 		ViewAppointmentsPanel dentistPanel = new ViewAppointmentsPanel("Week", "Dentist");
 		ViewAppointmentsPanel hygienistPanel = new ViewAppointmentsPanel("Week", "Hygienist");
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, patientsTPane, appointmentsTPane);
@@ -30,6 +31,8 @@ public class SecretaryPanel extends JPanel implements Panel {
 		patientsTPane.add("Register New Patient", registerPanel);
 		// Add find patient panel to patientsTPane
 		patientsTPane.add("Find Patient", patientPanel);
+		// Add book absence panel to patientsTPane
+		patientsTPane.add("Book Absence", bookAbsencePanel);
 		// Create tabbed pane for appointments side
 		// Add week to view calendar for dentist to appointmentsTPane
 		appointmentsTPane.add("Dentist", dentistPanel);
