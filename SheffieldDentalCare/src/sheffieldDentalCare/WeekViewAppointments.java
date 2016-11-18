@@ -246,6 +246,7 @@ public class WeekViewAppointments extends ViewAppointments {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		patients.set(0, "1: Absence");
 	}
 	
 	// Event handler for radio buttons
