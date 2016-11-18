@@ -162,8 +162,8 @@ public class FindPatientPanel extends JPanel {
 		return dOB;
 	}
 	
-	public String getHouseNo() {
-		return houseNoString;
+	public int getHouseNo() {
+		return houseNo;
 	}
 	
 	public String getPostcode() {
