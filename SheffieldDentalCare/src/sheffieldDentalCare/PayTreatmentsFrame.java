@@ -1,3 +1,4 @@
+
 package sheffieldDentalCare;
 
 import java.awt.EventQueue;
@@ -263,3 +264,4 @@ public class PayTreatmentsFrame extends JFrame {
 		}
 	}
 }
+
