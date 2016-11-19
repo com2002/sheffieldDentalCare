@@ -80,7 +80,7 @@ public class BookAppointmentFrame extends JFrame {
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i < 24; i++) {
 			startTimeCbox.addItem(timeFormat.format(cal.getTime()));
 			cal.add(Calendar.MINUTE, 20);
 		}
@@ -182,7 +182,7 @@ public class BookAppointmentFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Book button clicked");
 			// Confirm with user booking of appointment
-			int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to this appointment?", "Confirm Appointment", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to book this appointment?", "Confirm Appointment", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			System.out.println(n);
 			if (n == 0) {
 				System.out.println("Yes");
@@ -264,10 +264,5 @@ public class BookAppointmentFrame extends JFrame {
 				System.out.println("No");
 			}
 		}
-	}
-	
-	// Test frame
-	public static void main(String[] args) {
-		new BookAppointmentFrame(1);
 	}
 }

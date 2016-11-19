@@ -105,32 +105,40 @@ public class DBBuilder {
 		// Dummy data
 		// Address
 		String q8 = "INSERT INTO Address(houseNumber, streetName, district, city, postCode)"
-				+ "VALUES(123, 'Sesame Street', 'District', 'London', 'NW1 8AS'),"
+				+ "VALUES(null, null, null, null, null),"
+				+ "(123, 'Sesame Street', 'District', 'London', 'NW1 8AS'),"
 				+ "(120, 'Maple Street', 'District', 'London', 'NW4 2QD');";
 		
+		// Create blank patient for booking absences
+		String q9 = "INSERT INTO Patients(title, firstName, surName, addressID)"
+				+ "VALUES('Blank', 'Blank', 'Blank', 1)";
+		
 		// Patients
-		String q9 = "INSERT INTO Patients(title, firstName, surName, dateOb, phoneNumber, addressID)"
-				+ "VALUES('Mr', 'Chandler', 'Bing', '1969-08-19', '07923415233', 1), "
-				+ "('Mrs', 'Monica', 'Bing', '1964-06-15', '07784563187', 1), "
-				+ "('Mrs', 'Phoebe', 'Buffay-Hannigan', '1964-03-01', '07145632587', 2) ;";
+		String q10 = "INSERT INTO Patients(title, firstName, surName, dateOb, phoneNumber, addressID)"
+				+ "VALUES('Mr', 'Chandler', 'Bing', '1969-08-19', '07923415233', 2), "
+				+ "('Mrs', 'Monica', 'Bing', '1964-06-15', '07784563187', 2), "
+				+ "('Mrs', 'Phoebe', 'Buffay-Hannigan', '1964-03-01', '07145632587', 3) ;";
 		
 		// Healthcare plans
-		String q10 = "INSERT INTO HealthcarePlan Values('nhsfPlan', 2, 2, 6, 0),('maintPlan', 2, 2, 0, 15),('ohPlan', 2, 4, 0, 21),('drPlan', 2, 4, 2, 36);";
+		String q11 = "INSERT INTO HealthcarePlan Values('nhsfPlan', 2, 2, 6, 0),('maintPlan', 2, 2, 0, 15),('ohPlan', 2, 4, 0, 21),('drPlan', 2, 4, 2, 36);";
 		// Treatments
-		String q11 = "INSERT INTO Treatments Values('hygVisit', 45, 0), ('amalF', 90, 0), ('resinF', 150, 0), ('crown', 500, 1), ('checkup', 45 ,0);";
+		String q12 = "INSERT INTO Treatments Values('hygVisit', 45, 0), ('amalF', 90, 0), ('resinF', 150, 0), ('crown', 500, 1), ('checkup', 45 ,0);";
 		
 		// Appointments
-		String q12 = "INSERT INTO Appointments(patientID, pHygienist,date, startTime, endTime)"
-				+ "VALUES(1, false, '2016-11-8','15:00', '16:00'),"
-				+ "(1, false, '2016-11-14','14:00', '14:20'),"
-				+ "(2, false, '2016-11-14','14:40', '15:00'),"
-				+ "(1, false, '2016-11-15','10:00', '11:00'),"
-				+ "(1, true, '2016-11-10','10:20', '10:40'),"
-				+ "(2, true, '2016-11-15','9:00', '9:20'),"
-				+ "(3, true, '2016-11-15','9:20', '9:40');";
+		String q13 = "INSERT INTO Appointments(patientID, pHygienist,date, startTime, endTime)"
+				+ "VALUES(2, false, '2016-11-8','15:00', '16:00'),"
+				+ "(2, false, '2016-11-14','14:00', '14:20'),"
+				+ "(3, false, '2016-11-14','14:40', '15:00'),"
+				+ "(2, false, '2016-11-15','10:00', '11:00'),"
+				+ "(1, false, '2016-11-17','9:00', '17:00'),"
+				+ "(1, false, '2016-11-18','16:00', '17:00'),"
+				+ "(2, true, '2016-11-10','10:20', '10:40'),"
+				+ "(3, true, '2016-11-15','9:00', '9:20'),"
+				+ "(4, true, '2016-11-15','9:20', '9:40'),"
+				+ "(1, true, '2016-11-17','9:00', '17:00');";
 		
 		// TreatmentsPerformed
-		String q13 = "INSERT INTO TreatmentsPerformed VALUES(1, 'hygVisit', 0, 0),(1,'amalF', 1, 1),(2,'resinF', 0, 0);";
+		String q14 = "INSERT INTO TreatmentsPerformed VALUES(1, 'hygVisit', 0, 0),(1,'amalF', 1, 1),(2,'resinF', 0, 0);";
 		int rowsUpdated = 0;
 		
 		try {
@@ -243,6 +251,15 @@ public class DBBuilder {
 		
 		try {
 			rowsUpdated = dbc.update(q13);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Rows updated: "+rowsUpdated);
+		
+		try {
+			rowsUpdated = dbc.update(q14);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

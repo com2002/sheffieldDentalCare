@@ -1,5 +1,8 @@
 package sheffieldDentalCare;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,6 +12,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
@@ -47,6 +51,8 @@ public class BookAbsencePanel extends JPanel {
 		forBtnGroup.add(hygienistRBtn);
 		// Create button group for time radio buttons
 		wholeDayRBtn.setSelected(true);
+		wholeDayRBtn.setActionCommand("Whole Day");
+		timePeriodRBtn.setActionCommand("Time Period");
 		ButtonGroup timeBtnGroup = new ButtonGroup();
 		timeBtnGroup.add(wholeDayRBtn);
 		timeBtnGroup.add(timePeriodRBtn);
@@ -66,11 +72,13 @@ public class BookAbsencePanel extends JPanel {
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i < 24; i++) {
 			startTimeCbox.addItem(timeFormat.format(cal.getTime()));
-			endTimeCbox.addItem(timeFormat.format(cal.getTime()));
 			cal.add(Calendar.MINUTE, 20);
+			endTimeCbox.addItem(timeFormat.format(cal.getTime()));
 		}
+		startTimeCbox.setEnabled(false);
+		endTimeCbox.setEnabled(false);
 	}
 	
 	private void addComponents() {
@@ -163,5 +171,132 @@ public class BookAbsencePanel extends JPanel {
 					.addComponent(bookBtn)
 				)
 		);
+		wholeDayRBtn.addActionListener(new RBtnHandler());
+		timePeriodRBtn.addActionListener(new RBtnHandler());
+		bookBtn.addActionListener(new BookBtnHandler());
+	}
+	
+	// Event handler for book button
+	private class BookBtnHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Book button clicked");
+			boolean valid = validateEndTime();
+			if (valid) {
+				System.out.println("Valid End Time: "+ valid);
+				// Confirm with user booking of absence
+				int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to book this leave of absence?", "Confirm Absence", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				System.out.println(n);
+				if (n == 0) {
+					System.out.println("Yes");
+					// Blank patient's ID by default is 1
+					int patientID = 1;
+					// Change date selected into database format
+					SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					Date date =	(Date) dateSpinner.getValue();
+					String strDate = dbDateFormat.format(date);
+					boolean pHygienist = false;
+					if (hygienistRBtn.isSelected()) {
+						pHygienist = true;
+					}
+					// Assume whole day is selected
+					String startTime = "09:00";
+					String endTime = "17:00";
+					if (timePeriodRBtn.isSelected()) {
+						startTime = startTimeCbox.getSelectedItem().toString();
+						endTime = endTimeCbox.getSelectedItem().toString();
+					}
+					DPCalendar dpCal = new DPCalendar();
+					// Check availability
+					String availability = null;
+					try {
+						System.out.println(patientID);
+						System.out.println("Hygienist: " + pHygienist);
+						System.out.println(strDate);
+						System.out.println(startTime);
+						System.out.println(endTime);
+						availability = dpCal.checkAvailability(patientID, pHygienist, strDate, startTime, endTime);
+						System.out.println(availability);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					if (availability.equals("")) {
+						System.out.println("Available");
+						// Add absence as an appointment for blank patient in database
+						int appID = 0;
+						try {
+							appID = dpCal.addAppointment(patientID, pHygienist, strDate, startTime, endTime);
+							System.out.println("Appointment ID: " + appID);
+						} catch (SQLException e1) {
+							// Output error message
+							JOptionPane.showMessageDialog(null, e1.toString(), "Error - Database", JOptionPane.ERROR_MESSAGE);
+							e1.printStackTrace();
+						} finally {
+							// Output confirmation for user
+							String confirmMsg = null;
+							if (!pHygienist) {
+								confirmMsg = "Absence booked on " + strDate + " between " + startTime + " and " + endTime + " for the dentist.";
+							} else {
+								confirmMsg = "Absence booked on " + strDate + " between " + startTime + " and " + endTime + " for the hygienist.";
+							}
+							JOptionPane.showMessageDialog(null, confirmMsg, "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+						}
+					} else {
+						System.out.println("Not Available");
+						// Output error message if not available to book appointment
+						String errorMsg = "Cannot book leave of absence when there is an appointment. " + availability;
+						JOptionPane.showMessageDialog(null, errorMsg, "Error - Appointment Clash with Absence", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					System.out.println("No");
+				}
+			} else {
+				// Output error message if end time not valid
+				String errorMsg = "End time of " + endTimeCbox.getSelectedItem().toString() + " cannot be before start time of " 
+								+ startTimeCbox.getSelectedItem().toString() + ".";
+				JOptionPane.showMessageDialog(null, errorMsg, "Error - Invalid End Time", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	// Event handler for radio buttons
+	private class RBtnHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Radio button changed");
+			System.out.println(e.getActionCommand());
+			if (e.getActionCommand() == "Time Period") {
+				startTimeCbox.setEnabled(true);
+				endTimeCbox.setEnabled(true);
+			} else {
+				startTimeCbox.setEnabled(false);
+				endTimeCbox.setEnabled(false);
+			}
+		}
+	}
+	
+	private boolean validateEndTime() {
+		boolean valid = true;
+		if (timePeriodRBtn.isSelected()) {
+			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+			Calendar cal = Calendar.getInstance();
+			Date startTime = null;
+			try {
+				startTime = timeFormat.parse(startTimeCbox.getSelectedItem().toString());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			cal.setTime(startTime);
+			Calendar cal2 = Calendar.getInstance();
+			Date endTime = null;
+			try {
+				endTime = timeFormat.parse(endTimeCbox.getSelectedItem().toString());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			cal2.setTime(endTime);
+			// Check if start time selected is before end time selected
+			valid = cal.getTime().before(cal2.getTime());
+			System.out.println("Valid End Time: " + valid);
+		}
+		return valid;
 	}
 }
