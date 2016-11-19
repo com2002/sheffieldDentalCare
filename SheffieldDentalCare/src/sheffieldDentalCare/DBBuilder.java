@@ -106,8 +106,8 @@ public class DBBuilder {
 		// Address
 		String q8 = "INSERT INTO Address(houseNumber, streetName, district, city, postCode)"
 				+ "VALUES(null, null, null, null, null),"
-				+ "(123, 'Sesame Street', 'District', 'London', 'NW1 8AS'),"
-				+ "(120, 'Maple Street', 'District', 'London', 'NW4 2QD');";
+				+ "(123, 'Sesame Street', 'District', 'London', 'NW18AS'),"
+				+ "(120, 'Maple Street', 'District', 'London', 'NW42QD');";
 		
 		// Create blank patient for booking absences
 		String q9 = "INSERT INTO Patients(title, firstName, surName, addressID)"
