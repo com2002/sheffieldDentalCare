@@ -9,9 +9,9 @@ public class DBBuilder {
 		
 		String[] qs = new String[7];
 			
-		qs[0] = "DROP TABLE TreatmentsPerformed;";
-		qs[1] = "DROP TABLE Treatments;";
-		qs[2] = "DROP TABLE Appointments;";
+		qs[0] = "DROP TABLE TreatmentPerformed;";
+		qs[1] = "DROP TABLE Treatment;";
+		qs[2] = "DROP TABLE Appointment;";
 		qs[3] = "DROP TABLE TreatmentCredits;";
 		qs[4] = "DROP TABLE HealthcarePlan;";
 		qs[5] = "DROP TABLE Patients;";
@@ -26,7 +26,7 @@ public class DBBuilder {
 			}
 			
 			System.out.println("Rows updated: "+rowsUpdated);
-		}
+		} 
 	}
 	
 	public void rebuild() throws SQLException{
@@ -42,7 +42,7 @@ public class DBBuilder {
 				"PRIMARY KEY (addressID)"+
 				");";
 		
-		String q2 = "CREATE TABLE Patients("+
+		String q2 = "CREATE TABLE Patient("+
 				  "patientID INT NOT NULL AUTO_INCREMENT,"+
 				  "title VARCHAR(255) NOT NULL,"+
 				  "firstName VARCHAR(255) NOT NULL,"+
@@ -70,11 +70,11 @@ public class DBBuilder {
 				  "repairCount INT,"+
 				  "planName VARCHAR(255),"+
 				  "PRIMARY KEY(patientID),"+
-				  "FOREIGN KEY(patientID) REFERENCES Patients(patientID),"+
+				  "FOREIGN KEY(patientID) REFERENCES Patient(patientID),"+
 				  "FOREIGN KEY(planName) REFERENCES HealthcarePlan(planName)"+
 				");";
 		
-		String q5 = "CREATE TABLE Appointments("+
+		String q5 = "CREATE TABLE Appointment("+
 				  "appointmentID INT NOT NULL AUTO_INCREMENT,"+
 				  "patientID INT,"+
 				  "pHygienist BOOLEAN,"+
@@ -82,24 +82,24 @@ public class DBBuilder {
 				  "startTime TIME,"+
 				  "endTime TIME,"+
 				  "PRIMARY KEY (appointmentID),"+
-				  "FOREIGN KEY (patientID) REFERENCES Patients(patientID)"+
+				  "FOREIGN KEY (patientID) REFERENCES Patient(patientID)"+
 				");";
 		
-		String q6 = "CREATE TABLE Treatments("
+		String q6 = "CREATE TABLE Treatment("
 				+ "treatmentName VARCHAR(255),"
 				+ "cost INT,"
 				+ "pCosmetic BOOLEAN,"
 				+ "PRIMARY KEY (treatmentName)"
 				+ ");";
 		
-		String q7 = "CREATE TABLE TreatmentsPerformed("+
+		String q7 = "CREATE TABLE TreatmentPerformed("+
 				  "appointmentID INT,"+
 				  "treatmentName VARCHAR(255),"+
 				  "paid BOOLEAN,"+
 				  "paidByPlan BOOLEAN,"+
 				  "PRIMARY KEY (appointmentID, treatmentName),"+
-				  "FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID),"+
-				  "FOREIGN KEY (treatmentName) REFERENCES Treatments(treatmentName)"+
+				  "FOREIGN KEY (appointmentID) REFERENCES Appointment(appointmentID),"+
+				  "FOREIGN KEY (treatmentName) REFERENCES Treatment(treatmentName)"+
 				");";
 		
 		// Dummy data
@@ -110,22 +110,22 @@ public class DBBuilder {
 				+ "(120, 'Maple Street', 'District', 'London', 'NW4 2QD');";
 		
 		// Create blank patient for booking absences
-		String q9 = "INSERT INTO Patients(title, firstName, surName, addressID)"
+		String q9 = "INSERT INTO Patient(title, firstName, surName, addressID)"
 				+ "VALUES('Blank', 'Blank', 'Blank', 1)";
 		
-		// Patients
-		String q10 = "INSERT INTO Patients(title, firstName, surName, dateOb, phoneNumber, addressID)"
+		// Patient
+		String q10 = "INSERT INTO Patient(title, firstName, surName, dateOb, phoneNumber, addressID)"
 				+ "VALUES('Mr', 'Chandler', 'Bing', '1969-08-19', '07923415233', 2), "
 				+ "('Mrs', 'Monica', 'Bing', '1964-06-15', '07784563187', 2), "
 				+ "('Mrs', 'Phoebe', 'Buffay-Hannigan', '1964-03-01', '07145632587', 3) ;";
 		
 		// Healthcare plans
 		String q11 = "INSERT INTO HealthcarePlan Values('nhsfPlan', 2, 2, 6, 0),('maintPlan', 2, 2, 0, 15),('ohPlan', 2, 4, 0, 21),('drPlan', 2, 4, 2, 36);";
-		// Treatments
-		String q12 = "INSERT INTO Treatments Values('hygVisit', 45, 0), ('amalF', 90, 0), ('resinF', 150, 0), ('crown', 500, 1), ('checkup', 45 ,0);";
+		// Treatment
+		String q12 = "INSERT INTO Treatment Values('hygVisit', 45, 0), ('amalF', 90, 0), ('resinF', 150, 0), ('crown', 500, 1), ('checkup', 45 ,0);";
 		
-		// Appointments
-		String q13 = "INSERT INTO Appointments(patientID, pHygienist,date, startTime, endTime)"
+		// Appointment
+		String q13 = "INSERT INTO Appointment(patientID, pHygienist,date, startTime, endTime)"
 				+ "VALUES(2, false, '2016-11-8','15:00', '16:00'),"
 				+ "(2, false, '2016-11-14','14:00', '14:20'),"
 				+ "(3, false, '2016-11-14','14:40', '15:00'),"
@@ -137,8 +137,8 @@ public class DBBuilder {
 				+ "(4, true, '2016-11-15','9:20', '9:40'),"
 				+ "(1, true, '2016-11-17','9:00', '17:00');";
 		
-		// TreatmentsPerformed
-		String q14 = "INSERT INTO TreatmentsPerformed VALUES(1, 'hygVisit', 0, 0),(1,'amalF', 1, 1),(2,'resinF', 0, 0);";
+		// TreatmentPerformed
+		String q14 = "INSERT INTO TreatmentPerformed VALUES(1, 'hygVisit', 0, 0),(1,'amalF', 1, 1),(2,'resinF', 0, 0);";
 		int rowsUpdated = 0;
 		
 		try {

@@ -51,12 +51,12 @@ public class PayTreatmentsFrame extends JFrame {
 	public PayTreatmentsFrame(int patientID) {
 		this.patientID = patientID;
 			
-		setTitle("View/Pay Appointments and Treatments by Patient. Currently viewing patientID: "+patientID);
+		setTitle("View/Pay Appointment and Treatment by Patient. Currently viewing patientID: "+patientID);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1010, 602);
 		setVisible(true);
 		
-		JButton btnLoadData = new JButton("<html>Load Patient's <br>Appointments</html>");
+		JButton btnLoadData = new JButton("<html>Load Patient's <br>Appointment</html>");
 		btnLoadData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -71,9 +71,9 @@ public class PayTreatmentsFrame extends JFrame {
 		});
 		
 		JScrollPane appsTableScrPane = new JScrollPane();
-		appsTableScrPane.setBorder(BorderFactory.createTitledBorder("Patient's Appointments"));
+		appsTableScrPane.setBorder(BorderFactory.createTitledBorder("Patient's Appointment"));
 		JScrollPane tmentsTableScrPane = new JScrollPane();
-		tmentsTableScrPane.setBorder(BorderFactory.createTitledBorder("Treatments Performed"));
+		tmentsTableScrPane.setBorder(BorderFactory.createTitledBorder("Treatment Performed"));
 		
 		JLabel lblPatientid = new JLabel("PatientID: " + patientID);
 		
@@ -241,9 +241,9 @@ public class PayTreatmentsFrame extends JFrame {
 		stmt = con.createStatement();
 		
 		ResultSet rs = stmt.executeQuery("SELECT appointmentID as AppointmentID, date as Date, SUM(cost) as TotalCost, SUM(CASE WHEN paid = 0 THEN cost ELSE 0 END) as BalanceOutstanding "
-				+ "FROM (SELECT appointmentID, date, cost, paid FROM Appointments NATURAL JOIN (SELECT * "
-				+ "FROM TreatmentsPerformed NATURAL JOIN Treatments) AS srt "
-				+ "WHERE Appointments.appointmentID = srt.appointmentID AND patientID = "+ patientID +") AS srr GROUP BY appointmentID;");
+				+ "FROM (SELECT appointmentID, date, cost, paid FROM Appointment NATURAL JOIN (SELECT * "
+				+ "FROM TreatmentPerformed NATURAL JOIN Treatment) AS srt "
+				+ "WHERE Appointment.appointmentID = srt.appointmentID AND patientID = "+ patientID +") AS srr GROUP BY appointmentID;");
 		
 		appsTable.setModel(MyDbConverter.resultSetToMyTableModel(rs));
 		
@@ -267,7 +267,7 @@ public class PayTreatmentsFrame extends JFrame {
 		stmt = con.createStatement();
 		
 		ResultSet rs = stmt.executeQuery("SELECT treatmentName as TreatmentName, cost as Cost, paidByPlan as PaidByHealthcarePlan, paid as PaidFor FROM "
-				+ "(SELECT * from TreatmentsPerformed Natural JOIN Treatments WHERE appointmentID = "+appID+") as als;");
+				+ "(SELECT * from TreatmentPerformed Natural JOIN Treatment WHERE appointmentID = "+appID+") as als;");
 		
 		tmentTable.setModel(MyDbConverter.resultSetToMyTableModel(rs));
 		

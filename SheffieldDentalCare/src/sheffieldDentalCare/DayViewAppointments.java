@@ -16,8 +16,8 @@ import javax.swing.SpinnerModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * DayViewAppointments.java
- * Uses the ViewAppointments abstract class and creates a selection panel and table model
+ * DayViewAppointment.java
+ * Uses the ViewAppointment abstract class and creates a selection panel and table model
  * @author ting
  *
  */
@@ -120,9 +120,9 @@ public class DayViewAppointments extends ViewAppointments {
 			String date = dbDateFormat.format(dateFormat.parse(cols[1]));
 			// According to calendarFor, get their appointments
 			if (calendarFor == "Hygienist") {
-				appPlot = dpCal.getAppointmentsForDate(true, date);
+				appPlot = dpCal.getAppointmentForDate(true, date);
 			} else {
-				appPlot = dpCal.getAppointmentsForDate(false, date);
+				appPlot = dpCal.getAppointmentForDate(false, date);
 			}
 		} catch (SQLException | ParseException e) {
 			e.printStackTrace();

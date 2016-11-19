@@ -20,7 +20,7 @@ public class DPCalendar {
 			//check patient clashes
 			// Clashes for a patient only matter if patient is not the "blank"/"absence" patient
 			if (patientID != 1) {
-				ResultSet rs = stmt.executeQuery("SELECT * FROM Appointments WHERE "
+				ResultSet rs = stmt.executeQuery("SELECT * FROM Appointment WHERE "
 						+ "patientID = " + patientID + " AND date = '" + date + "';");
 				while (rs.next()) {
 					if (timeClash(rs.getString(5),rs.getString(6), start, end)) {					
@@ -29,7 +29,7 @@ public class DPCalendar {
 				}
 			}
 			//check partner clashes
-			ResultSet rt = stmt.executeQuery("SELECT * FROM Appointments WHERE "
+			ResultSet rt = stmt.executeQuery("SELECT * FROM Appointment WHERE "
 					+ "pHygienist = " + pHygienist + " AND date = '" + date + "';");
 			while (rt.next()) {
 				if (timeClash(rt.getString(5),rt.getString(6), start, end)) {
@@ -77,10 +77,10 @@ public class DPCalendar {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
-			int count = stmt.executeUpdate("INSERT INTO Appointments(patientID, pHygienist, date, startTime, endTime) "
+			int count = stmt.executeUpdate("INSERT INTO Appointment(patientID, pHygienist, date, startTime, endTime) "
 					  + "VALUES(" + patientID + ", " + pHygienist + ", '" + date + "', '" + startTime + "', '" + endTime + "');");
 			System.out.println("Rows updated: " + count);
-			ResultSet res = stmt.executeQuery("SELECT MAX(appointmentID) FROM Appointments;");
+			ResultSet res = stmt.executeQuery("SELECT MAX(appointmentID) FROM Appointment;");
 			while (res.next()) {
 				appointmentID = res.getInt(1);
 			}
@@ -103,7 +103,7 @@ public class DPCalendar {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
-			count = stmt.executeUpdate("DELETE FROM Appointments "
+			count = stmt.executeUpdate("DELETE FROM Appointment "
 				  + "WHERE appointmentID = " + appointmentID + ";");
 			System.out.println("Rows updated: " + count);
 		} 
@@ -124,7 +124,7 @@ public class DPCalendar {
 	 * @return a list of AppointmentPlots, see AppointmentPlot doc for info
 	 * @throws ParseException, SQLException
 	 */
-	public AppointmentPlot[] getAppointments(boolean pHygeinist, String wbdate) throws SQLException, ParseException {
+	public AppointmentPlot[] getAppointment(boolean pHygeinist, String wbdate) throws SQLException, ParseException {
 		AppointmentPlot[] applots = null;
 		String[] days = new String[5];
 		Connection con = null;
@@ -144,7 +144,7 @@ public class DPCalendar {
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			//pull up all appointments of the specified partner from the week
-			String q = "SELECT * FROM Appointments WHERE pHygienist = "+pHygeinist+" AND "
+			String q = "SELECT * FROM Appointment WHERE pHygienist = "+pHygeinist+" AND "
 					+ "(date = '" + days[0] + "' OR date = '" + days[1] + "' OR date = '" + days[2] + "' OR "
 					+ "date = '" + days[3] + "' OR date = '" + days[4] + "');";
 			//get the length of the result set initialise list
@@ -171,7 +171,7 @@ public class DPCalendar {
 		return applots;		
 	}
 	
-	public AppointmentPlot[] getAppointmentsForDate(boolean pHygeinist, String date) throws SQLException, ParseException {
+	public AppointmentPlot[] getAppointmentForDate(boolean pHygeinist, String date) throws SQLException, ParseException {
 		AppointmentPlot[] applots = null;
 		String day = new String();
 		Connection con = null;
@@ -186,7 +186,7 @@ public class DPCalendar {
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			//pull up all appointments of the specified partner from the week
-			String q = "SELECT * FROM Appointments WHERE pHygienist = "+pHygeinist+" AND "
+			String q = "SELECT * FROM Appointment WHERE pHygienist = "+pHygeinist+" AND "
 					+ "date = '" + day + "';";
 			//get the length of the result set initialise list
 			ResultSet rss = stmt.executeQuery(q);
@@ -227,8 +227,8 @@ public class DPCalendar {
 		//System.out.println(timeClash("17:50", "18:50","18:00","18:20"));
 		//System.out.println(calendar.checkAvailability(1, true, "2016-11-12", "17:50", "18:50"));
 		//System.out.println(ap.ENDTIME);
-		//calendar.getDentistAppointments(true, "2016-11-30");
-		AppointmentPlot[] ap = calendar.getAppointmentsForDate(true, "2016-11-15");
+		//calendar.getDentistAppointment(true, "2016-11-30");
+		AppointmentPlot[] ap = calendar.getAppointmentForDate(true, "2016-11-15");
 		for (int i = 0; i < ap.length; i++) {
 			System.out.println(ap[i].STARTTIME + " - " + ap[i].ENDTIME + " " + ap[i].PATIENTID);
 		}		

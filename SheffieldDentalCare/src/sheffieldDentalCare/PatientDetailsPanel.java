@@ -81,14 +81,14 @@ public class PatientDetailsPanel extends JPanel {
 					new BookAppointmentFrame(patientID);
 				}
 			});
-			JButton payAppointmentsBtn = new JButton("Pay");
-			payAppointmentsBtn.addActionListener(new ActionListener() {
+			JButton payAppointmentBtn = new JButton("Pay");
+			payAppointmentBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					new PayTreatmentsFrame(patientID);
 				}
 			});
-			JButton cancelAppointmentsBtn = new JButton("Cancel");
-			cancelAppointmentsBtn.addActionListener(new ActionListener() {
+			JButton cancelAppointmentBtn = new JButton("Cancel");
+			cancelAppointmentBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {					
 					new CancelAppointmentFrame(patientID);
@@ -99,8 +99,8 @@ public class PatientDetailsPanel extends JPanel {
 				}
 			});
 			appointmentsActions.add(bookAppointmentBtn);
-			appointmentsActions.add(payAppointmentsBtn);
-			appointmentsActions.add(cancelAppointmentsBtn);
+			appointmentsActions.add(payAppointmentBtn);
+			appointmentsActions.add(cancelAppointmentBtn);
 			this.add(new JLabel("Appointment Options:", JLabel.LEFT));
 			this.add(appointmentsActions);
 		}
@@ -143,7 +143,7 @@ public class PatientDetailsPanel extends JPanel {
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			ResultSet res = stmt.executeQuery("SELECT title, firstName, surname, dateOB, phoneNumber, streetName, district, city, postcode "
-					+ "FROM Patients p, Address a "
+					+ "FROM Patient p, Address a "
 					+ "WHERE p.addressID = a.addressID "
 					+ "AND firstName = '" + firstName + "' "
 					+ "AND surName = '" + surname + "' "

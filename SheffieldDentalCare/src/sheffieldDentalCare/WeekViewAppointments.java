@@ -18,8 +18,8 @@ import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * WeekViewAppointments.java
- * Uses the ViewAppointments abstract class and creates a selection panel and table model
+ * WeekViewAppointment.java
+ * Uses the ViewAppointment abstract class and creates a selection panel and table model
  * @author ting
  *
  */
@@ -29,7 +29,7 @@ public class WeekViewAppointments extends ViewAppointments {
 	private JLabel viewLbl = new JLabel("View");
 	private JComboBox<String> patientsCbox = new JComboBox<String>();
 	private JComboBox<String> weekCbox = new JComboBox<String>();
-	private JRadioButton allPatientsRBtn = new JRadioButton("All Patients");
+	private JRadioButton allPatientsRBtn = new JRadioButton("All Patient");
 	private JRadioButton singlePatientRBtn = new JRadioButton("Single Patient");
 	public JButton viewBtn = new JButton("View");
 	private ArrayList<String> patients = new ArrayList<String>();
@@ -54,7 +54,7 @@ public class WeekViewAppointments extends ViewAppointments {
 		JPanel panel = new JPanel();
 		// Set default selected as view by all patients
 		allPatientsRBtn.setSelected(true);
-		allPatientsRBtn.setActionCommand("All Patients");
+		allPatientsRBtn.setActionCommand("All Patient");
 		singlePatientRBtn.setActionCommand("Single Patient");
 		// Create radio button group
 		ButtonGroup rBtnGroup = new ButtonGroup();
@@ -183,9 +183,9 @@ public class WeekViewAppointments extends ViewAppointments {
 			String weekCommencingDate = dbDateFormat.format(dateFormat.parse(cols[1]));
 			// According to calendarFor, get their appointments
 			if (calendarFor == "Hygienist") {
-				appPlot = dpCal.getAppointments(true, weekCommencingDate);
+				appPlot = dpCal.getAppointment(true, weekCommencingDate);
 			} else {
-				appPlot = dpCal.getAppointments(false, weekCommencingDate);
+				appPlot = dpCal.getAppointment(false, weekCommencingDate);
 			}
 		} catch (SQLException | ParseException e) {
 			e.printStackTrace();

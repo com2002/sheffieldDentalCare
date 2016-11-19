@@ -66,10 +66,10 @@ public class RegistrarObselete {
 	public int addPatient(String firstName, String surName, String dob, int addressID) throws SQLException {
 		DBController dbc = new DBController();
 		
-		String q1 = "INSERT INTO Patients (firstName, surName, dateOB, addressID) ";
+		String q1 = "INSERT INTO Patient (firstName, surName, dateOB, addressID) ";
 		String q2 = "VALUES ('"+firstName+"','"+surName+"','"+dob+"','"+addressID+"');";
 		
-		int updates = dbc.update(q1+q2);//Make and entry onto the Patients table using the above statements	
+		int updates = dbc.update(q1+q2);//Make and entry onto the Patient table using the above statements	
 		dbc.closeConnection();
 		
 		return updates;

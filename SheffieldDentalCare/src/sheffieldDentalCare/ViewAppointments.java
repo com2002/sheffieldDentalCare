@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * ViewAppointments.java
+ * ViewAppointment.java
  * Abstract class for viewing appointments.
  * @author ting
  * 

@@ -51,7 +51,7 @@ public class CancelAppointmentFrame extends JFrame {
 	 */
 	public CancelAppointmentFrame(int patientID) throws SQLException {
 		this.patientID = patientID;
-		setTitle("Cancel Appointments by Patient. Current Patient's ID is: "+patientID);
+		setTitle("Cancel Appointment by Patient. Current Patient's ID is: "+patientID);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 300);
 		contentPane = new JPanel();
@@ -59,7 +59,7 @@ public class CancelAppointmentFrame extends JFrame {
 		setContentPane(contentPane);
 		
 		JScrollPane futureAppsScrPane = new JScrollPane();
-		futureAppsScrPane.setBorder(BorderFactory.createTitledBorder("Patient's Future Appointments"));
+		futureAppsScrPane.setBorder(BorderFactory.createTitledBorder("Patient's Future Appointment"));
 		setVisible(true);
 		btnCancelApp = new JButton("<html>Cancel Selected <br>Appointment</html>");
 		btnCancelApp.addActionListener(new ActionListener() {
@@ -80,7 +80,7 @@ public class CancelAppointmentFrame extends JFrame {
 								DBController.DB_User, DBController.DB_Password);
 						stmt = con.createStatement();
 						
-						stmt.executeUpdate("DELETE FROM Appointments WHERE appointmentID = "+appIDCancel+";");
+						stmt.executeUpdate("DELETE FROM Appointment WHERE appointmentID = "+appIDCancel+";");
 						
 						JOptionPane.showMessageDialog(null, "<html>The selected appointment was successfully cancelled.</html>", 
 								"Appointment Cancelled", JOptionPane.INFORMATION_MESSAGE);
@@ -146,7 +146,7 @@ public class CancelAppointmentFrame extends JFrame {
 				+ "(CASE WHEN pHygienist = 1 THEN 'Hygienist' ELSE 'Dentist' END) as Partner, "
 				+ "date as Date, "
 				+ "startTime as StartTime, "
-				+ "endTime as EndTime FROM Appointments "
+				+ "endTime as EndTime FROM Appointment "
 				+ "WHERE patientID = "+patientID
 				+ " AND date > CURDATE() OR "
 				+ "(date = CURDATE() AND startTime > CURTIME())"

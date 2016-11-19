@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * ViewAppointmentsPanel.java
+ * ViewAppointmentPanel.java
  * Creates a panel for viewing appointments.
  * @author ting
  * 
@@ -47,9 +47,9 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 	@Override
 	public void initComponents() {
 		if (calendarFor == "Dentist") {
-			titleLbl.setText("View Dentist Appointments");
+			titleLbl.setText("View Dentist Appointment");
 		} else {
-			titleLbl.setText("View Hygienist Appointments");
+			titleLbl.setText("View Hygienist Appointment");
 		}
 		if (viewType == "Week") {
 			weekView = new WeekViewAppointments(calendarFor);

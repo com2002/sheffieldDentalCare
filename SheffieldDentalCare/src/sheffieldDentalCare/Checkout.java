@@ -71,7 +71,7 @@ public class Checkout {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
-			rowsAdded = stmt.executeUpdate("INSERT INTO TreatmentsPerformed "
+			rowsAdded = stmt.executeUpdate("INSERT INTO TreatmentPerformed "
 					+ "VALUES(" + appointmentID + ",'" + treatmentName + "', "+paid+","+paidByPlan+");");
 		}
 		catch (SQLException ex) {
@@ -98,7 +98,7 @@ public class Checkout {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
-			count = stmt.executeUpdate("UPDATE TreatmentsPerformed SET paid = TRUE "
+			count = stmt.executeUpdate("UPDATE TreatmentPerformed SET paid = TRUE "
 					+ "WHERE appointmentID = " + appointmentID + ";");
 		}
 		catch (SQLException ex) {
@@ -126,7 +126,7 @@ public class Checkout {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
-			count = stmt.executeUpdate("UPDATE TreatmentsPerformed SET paid = TRUE "
+			count = stmt.executeUpdate("UPDATE TreatmentPerformed SET paid = TRUE "
 					+ "WHERE appointmentID = " + appointmentID + " AND treatmentName LIKE '" + treatmentName + "';");
 		}
 		catch (SQLException ex) {
@@ -170,7 +170,7 @@ public class Checkout {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT patientID FROM Appointments WHERE appointmentID = "+appid+";");
+			ResultSet rs = stmt.executeQuery("SELECT patientID FROM Appointment WHERE appointmentID = "+appid+";");
 			while(rs.next()) {
 				pid = rs.getInt(1);
 			}

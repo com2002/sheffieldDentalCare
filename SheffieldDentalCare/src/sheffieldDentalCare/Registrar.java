@@ -78,9 +78,9 @@ public class Registrar {
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			System.out.println("Rows updates: " + 
-					stmt.executeUpdate("INSERT INTO Patients(title, firstName, surName, dateOB, phoneNumber, addressID)"
+					stmt.executeUpdate("INSERT INTO Patient(title, firstName, surName, dateOB, phoneNumber, addressID)"
 							+ "VALUES('" + title + "','" + fname + "','" + sname + "','" + dob + "','" + phone + "'," + addressID +")"));
-			ResultSet res = stmt.executeQuery("SELECT MAX(patientID) FROM Patients;");
+			ResultSet res = stmt.executeQuery("SELECT MAX(patientID) FROM Patient;");
 			while (res.next()) {
 				id = res.getInt(1);
 			}
@@ -214,7 +214,7 @@ public class Registrar {
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			
-			String q1 = "Select patientID from Patients ";
+			String q1 = "Select patientID from Patient ";
 			String q2 = "WHERE firstName LIKE '" + fName + "' AND surName LIKE '" + sName + "' AND dateOB = '" + dob + "' AND addressID = " + addressID + ";";
 			
 			ResultSet rs = stmt.executeQuery(q1+q2);
@@ -240,10 +240,10 @@ public class Registrar {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
-			String query = "SELECT Patients.patientID, Patients.firstName, Patients.surName, "
-					     + "Patients.dateOb, Address.houseNumber, Address.postCode "
-					     + "FROM Patients, Address "
-					     + "WHERE Patients.addressID = Address.addressID;";
+			String query = "SELECT Patient.patientID, Patient.firstName, Patient.surName, "
+					     + "Patient.dateOb, Address.houseNumber, Address.postCode "
+					     + "FROM Patient, Address "
+					     + "WHERE Patient.addressID = Address.addressID;";
 			
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
