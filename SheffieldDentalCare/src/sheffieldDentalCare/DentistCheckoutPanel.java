@@ -1,5 +1,12 @@
 package sheffieldDentalCare;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -24,14 +31,46 @@ public class DentistCheckoutPanel extends JPanel {
 	private JCheckBox resinChBox = new JCheckBox("White Composite Resin Filling (£150)");
 	private JCheckBox crownChBox = new JCheckBox("Gold Crown Fitting (£500)");
 	private JButton checkoutBtn = new JButton("Checkout");
+	private ArrayList<String> patients = new ArrayList<String>();
 	
 	public DentistCheckoutPanel() {
+		setPatients();
 		initComponents();
 		addComponents();
 	}
 	
 	private void initComponents() {
 		// Populate appointments drop down list
+		// Get appointments for current day
+		DPCalendar dpCal = new DPCalendar();
+		AppointmentPlot[] appPlot = null;
+		try {
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+			// If Saturday then skip to Monday by adding two days
+			if (dayOfWeek == Calendar.SATURDAY) {
+				cal.add(Calendar.DATE, 2);
+				// Else if Sunday then skip to Monday by adding one day
+			} else if (dayOfWeek == Calendar.SUNDAY){
+				cal.add(Calendar.DATE, 1);
+			}
+			String date = dbDateFormat.format(cal.getTime());
+			appPlot = dpCal.getAppointmentForDate(false, date);
+		} catch (SQLException | ParseException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i < appPlot.length; i++) {
+			String patient = null;
+			// Find patient's details
+			for (int j = 0; j < patients.size(); j++) {
+				if (appPlot[i].PATIENTID == getPatientID(patients.get(j))) {
+					patient = patients.get(j);
+				}
+			}
+			appointmentCbox.addItem("(" + appPlot[i].APPOINTMENTID + ") " + appPlot[i].STARTTIME + " - " + appPlot[i].ENDTIME + ": " + patient);
+			System.out.println("(" + appPlot[i].APPOINTMENTID + ") " + appPlot[i].STARTTIME + " - " + appPlot[i].ENDTIME + ": " + patient);
+		}
 	}
 	
 	private void addComponents() {
@@ -104,5 +143,59 @@ public class DentistCheckoutPanel extends JPanel {
 					.addComponent(checkoutBtn)
 				)
 		);
+		checkoutBtn.addActionListener(new CheckoutBtnHandler());
+	}
+	
+	/**
+	 * Event handler for checkout button
+	 */
+	private class CheckoutBtnHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Checkout button clicked");
+			int appointmentID = getAppointmentID();
+			boolean[] treatmentsSelected = {checkUpChBox.isSelected(), amalgamChBox.isSelected(),
+											resinChBox.isSelected(), crownChBox.isSelected()};
+			String[] treatmentNames = {"checkup", "amalF", "resinF"};
+			Checkout checkout = new Checkout();
+			
+		}
+	}
+	
+	/**
+	 * Gets all patients from database and sets to patients variable
+	 */
+	private void setPatients() {
+		Registrar reg = new Registrar();
+		try {
+			patients = reg.getForAllPatientsSomeDetails();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		patients.set(0, "1: Absence");
+	}
+	
+	/**
+	 * Gets patient ID from selected patient drop down list
+	 * @param p		Selected patient
+	 * @return
+	 */
+	private int getPatientID(String p) {
+		String patient = p;
+		int patientID = 0;
+		int indexOfColon = patient.indexOf(":");
+		patientID = Integer.parseInt(patient.substring(0, indexOfColon));
+		return patientID;
+	}
+	
+	/**
+	 * Gets appointmentID from appointment drop down list
+	 * @return appointmentID
+	 */
+	private int getAppointmentID() {
+		String appointment = appointmentCbox.getSelectedItem().toString();
+		int indexOfBracket = appointment.indexOf(")");
+		String appointmentID = appointment.substring(1, indexOfBracket);
+		System.out.println("Appointment ID: " + appointmentID);
+		return Integer.parseInt(appointmentID);
 	}
 }
