@@ -21,6 +21,7 @@ public class PatientPanel extends JPanel {
 		
 		resultsPanel = new PatientDetailsPanel(searchPanel.searchPerformed(), searchPanel.getFirstName(), 
 				searchPanel.getSurname(), searchPanel.getDOB(), searchPanel.getHouseNo(), searchPanel.getPostcode());
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.weightx = 1;
@@ -36,10 +37,11 @@ public class PatientPanel extends JPanel {
 		this.remove(resultsPanel);
 		resultsPanel = new PatientDetailsPanel(searchPanel.searchPerformed(), searchPanel.getFirstName(), 
 				searchPanel.getSurname(), searchPanel.getDOB(), searchPanel.getHouseNo(), searchPanel.getPostcode());
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.weightx = 1;
-		c.weighty = 0.9;
+		c.weighty = 0.6;
 		c.gridx = 0;
 		c.gridy = 1;
 		this.add(resultsPanel, c);
