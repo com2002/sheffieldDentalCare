@@ -15,6 +15,12 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * DayViewAppointments.java
+ * Uses the ViewAppointments abstract class and creates a selection panel and table model
+ * @author ting
+ *
+ */
 public class DayViewAppointments extends ViewAppointments {
 	private String calendarFor;
 	private JLabel dateLbl = new JLabel("Select Date");
@@ -22,14 +28,22 @@ public class DayViewAppointments extends ViewAppointments {
 	private JSpinner dateSpinner;
 	private ArrayList<String> patients = new ArrayList<String>();
 	public JButton viewBtn = new JButton("View");
-
+	
+	/**
+	 * Class constructor
+	 * Makes/sets selection panel and table model
+	 * @param cf	Either for "Dentist" or "Hygienist"
+	 */
 	public DayViewAppointments(String cf) {
 		calendarFor = cf;
 		setPatients();
 		makeSelectionPanel();
-		makeTbl();
+		makeTblModel();
 	}
-
+	
+	/**
+	 * Creates a selection panel that provides the option to view by all patients or a single patient
+	 */
 	@Override
 	public void makeSelectionPanel() {
 		JPanel panel = new JPanel();
@@ -70,11 +84,15 @@ public class DayViewAppointments extends ViewAppointments {
 					.addComponent(viewBtn)
 				)
 		);
+		// Set created panel as selection panel
 		setSelectionPanel(panel);
 	}
-
+	
+	/**
+	 * Creates a table model that shows appointments and places them is a cell according to time and date
+	 */
 	@Override
-	public void makeTbl() {
+	public void makeTblModel() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
 		// Set up column names
 		String[] cols = new String [2];
@@ -90,7 +108,7 @@ public class DayViewAppointments extends ViewAppointments {
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
-		// Set up date
+		// Set up data
 		Object[][] data = new Object[24][2];
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		// Date format from database
@@ -100,6 +118,7 @@ public class DayViewAppointments extends ViewAppointments {
 		AppointmentPlot[] appPlot = null;
 		try {
 			String date = dbDateFormat.format(dateFormat.parse(cols[1]));
+			// According to calendarFor, get their appointments
 			if (calendarFor == "Hygienist") {
 				appPlot = dpCal.getAppointmentsForDate(true, date);
 			} else {
@@ -108,6 +127,7 @@ public class DayViewAppointments extends ViewAppointments {
 		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
+		// Place appointments in cell according to time and date
 		for (int i = 0; i < 24; i++) {
 			for (int j = 0; j < 2; j++) {
 				if (j == 0) {
@@ -124,7 +144,6 @@ public class DayViewAppointments extends ViewAppointments {
 						cal2.setTime(time);
 						System.out.println(timeFormat.format(cal2.getTime()));
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					System.out.println("DB Date: " + date);
@@ -132,7 +151,6 @@ public class DayViewAppointments extends ViewAppointments {
 					System.out.println("Col Date: " + cols[j]);
 					System.out.println("Row Time: " + timeFormat.format(cal.getTime()));
 					System.out.println("");
-
 					if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal.getTime()))) {
 						String patient = null;
 						for (int l = 0; l < patients.size(); l++) {
@@ -140,26 +158,34 @@ public class DayViewAppointments extends ViewAppointments {
 								patient = patients.get(l);
 							}
 						}
-						data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + ": " + patient;
+						data[i][j] = "(" + appPlot[k].APPOINTMENTID + ") " + appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + ": " + patient;
 					}
 				}
 			}
 			cal.add(Calendar.MINUTE, 20);
 		}
-
+		// Add data and column names to a table model
 		setTblModel(new DefaultTableModel(data, cols));
 	}
 	
+	/**
+	 * Gets all patients from database and sets to patients variable
+	 */
 	private void setPatients() {
 		Registrar reg = new Registrar();
 		try {
 			patients = reg.getForAllPatientsSomeDetails();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		patients.set(0, "1: Absence");
 	}
 	
+	/**
+	 * Gets patient ID from selected patient drop down list
+	 * @param p		Selected patient
+	 * @return
+	 */
 	private int getPatientID(String p) {
 		String patient = p;
 		int patientID = 0;
