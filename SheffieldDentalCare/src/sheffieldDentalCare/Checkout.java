@@ -29,44 +29,45 @@ public class Checkout {
 		String possibleCreditTypeColumn;
 		int pid = getPatientID(appointmentID);
 		
-		if (isSubscribed(pid)) {
-			switch(treatmentName) {
-			case "amalF": possibleCreditTypeColumn = "repairCount";
-				break;
-			case "hygVisit": possibleCreditTypeColumn = "hygieneCount";
-				break;
-			case "resinF": possibleCreditTypeColumn = "repairCount";
-				break;
-			case "checkup": possibleCreditTypeColumn = "checkupCount";
-				break;
-			default : possibleCreditTypeColumn = null;
-				break;
-			}
-			try {
-				con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
-						DBController.DB_User, DBController.DB_Password);
-				stmt = con.createStatement();
-				
-				ResultSet rs = stmt.executeQuery("SELECT "+possibleCreditTypeColumn+" FROM TreatmentCredits WHERE patientID = "+pid+";");
-				
-				rs.next();
-				if (rs.getInt(1) > 0) {
-					paidByPlan = true;
-					paid = true;
-					stmt2 = con.createStatement();
-					stmt2.executeUpdate("UPDATE TreatmentCredits SET "+possibleCreditTypeColumn+" = "+possibleCreditTypeColumn+"-1 WHERE patientID = "+pid+";");
+		if (treatmentName != "crown") {
+			if (isSubscribed(pid)) {
+				switch(treatmentName) {
+				case "amalF": possibleCreditTypeColumn = "repairCount";
+					break;
+				case "hygVisit": possibleCreditTypeColumn = "hygieneCount";
+					break;
+				case "resinF": possibleCreditTypeColumn = "repairCount";
+					break;
+				case "checkup": possibleCreditTypeColumn = "checkupCount";
+					break;
+				default : possibleCreditTypeColumn = null;
+					break;
+				}
+				try {
+					con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+							DBController.DB_User, DBController.DB_Password);
+					stmt = con.createStatement();
+					
+					ResultSet rs = stmt.executeQuery("SELECT "+possibleCreditTypeColumn+" FROM TreatmentCredits WHERE patientID = "+pid+";");
+					
+					rs.next();
+					if (rs.getInt(1) > 0) {
+						paidByPlan = true;
+						paid = true;
+						stmt2 = con.createStatement();
+						stmt2.executeUpdate("UPDATE TreatmentCredits SET "+possibleCreditTypeColumn+" = "+possibleCreditTypeColumn+"-1 WHERE patientID = "+pid+";");
+					}
+				}
+				catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+				finally {
+					if (stmt != null) stmt.close();
+					if (con != null) con.close();
+					if (stmt2 != null) stmt2.close();
 				}
 			}
-			catch (SQLException ex) {
-				ex.printStackTrace();
-			}
-			finally {
-				if (stmt != null) stmt.close();
-				if (con != null) con.close();
-				if (stmt2 != null) stmt2.close();
-			}
 		}
-		
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
