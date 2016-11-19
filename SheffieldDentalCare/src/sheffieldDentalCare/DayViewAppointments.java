@@ -8,11 +8,9 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SpinnerModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,8 +22,7 @@ import javax.swing.table.DefaultTableModel;
 public class DayViewAppointments extends ViewAppointments {
 	private String calendarFor;
 	private JLabel dateLbl = new JLabel("Select Date");
-	private SpinnerModel dateModel;
-	private JSpinner dateSpinner;
+	private JComboBox<String> dateCbox = new JComboBox<String>();
 	private ArrayList<String> patients = new ArrayList<String>();
 	public JButton viewBtn = new JButton("View");
 	
@@ -47,11 +44,31 @@ public class DayViewAppointments extends ViewAppointments {
 	@Override
 	public void makeSelectionPanel() {
 		JPanel panel = new JPanel();
-		// Initialise date selector component
-		dateModel = new SpinnerDateModel();
-		dateSpinner = new JSpinner(dateModel);
-		JSpinner.DateEditor de = new JSpinner.DateEditor(dateSpinner, "E dd-MM-yyyy");
-		dateSpinner.setEditor(de);
+		// Set up date drop down list with dates Monday to Friday 4 weeks in advance
+		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
+		Calendar cal = Calendar.getInstance();
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		// If Saturday then skip to Monday
+		if (dayOfWeek == Calendar.SATURDAY) {
+			cal.add(Calendar.DATE, 2);
+			// Else add one day
+		} else {
+			cal.add(Calendar.DATE, 1);
+		}
+		for (int i = 0; i < 20; i++) {
+			dateCbox.addItem(dateFormat.format(cal.getTime()));
+			dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+			// If Friday then skip to Monday
+			if (dayOfWeek == Calendar.FRIDAY) {
+				cal.add(Calendar.DATE, 3);
+				// If Saturday then skip to Monday
+			} else if (dayOfWeek == Calendar.SATURDAY) {
+				cal.add(Calendar.DATE, 2);
+				// Else add one day
+			} else {
+				cal.add(Calendar.DATE, 1);
+			}
+		}
 
 		GroupLayout layout = new GroupLayout(panel);
 		layout.setAutoCreateGaps(true);
@@ -67,7 +84,7 @@ public class DayViewAppointments extends ViewAppointments {
 						.addComponent(dateLbl)
 					)
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(dateSpinner)
+						.addComponent(dateCbox)
 					)
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addComponent(viewBtn)
@@ -80,7 +97,7 @@ public class DayViewAppointments extends ViewAppointments {
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 					.addComponent(dateLbl)
-					.addComponent(dateSpinner)
+					.addComponent(dateCbox)
 					.addComponent(viewBtn)
 				)
 		);
@@ -97,7 +114,7 @@ public class DayViewAppointments extends ViewAppointments {
 		// Set up column names
 		String[] cols = new String [2];
 		cols[0] = "";
-		cols[1] = dateFormat.format(dateSpinner.getValue());
+		cols[1] = dateCbox.getSelectedItem().toString();
 		// Set up times
 		String strTime = "09:00";
 		Date startTime = null;
