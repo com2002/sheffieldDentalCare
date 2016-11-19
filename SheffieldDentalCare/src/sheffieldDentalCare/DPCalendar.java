@@ -18,11 +18,14 @@ public class DPCalendar {
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
 			//check patient clashes
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Appointments WHERE "
-					+ "patientID = " + patientID + " AND date = '" + date + "';");
-			while (rs.next()) {
-				if (timeClash(rs.getString(5),rs.getString(6), start, end)) {					
-					output1 = "Not available: clash with patient's appointment with ID " + rs.getInt(1)+ ". ";
+			// Clashes for a patient only matter if patient is not the "blank"/"absence" patient
+			if (patientID != 1) {
+				ResultSet rs = stmt.executeQuery("SELECT * FROM Appointments WHERE "
+						+ "patientID = " + patientID + " AND date = '" + date + "';");
+				while (rs.next()) {
+					if (timeClash(rs.getString(5),rs.getString(6), start, end)) {					
+						output1 = "Not available: clash with patient's appointment with ID " + rs.getInt(1)+ ". ";
+					}
 				}
 			}
 			//check partner clashes
