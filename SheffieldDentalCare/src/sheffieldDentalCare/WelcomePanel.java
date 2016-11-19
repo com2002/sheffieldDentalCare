@@ -1,32 +1,50 @@
 package sheffieldDentalCare;
+
 import javax.swing.*;
 
+/**
+ * WelcomePanel.java
+ * To select user type to enter system
+ * @author ting
+ *
+ */
 @SuppressWarnings("serial")
 public class WelcomePanel extends JPanel implements Panel {
-	// All components to be added to frame
 	private JLabel titleLbl = new JLabel("Welcome to Sheffield Dental Care");
 	private JLabel userTypeLbl = new JLabel("User");
 	private JComboBox<String> userTypeCbox = new JComboBox<String>();
 	private JButton enterBtn = new JButton("Enter");
 	private JButton exitBtn = new JButton("Exit");
 	
+	/**
+	 * Class constructor
+	 * Initialises panel
+	 */
 	public WelcomePanel() {
 		initComponents();
 		addComponents();
 	}
 	
+	/**
+	 * Get methods
+	 */
 	public JComboBox<String> getUserTypeCbox() {return userTypeCbox;}
 	public JButton getEnterBtn() {return enterBtn;}
 	public JButton getExitBtn() {return exitBtn;}
 	
+	/**
+	 * Adds user type options
+	 */
 	@Override
 	public void initComponents() {
-		// Add user type options
 		userTypeCbox.addItem("Secretary");
 		userTypeCbox.addItem("Dentist");
 		userTypeCbox.addItem("Hygienist");
 	}
-
+	
+	/**
+	 * Lays out components in panel
+	 */
 	@Override
 	public void addComponents() {
 		GroupLayout layout = new GroupLayout(this);
@@ -69,10 +87,5 @@ public class WelcomePanel extends JPanel implements Panel {
 			    	.addComponent(exitBtn)
 			    )
 		);
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 }

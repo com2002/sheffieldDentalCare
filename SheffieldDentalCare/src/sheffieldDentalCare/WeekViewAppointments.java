@@ -17,6 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * WeekViewAppointments.java
+ * Uses the ViewAppointments abstract class and creates a selection panel and table model
+ * @author ting
+ *
+ */
 public class WeekViewAppointments extends ViewAppointments {
 	private String calendarFor;
 	private JLabel selectWeekLbl = new JLabel("Select Week Commencing");
@@ -28,16 +34,25 @@ public class WeekViewAppointments extends ViewAppointments {
 	public JButton viewBtn = new JButton("View");
 	private ArrayList<String> patients = new ArrayList<String>();
 	
+	/**
+	 * Class constructor
+	 * Makes/sets selection panel and table model
+	 * @param cf	Either for "Dentist" or "Hygienist"
+	 */
 	public WeekViewAppointments(String cf) {
 		calendarFor = cf;
 		setPatients();
 		makeSelectionPanel();
-		makeTbl();
+		makeTblModel();
 	}
 	
+	/**
+	 * Creates a selection panel that provides the option to view by all patients or a single patient
+	 */
+	@Override
 	public void makeSelectionPanel() {
 		JPanel panel = new JPanel();
-		// Set default selected as by week
+		// Set default selected as view by all patients
 		allPatientsRBtn.setSelected(true);
 		allPatientsRBtn.setActionCommand("All Patients");
 		singlePatientRBtn.setActionCommand("Single Patient");
@@ -60,8 +75,9 @@ public class WeekViewAppointments extends ViewAppointments {
 			cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 			// Set default selected item of drop down list
 			Calendar cal2 = Calendar.getInstance();
-			// If current week number is equivalent to added week number then set as default
+			// If current week number is equivalent to the week number to be added then set as default
 			if (cal2.get(Calendar.WEEK_OF_YEAR) == cal.get(Calendar.WEEK_OF_YEAR)) {
+				// Allow easier identification of current week
 				weekCbox.addItem("Week " + i + ": " + sdf.format(cal.getTime()) + " (Current)");
 				weekCbox.setSelectedIndex(i-1);
 			} else {
@@ -122,12 +138,18 @@ public class WeekViewAppointments extends ViewAppointments {
 				    .addComponent(viewBtn)
 				)
 		);
+		// Set created panel as selection panel
 		setSelectionPanel(panel);
+		// Add action listeners for radio buttons
 		allPatientsRBtn.addActionListener(new RBtnHandler());
 		singlePatientRBtn.addActionListener(new RBtnHandler());
 	}
-
-	public void makeTbl() {
+	
+	/**
+	 * Creates a table model that shows appointments and places them is a cell according to time and date
+	 */
+	@Override
+	public void makeTblModel() {
 		int weekNo = getWeekNo();
 		// Set column names as dates starting from week selected
 		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
@@ -159,7 +181,7 @@ public class WeekViewAppointments extends ViewAppointments {
 		AppointmentPlot[] appPlot = null;
 		try {
 			String weekCommencingDate = dbDateFormat.format(dateFormat.parse(cols[1]));
-			//System.out.println(weekCommencingDate);
+			// According to calendarFor, get their appointments
 			if (calendarFor == "Hygienist") {
 				appPlot = dpCal.getAppointments(true, weekCommencingDate);
 			} else {
@@ -172,6 +194,7 @@ public class WeekViewAppointments extends ViewAppointments {
 		if (singlePatientRBtn.isSelected()) {
 			patientID = getPatientID(patientsCbox.getSelectedItem().toString());
 		}
+		// Place appointments in cell according to time and date
 		for (int i = 0; i < 24; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (j == 0) {
@@ -188,7 +211,6 @@ public class WeekViewAppointments extends ViewAppointments {
 						cal3.setTime(time);
 						System.out.println(timeFormat.format(cal3.getTime()));
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					System.out.println("DB Date: " + date);
@@ -196,9 +218,10 @@ public class WeekViewAppointments extends ViewAppointments {
 					System.out.println("Col Date: " + cols[j]);
 					System.out.println("Row Time: " + timeFormat.format(cal2.getTime()));
 					System.out.println("");
+					// If view by single patient then no need to add patient details to every appointment
 					if (singlePatientRBtn.isSelected()) {
 						if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal2.getTime())) && patientID == appPlot[k].PATIENTID) {
-							data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME;
+							data[i][j] = "(" + appPlot[k].APPOINTMENTID + ") " + appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME;
 						}
 					} else {
 						if (date.equals(cols[j]) && appPlot[k].STARTTIME.equals(timeFormat.format(cal2.getTime()))) {
@@ -208,7 +231,7 @@ public class WeekViewAppointments extends ViewAppointments {
 									patient = patients.get(l);
 								}
 							}
-							data[i][j] = appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + ": " + patient;
+							data[i][j] = "(" + appPlot[k].APPOINTMENTID + ") " + appPlot[k].STARTTIME + " - " + appPlot[k].ENDTIME + ": " + patient;
 						}
 					}
 				}
@@ -219,8 +242,24 @@ public class WeekViewAppointments extends ViewAppointments {
 		setTblModel(new DefaultTableModel(data, cols));
 	}
 	
+	/**
+	 * Gets all patients from database and sets to patients variable
+	 */
+	private void setPatients() {
+		Registrar reg = new Registrar();
+		try {
+			patients = reg.getForAllPatientsSomeDetails();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		patients.set(0, "1: Absence");
+	}
+	
+	/**
+	 * Gets week number from week drop down list
+	 * @return week number
+	 */
 	private int getWeekNo() {
-		// Get week number from drop down list
 		String week = weekCbox.getSelectedItem().toString();
 		String weekNo = week.substring(5, 7);
 		if (weekNo.contains(":")) {
@@ -229,6 +268,11 @@ public class WeekViewAppointments extends ViewAppointments {
 		return Integer.parseInt(weekNo);
 	}
 	
+	/**
+	 * Gets patient ID from selected patient drop down list
+	 * @param p		Selected patient
+	 * @return patient ID
+	 */
 	private int getPatientID(String p) {
 		String patient = p;
 		int patientID = 0;
@@ -238,28 +282,17 @@ public class WeekViewAppointments extends ViewAppointments {
 		return patientID;
 	}
 	
-	private void setPatients() {
-		Registrar reg = new Registrar();
-		try {
-			patients = reg.getForAllPatientsSomeDetails();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		patients.set(0, "1: Absence");
-	}
-	
-	// Event handler for radio buttons
+	/**
+	 * Event handler for radio buttons
+	 */
 	private class RBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Radio button changed");
 			System.out.println(e.getActionCommand());
 			if (e.getActionCommand() == "Single Patient") {
 				patientsCbox.setEnabled(true);
-				// Show only all of a patient's appointment for that week
 			} else {
 				patientsCbox.setEnabled(false);
-				// Show all patients for that week
 			}
 		}
 	}

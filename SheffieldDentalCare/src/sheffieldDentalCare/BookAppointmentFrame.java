@@ -23,6 +23,12 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 
+/**
+ * BookAppointmentFrame.java
+ * Books an appointment for a specified patient
+ * @author ting
+ *
+ */
 @SuppressWarnings("serial")
 public class BookAppointmentFrame extends JFrame {
 	private int patientID = 0;
@@ -38,20 +44,27 @@ public class BookAppointmentFrame extends JFrame {
 	private JComboBox<String> startTimeCbox = new JComboBox<String>();
 	private JButton bookBtn = new JButton("Book"); 
 	
+	/**
+	 * Class constructor
+	 * Set patientID, initialises frame by setting size and components
+	 * @param p		Patient ID
+	 */
 	public BookAppointmentFrame(int p) {
+		patientID = p;
 		setTitle("Book Appointment");
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenDimensions = toolkit.getScreenSize();
 		setSize(screenDimensions.width/2, screenDimensions.height/2);
 		setLocationByPlatform(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//pack();
 		setVisible(true);
-		patientID = p;
 		initComponents();
 		addComponents();
 	}
 	
+	/**
+	 * Initialises components. Sets titleLbl, radio buttons and drop down list
+	 */
 	private void initComponents() {
 		// Set dentist radio button by default as selected
 		dentistRBtn.setSelected(true);
@@ -86,6 +99,9 @@ public class BookAppointmentFrame extends JFrame {
 		}
 	}
 	
+	/**
+	 * Lays out components in panel and add
+	 */
 	private void addComponents() {
 		Container contentPane = getContentPane();
 		JPanel panel = new JPanel();
@@ -164,7 +180,9 @@ public class BookAppointmentFrame extends JFrame {
 		bookBtn.addActionListener(new BookBtnHandler());
 	}
 	
-	// Event handler for radio buttons
+	/**
+	 * Event handler for radio buttons
+	 */
 	private class RBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Radio button changed");

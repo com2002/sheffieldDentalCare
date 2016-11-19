@@ -1,21 +1,30 @@
 package sheffieldDentalCare;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JFrame;
 
+/**
+ * MainFrame.java
+ * MainFrame is the main frame that the user will use. Will contain other panels
+ * 
+ */
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 	WelcomePanel welcomePanel = new WelcomePanel();
 	public static String USER_TYPE;
 	
+	/**
+	 * Class constructor
+	 * Initialises frame by setting size and first panel
+	 */
 	public MainFrame() {
 		setTitle("Sheffield Dental Care");
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenDimensions = toolkit.getScreenSize();
-		setSize(screenDimensions.width/2, screenDimensions.height/2);
+		setSize(screenDimensions.width, screenDimensions.height);
 		setLocationByPlatform(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Add action listener to Enter button from WelcomePanel
@@ -23,12 +32,13 @@ public class MainFrame extends JFrame {
 		// Add action listener to Exit button from WelcomePanel
 		welcomePanel.getExitBtn().addActionListener(new ExitBtnHandler());
 		setContentPane(welcomePanel);
-		//pack();
 		setVisible(true);
 	}
 	
-	/* Event Handlers */
-	// Event handler for Enter button
+	/**
+	 * Event handler for enterBtn
+	 * Outputs new panel based on user selection of user type
+	 */
 	private class EnterBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			USER_TYPE = welcomePanel.getUserTypeCbox().getSelectedItem().toString();
@@ -52,12 +62,20 @@ public class MainFrame extends JFrame {
 		}
 	}
 
-	// Event handler for Exit button
+	/**
+	 * Event handler for exitrBtn
+	 * Closes application
+	 */
 	private class ExitBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dispose();
 		}
 	}
+	
+	/**
+	 * Main method
+	 * Creates main frame
+	 */
 	public static void main(String[] args) {
 		new MainFrame();
 	}
