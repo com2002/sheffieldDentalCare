@@ -19,9 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SpinnerModel;
 
 /**
  * BookAppointmentFrame.java
@@ -38,8 +35,7 @@ public class BookAppointmentFrame extends JFrame {
 	private JComboBox<String> dentistCbox = new JComboBox<String>();
 	private JRadioButton hygienistRBtn = new JRadioButton("Hygienist");
 	private JLabel dateLbl = new JLabel("Date");
-	private SpinnerModel dateModel;
-	private JSpinner dateSpinner = new JSpinner();
+	private JComboBox<String> dateCbox = new JComboBox<String>();
 	private JLabel startTimeLbl = new JLabel("Start Time");
 	private JComboBox<String> startTimeCbox = new JComboBox<String>();
 	private JButton bookBtn = new JButton("Book"); 
@@ -77,26 +73,32 @@ public class BookAppointmentFrame extends JFrame {
 		// Add types of appointments for dentist drop down list
 		dentistCbox.addItem("Check-Up (20 minutes)");
 		dentistCbox.addItem("Treatment (1 hour)");
-		// Set up date selector
-		dateModel = new SpinnerDateModel();
-		dateSpinner = new JSpinner(dateModel);
-		JSpinner.DateEditor de = new JSpinner.DateEditor(dateSpinner, "E dd-MM-yyyy");
-		dateSpinner.setEditor(de);
-		// Add times to start time drop down list
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		String strTime = "09:00";
-		Date startTime = null;
-		try {
-			startTime = new SimpleDateFormat("HH:mm").parse(strTime);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		// Set up date drop down list with dates Monday to Friday 4 weeks in advance
+		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(startTime);
-		for (int i = 0; i < 24; i++) {
-			startTimeCbox.addItem(timeFormat.format(cal.getTime()));
-			cal.add(Calendar.MINUTE, 20);
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		// If Saturday then skip to Monday
+		if (dayOfWeek == Calendar.SATURDAY) {
+			cal.add(Calendar.DATE, 2);
+			// Else add one day
+		} else {
+			cal.add(Calendar.DATE, 1);
 		}
+		for (int i = 0; i < 20; i++) {
+			dateCbox.addItem(dateFormat.format(cal.getTime()));
+			dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+			// If Friday then skip to Monday
+			if (dayOfWeek == Calendar.FRIDAY) {
+				cal.add(Calendar.DATE, 3);
+				// If Saturday then skip to Monday
+			} else if (dayOfWeek == Calendar.SATURDAY) {
+				cal.add(Calendar.DATE, 2);
+				// Else add one day
+			} else {
+				cal.add(Calendar.DATE, 1);
+			}
+		}
+		setStartTimeCbox(24);
 	}
 	
 	/**
@@ -136,7 +138,7 @@ public class BookAppointmentFrame extends JFrame {
 						.addComponent(dateLbl)
 					)
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(dateSpinner)
+						.addComponent(dateCbox)
 					)
 				)
 				.addGroup(layout.createSequentialGroup()
@@ -165,7 +167,7 @@ public class BookAppointmentFrame extends JFrame {
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 					.addComponent(dateLbl)
-					.addComponent(dateSpinner)
+					.addComponent(dateCbox)
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 					.addComponent(startTimeLbl)
@@ -176,8 +178,31 @@ public class BookAppointmentFrame extends JFrame {
 		// Add event listeners for radio buttons
 		dentistRBtn.addActionListener(new RBtnHandler());
 		hygienistRBtn.addActionListener(new RBtnHandler());
+		// Add event listener for dentist drop down list
+		dentistCbox.addActionListener(new DentistCboxHandler());
 		// Add event listener for book button
 		bookBtn.addActionListener(new BookBtnHandler());
+	}
+	
+	/**
+	 * Adds times to start time drop down list
+	 */
+	private void setStartTimeCbox(int j) {
+		// Add times to start time drop down list
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+		String strTime = "09:00";
+		Date startTime = null;
+		try {
+			startTime = new SimpleDateFormat("HH:mm").parse(strTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(startTime);
+		for (int i = 0; i < j; i++) {
+			startTimeCbox.addItem(timeFormat.format(cal2.getTime()));
+			cal2.add(Calendar.MINUTE, 20);
+		}
 	}
 	
 	/**
@@ -189,8 +214,25 @@ public class BookAppointmentFrame extends JFrame {
 			System.out.println(e.getActionCommand());
 			if (e.getActionCommand() == "Hygienist") {
 				dentistCbox.setEnabled(false);
+				startTimeCbox.removeAllItems();
+				setStartTimeCbox(24);
 			} else {
 				dentistCbox.setEnabled(true);
+			}
+		}
+	}
+	
+	/**
+	 * Event handler for dentist drop down list
+	 */
+	private class DentistCboxHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Dentist drop down list selected item changed");
+			startTimeCbox.removeAllItems();
+			if (dentistCbox.getSelectedItem() == "Treatment (1 hour)" && dentistRBtn.isSelected()) {
+				setStartTimeCbox(22);
+			} else {
+				setStartTimeCbox(24);
 			}
 		}
 	}
@@ -205,12 +247,18 @@ public class BookAppointmentFrame extends JFrame {
 			if (n == 0) {
 				System.out.println("Yes");
 				DPCalendar dpCal = new DPCalendar();
-				//SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
+				// Change date selected into database format
+				SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
 				SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-				Date date =	(Date) dateSpinner.getValue();
+				Date date = null;
+				try {
+					date = dateFormat.parse(dateCbox.getSelectedItem().toString());
+				} catch (ParseException e2) {
+					e2.printStackTrace();
+				} 
 				String strDate = dbDateFormat.format(date);
 				// Calculate end time
+				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 				Calendar cal = Calendar.getInstance();
 				String strStartTime = startTimeCbox.getSelectedItem().toString();
 				Date startTime = null;
