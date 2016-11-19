@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 /**
  * BookAbsencePanel.java
@@ -113,95 +115,71 @@ public class BookAbsencePanel extends JPanel {
 	 * Lays out components in panel
 	 */
 	private void addComponents() {
+		
+		JButton btnCancelAnAbsence = new JButton("Cancel an Absence");
+		btnCancelAnAbsence.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					new CancelAppointmentFrame(1);
+				}
+				catch (SQLException ex){
+					JOptionPane.showMessageDialog(null, "Server error!", "Error", JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();
+				}
+			}
+		});
 		GroupLayout layout = new GroupLayout(this);
+		layout.setHorizontalGroup(
+			layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+						.addComponent(titleLbl)
+						.addGroup(layout.createSequentialGroup()
+							.addComponent(forLbl)
+							.addComponent(dentistRBtn)
+							.addComponent(hygienistRBtn))
+						.addGroup(layout.createSequentialGroup()
+							.addComponent(dateLbl)
+							.addComponent(dateCbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(layout.createSequentialGroup()
+							.addComponent(timeLbl)
+							.addComponent(wholeDayRBtn)
+							.addComponent(timePeriodRBtn)
+							.addComponent(startTimeLbl)
+							.addComponent(startTimeCbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(endTimeLbl)
+							.addComponent(endTimeCbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(bookBtn)
+						.addComponent(btnCancelAnAbsence))
+					.addContainerGap(100, Short.MAX_VALUE))
+		);
+		layout.setVerticalGroup(
+			layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup()
+					.addComponent(titleLbl)
+					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(forLbl)
+						.addComponent(dentistRBtn)
+						.addComponent(hygienistRBtn))
+					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(dateLbl)
+						.addComponent(dateCbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(timeLbl)
+						.addComponent(wholeDayRBtn)
+						.addComponent(timePeriodRBtn)
+						.addComponent(startTimeLbl)
+						.addComponent(startTimeCbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(endTimeLbl)
+						.addComponent(endTimeCbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addComponent(bookBtn)
+					.addPreferredGap(ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+					.addComponent(btnCancelAnAbsence)
+					.addContainerGap())
+		);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		this.setLayout(layout);
-		
-		// Add components to layout
-		// Position components in the horizontal
-		layout.setHorizontalGroup(
-			layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(titleLbl)
-				.addGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(forLbl)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(dentistRBtn)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(hygienistRBtn)
-					)
-				)
-				.addGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(dateLbl)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(dateCbox)
-					)
-				)
-				.addGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(timeLbl)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(wholeDayRBtn)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(timePeriodRBtn)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(startTimeLbl)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(startTimeCbox)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(endTimeLbl)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(endTimeCbox)
-					)
-				)
-				.addGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(bookBtn)
-					)
-				)
-				)
-		);
-				
-		// Position components in the vertical
-		layout.setVerticalGroup(
-			layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(titleLbl)
-				)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(forLbl)
-					.addComponent(dentistRBtn)
-					.addComponent(hygienistRBtn)			    		
-				)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(dateLbl)
-					.addComponent(dateCbox)
-				)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(timeLbl)
-					.addComponent(wholeDayRBtn)
-					.addComponent(timePeriodRBtn)
-					.addComponent(startTimeLbl)
-					.addComponent(startTimeCbox)
-					.addComponent(endTimeLbl)
-					.addComponent(endTimeCbox)
-				)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(bookBtn)
-				)
-		);
 		// Add action listeners for radio buttons
 		wholeDayRBtn.addActionListener(new RBtnHandler());
 		timePeriodRBtn.addActionListener(new RBtnHandler());
