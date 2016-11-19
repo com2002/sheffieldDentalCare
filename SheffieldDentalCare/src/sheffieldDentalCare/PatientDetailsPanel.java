@@ -1,17 +1,10 @@
 package sheffieldDentalCare;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.awt.event.*;
+import java.sql.*;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class PatientDetailsPanel extends JPanel {
 	private int patientID;
@@ -56,7 +49,6 @@ public class PatientDetailsPanel extends JPanel {
 				getPatientDetails();
 			}
 			catch (SQLException ex) {
-				System.out.println("Error: getPatientDetails failed");
 				this.add(new JLabel("Patient not found", JLabel.CENTER));
 				return;
 			} 
@@ -64,11 +56,9 @@ public class PatientDetailsPanel extends JPanel {
 				getPatientPlanDetails();
 			}
 			catch (SQLException ex) {
-				System.out.println("Error: getPatientPlanDetails failed");
 				this.add(new JLabel("Patient plan not found", JLabel.CENTER));
 				return;
 			} 
-			this.add(new JLabel("Patient found", JLabel.CENTER));
 			
 			// add patient's details
 			this.add(new JLabel("Patient ID:             " + patientID, JLabel.LEFT));
@@ -180,29 +170,85 @@ public class PatientDetailsPanel extends JPanel {
 	
 	private void displayPlanDetails() {
 		String planNameString;
+		
+		// NEED TO ADD OPTIONS FOR HEALTHCARE PLAN
+		// IF NOT SUBSCRIBED TO A PLAN, DISPLAY A DROPDOWN MENU WITH THE POSSIBLE PLANS, WITH A 'SUBSCRIBE' BUTTON
+		// IF ALREADY SUBSCRIBED TO A PLAN, DISPLAY AN 'UNSUBSCRIBE' BUTTON
+		
+		// get the patient's plan name, or 'none' if they don't have one 
 		if (planName==null) {
-			planNameString = "None";
+			planNameString = "None";	
 		}
 		else {
 			switch (planName) {
-        	case "nhsfPlan":  planNameString = "NHS Free Plan";
-        		break;
-        	case "maintPlan":  planNameString = "Maintenance Plan";
-         		break;
-        	case "ohPlan":  planNameString = "Oral Health Plan";
-        		break;
-        	case "drPlan": planNameString = "Dental Repair Plan";
-        		break;
-        	default: planNameString = "None";
-        		break;
+        		case "nhsfPlan":  planNameString = "NHS Free Plan";
+        			break;
+        		case "maintPlan":  planNameString = "Maintenance Plan";
+         			break;
+        		case "ohPlan":  planNameString = "Oral Health Plan";
+        			break;
+        		case "drPlan": planNameString = "Dental Repair Plan";
+        			break;
+        		default: planNameString = "None";
+        			break;
+			}
 		}
-    }
-		this.add(new JLabel("Healthcare Plan: " + planNameString, JLabel.LEFT));
-		if (planName!=null) {
-			this.add(new JLabel("Check-up Credits Remaining: " + checkupCount, JLabel.LEFT));
-			this.add(new JLabel("Date of Birth:        " + dOB, JLabel.LEFT));
-			this.add(new JLabel("Phone Number:   " + phoneNumber, JLabel.LEFT));
+		
+		this.add(new JLabel("Healthcare Plan:     " + planNameString, JLabel.LEFT));
+		JPanel planPanel = new JPanel();
+		
+		// if the patient is not on a plan, give the user the option to subscribe to a plan
+		// if they are, give the user the option to unsubscribe from the plan
+		if (planName==null) {
+			JComboBox<String> plansCbox = new JComboBox<String>();
+			plansCbox.addItem("NHS Free Plan");
+			plansCbox.addItem("Maintenance Plan");
+			plansCbox.addItem("Oral Health Plan");
+			plansCbox.addItem("Dental Repair Plan");
+			JButton subscribeBtn = new JButton("Subscribe to Plan");
+			subscribeBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String planSelected = plansCbox.getSelectedItem().toString();
+					switch (planSelected) {
+	        			case "NHS Free Plan":  subToPlan(patientID, "nhsfPlan");
+	        				break;
+	        			case "Maintenance Plan":  subToPlan(patientID, "nhsfPlan");
+	         				break;
+	        			case "Oral Health Plan":  subToPlan(patientID, "nhsfPlan");
+	        				break;
+	        			case "Dental Repair Plan": subToPlan(patientID, "nhsfPlan");
+	        				break;
+	        			default: System.out.println("No plan selected");
+	        				break;
+					}
+				}
+			});
+			planPanel.add(plansCbox);
+			planPanel.add(subscribeBtn);
+			this.add(planPanel);
 		}
+		else {
+			JButton unsubscribeBtn = new JButton("Unsubscribe from Plan");
+			unsubscribeBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					unsubFromPlan(patientID);
+				}
+			});
+			this.add(unsubscribeBtn);
+		}
+		
+		// display number of treatment credits remaining
+		this.add(new JLabel("Check-up Credits Remaining: " + checkupCount, JLabel.LEFT));
+		this.add(new JLabel("Hygiene Credits Remaining:   " + hygieneCount, JLabel.LEFT));
+		this.add(new JLabel("Repair Credits Remaining:     " + repairCount, JLabel.LEFT));
+	}
+	
+	private void subToPlan(int patientID, String plan) {
+		System.out.println("Plan " + plan + " subscribed for Patient " + patientID);
+	}
+	
+	private void unsubFromPlan(int patientID) {
+		System.out.println("Patient" + patientID + " unsubscribed from plan");
 	}
 	
 	private void getPatientPlanDetails() throws SQLException {
