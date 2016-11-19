@@ -14,7 +14,7 @@ public class DBBuilder {
 		qs[2] = "DROP TABLE Appointment;";
 		qs[3] = "DROP TABLE TreatmentCredits;";
 		qs[4] = "DROP TABLE HealthcarePlan;";
-		qs[5] = "DROP TABLE Patients;";
+		qs[5] = "DROP TABLE Patient;";
 		qs[6] = "DROP TABLE Address;";
 		
 		for (int i=0;i<7;i++) {
