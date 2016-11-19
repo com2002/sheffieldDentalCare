@@ -70,11 +70,11 @@ public class BookAbsencePanel extends JPanel {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
 		Calendar cal = Calendar.getInstance();
 		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		// If Saturday then skip to Monday
+		// If Saturday then skip to Monday by adding two days
 		if (dayOfWeek == Calendar.SATURDAY) {
 			cal.add(Calendar.DATE, 2);
-		// Else add one day
-		} else {
+		// Else if Sunday then skip to Monday by adding one day
+		} else if (dayOfWeek == Calendar.SUNDAY){
 			cal.add(Calendar.DATE, 1);
 		}
 		for (int i = 0; i < 20; i++) {

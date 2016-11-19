@@ -52,7 +52,7 @@ public class DayViewAppointments extends ViewAppointments {
 		if (dayOfWeek == Calendar.SATURDAY) {
 			cal.add(Calendar.DATE, 2);
 			// Else add one day
-		} else {
+		} else if (dayOfWeek == Calendar.SUNDAY) {
 			cal.add(Calendar.DATE, 1);
 		}
 		for (int i = 0; i < 20; i++) {
