@@ -19,10 +19,6 @@ public class PatientDetailsPanel extends JPanel {
 	private String district;
 	private String city;
 	private String postcode;
-	private int checkupCount;
-	private int hygieneCount;
-	private int repairCount;
-	private String planName;
 	
 	private Registrar reg = new Registrar();
 	private PatientPlan plan;

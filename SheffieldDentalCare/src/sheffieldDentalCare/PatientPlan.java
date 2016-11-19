@@ -70,25 +70,25 @@ public class PatientPlan {
 					switch (planSelected) {
 	        			case "NHS Free Plan":  {
 	        				try {
-	        					subToPlan(patientID, "nhsfPlan");
+	        					subToPlan("nhsfPlan");
 	        				} catch (SQLException ex) {} 
 	        				}
 	        				break;
 	        			case "Maintenance Plan":  {
 	        				try {
-	        					subToPlan(patientID, "maintPlan");
+	        					subToPlan("maintPlan");
 	        				} catch (SQLException ex) {} 
 	        				}
 	         				break;
 	        			case "Oral Health Plan":  {
 	        				try {
-	        					subToPlan(patientID, "ohPlan");
+	        					subToPlan("ohPlan");
 	        				} catch (SQLException ex) {} 
 	        				}
 	        				break;
 	        			case "Dental Repair Plan": {
 	        				try {
-	        					subToPlan(patientID, "drPlan");
+	        					subToPlan("drPlan");
 	        				} catch (SQLException ex) {} 
 	        				}
 	        				break;
@@ -106,7 +106,7 @@ public class PatientPlan {
 			unsubscribeBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						unsubFromPlan(patientID);
+						unsubFromPlan();
     				} catch (SQLException ex) {}
 				}
 			});
@@ -119,11 +119,70 @@ public class PatientPlan {
 		pdPanel.add(new JLabel("Repair Credits Remaining:     " + repairCount, JLabel.LEFT));
 	}
 	
-	private void subToPlan(int patientID, String plan) throws SQLException {
+	private void subToPlan(String plan) throws SQLException {
+		int initCheckupCount = 0;
+		int initHygieneCount = 0;
+		int initRepairCount = 0;
+		
+		Connection con = null;
+		Statement stmt = null;
+		
+		// get initial credits
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
+			stmt = con.createStatement();
+			ResultSet res = stmt.executeQuery("SELECT initialCheckUps, initialHygVisits, initialRepairs "
+					+ "FROM HealthcarePlan WHERE planName = '" + plan + "';");
+			while(res.next()) {
+				initCheckupCount = res.getInt(1);
+				initHygieneCount = res.getInt(2);
+				initRepairCount = res.getInt(3);
+			}
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
+		}
+		
+		// update the TreatmentCredits table in database with new plan for patient
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
+			stmt = con.createStatement();
+			stmt.executeUpdate("INSERT INTO TreatmentCredits "
+					+ "VALUES("+ patientID +", " + initCheckupCount + ", "
+							+ initHygieneCount + ", " + initRepairCount + ", '" + plan + "');");
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
+		}
 		System.out.println("Plan " + plan + " subscribed for Patient " + patientID);
 	}
 	
-	private void unsubFromPlan(int patientID) throws SQLException {
+	private void unsubFromPlan() throws SQLException {
+		Connection con = null;
+		Statement stmt = null;
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
+					DBController.DB_User, DBController.DB_Password);
+			stmt = con.createStatement();
+			stmt.executeUpdate("DELETE FROM TreatmentCredits WHERE patientID = " + patientID + ";");
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (con != null) con.close();
+		}
 		System.out.println("Patient" + patientID + " unsubscribed from plan");
 	}
 	
@@ -157,13 +216,5 @@ public class PatientPlan {
 			if (con != null) con.close();
 		}
 	}
-	
-	public int getCheckupCount() {return checkupCount;}
-	
-	public int getHygieneCount() {return hygieneCount;}
-	
-	public int getRepairCount() {return repairCount;}
-	
-	public String getPlanName() {return planName;}
 	
 }
