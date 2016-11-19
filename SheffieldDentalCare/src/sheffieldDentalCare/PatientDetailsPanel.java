@@ -92,7 +92,12 @@ public class PatientDetailsPanel extends JPanel {
 			JButton cancelAppointmentsBtn = new JButton("Cancel");
 			cancelAppointmentsBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					try {					
+					new CancelAppointmentFrame(patientID);
+					}
+					catch (SQLException ex){
+						ex.printStackTrace();
+					}
 				}
 			});
 			appointmentsActions.add(bookAppointmentBtn);
