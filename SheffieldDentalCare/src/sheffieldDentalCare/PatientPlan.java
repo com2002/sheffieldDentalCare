@@ -164,6 +164,7 @@ public class PatientPlan {
 			if (stmt != null) stmt.close();
 			if (con != null) con.close();
 		}
+		pdPanel.updateDetailsDisplayed();
 		System.out.println("Plan " + plan + " subscribed for Patient " + patientID);
 	}
 	
@@ -183,6 +184,7 @@ public class PatientPlan {
 			if (stmt != null) stmt.close();
 			if (con != null) con.close();
 		}
+		pdPanel.updateDetailsDisplayed();
 		System.out.println("Patient" + patientID + " unsubscribed from plan");
 	}
 	

@@ -171,4 +171,11 @@ public class PatientDetailsPanel extends JPanel {
 		}
 	}
 	
+	public void updateDetailsDisplayed() {
+		this.removeAll();
+		displayResults();
+		this.validate();
+		this.repaint();
+	}
+
 }
