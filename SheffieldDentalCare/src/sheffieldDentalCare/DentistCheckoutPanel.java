@@ -12,11 +12,12 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
  * DentistCheckoutPanel.java
- * To check out and add treatments to an appointment with a patient
+ * To check out patient and add treatments to an appointment
  * @author ting
  *
  */
@@ -33,12 +34,18 @@ public class DentistCheckoutPanel extends JPanel {
 	private JButton checkoutBtn = new JButton("Checkout");
 	private ArrayList<String> patients = new ArrayList<String>();
 	
+	/**
+	 * Class constructor
+	 */
 	public DentistCheckoutPanel() {
 		setPatients();
 		initComponents();
 		addComponents();
 	}
 	
+	/**
+	 * Populates appointments drop down list
+	 */
 	private void initComponents() {
 		// Populate appointments drop down list
 		// Get appointments for current day
@@ -68,11 +75,15 @@ public class DentistCheckoutPanel extends JPanel {
 					patient = patients.get(j);
 				}
 			}
+			// Add appointment as item to drop down list
 			appointmentCbox.addItem("(" + appPlot[i].APPOINTMENTID + ") " + appPlot[i].STARTTIME + " - " + appPlot[i].ENDTIME + ": " + patient);
 			System.out.println("(" + appPlot[i].APPOINTMENTID + ") " + appPlot[i].STARTTIME + " - " + appPlot[i].ENDTIME + ": " + patient);
 		}
 	}
 	
+	/**
+	 * Lays out components in panel
+	 */
 	private void addComponents() {
 		GroupLayout layout = new GroupLayout(this);
 		layout.setAutoCreateGaps(true);
@@ -153,11 +164,32 @@ public class DentistCheckoutPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Checkout button clicked");
 			int appointmentID = getAppointmentID();
-			boolean[] treatmentsSelected = {checkUpChBox.isSelected(), amalgamChBox.isSelected(),
-											resinChBox.isSelected(), crownChBox.isSelected()};
-			String[] treatmentNames = {"checkup", "amalF", "resinF"};
-			Checkout checkout = new Checkout();
-			
+			boolean[] treatmentSelected = {checkUpChBox.isSelected(), amalgamChBox.isSelected(),
+										   resinChBox.isSelected(), crownChBox.isSelected()};
+			String[] treatmentName = {"checkup", "amalF", "resinF", "crown"};
+			// Confirm that user wants to checkout patient
+			int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to checkout this patient?", "Confirm Absence", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (n == 0) {
+				System.out.println("Yes");
+				Checkout checkout = new Checkout();
+				for (int i = 0; i < treatmentName.length; i++) {
+					if (treatmentSelected[i]) {
+						try {
+							int rowsAdded = checkout.addTreatmentToAppointment(appointmentID, treatmentName[i]);
+							System.out.println("Rows added: " + rowsAdded);
+						} catch (SQLException e1) {
+							// Output error message
+							JOptionPane.showMessageDialog(null, e1.toString(), "Error - Database", JOptionPane.ERROR_MESSAGE);
+							e1.printStackTrace();
+						} finally {
+							// Output confirmation for user
+							JOptionPane.showMessageDialog(null, "Patient checked out.", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+						}
+					}
+				}
+			} else {
+				System.out.println("No");
+			}
 		}
 	}
 	
@@ -177,7 +209,7 @@ public class DentistCheckoutPanel extends JPanel {
 	/**
 	 * Gets patient ID from selected patient drop down list
 	 * @param p		Selected patient
-	 * @return
+	 * @return patientID
 	 */
 	private int getPatientID(String p) {
 		String patient = p;
