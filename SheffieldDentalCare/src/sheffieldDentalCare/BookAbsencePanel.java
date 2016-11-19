@@ -19,6 +19,12 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 
+/**
+ * BookAbsencePanel.java
+ * Books a leave of absence for a partner
+ * @author ting
+ *
+ */
 @SuppressWarnings("serial")
 public class BookAbsencePanel extends JPanel {
 	private JLabel titleLbl = new JLabel("Book Absence");
@@ -37,11 +43,17 @@ public class BookAbsencePanel extends JPanel {
 	private JComboBox<String> endTimeCbox = new JComboBox<String>();
 	private JButton bookBtn = new JButton("Book");
 	
+	/**
+	 * Class constructor
+	 */
 	public BookAbsencePanel() {
 		initComponents();
 		addComponents();
 	}
 	
+	/**
+	 * Initialises components. Sets radio buttons, date selector and time drop down lists
+	 */
 	private void initComponents() {
 		// Set dentist radio button by default as selected
 		dentistRBtn.setSelected(true);
@@ -81,6 +93,9 @@ public class BookAbsencePanel extends JPanel {
 		endTimeCbox.setEnabled(false);
 	}
 	
+	/**
+	 * Lays out components in panel
+	 */
 	private void addComponents() {
 		GroupLayout layout = new GroupLayout(this);
 		layout.setAutoCreateGaps(true);
@@ -171,12 +186,15 @@ public class BookAbsencePanel extends JPanel {
 					.addComponent(bookBtn)
 				)
 		);
+		// Add action listeners for radio buttons
 		wholeDayRBtn.addActionListener(new RBtnHandler());
 		timePeriodRBtn.addActionListener(new RBtnHandler());
+		// Add action listener for book button
 		bookBtn.addActionListener(new BookBtnHandler());
 	}
-	
-	// Event handler for book button
+	/**
+	 * Event handler for book button
+	 */
 	private class BookBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Book button clicked");
@@ -258,7 +276,9 @@ public class BookAbsencePanel extends JPanel {
 		}
 	}
 	
-	// Event handler for radio buttons
+	/**
+	 * Event handler for radio buttons
+	 */
 	private class RBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Radio button changed");
@@ -273,8 +293,13 @@ public class BookAbsencePanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Checks whether end time is valid
+	 * @return valid
+	 */
 	private boolean validateEndTime() {
 		boolean valid = true;
+		// If whole day then ignore what is in drop down lists
 		if (timePeriodRBtn.isSelected()) {
 			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 			Calendar cal = Calendar.getInstance();

@@ -9,6 +9,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * ViewAppointmentsPanel.java
+ * Creates a panel for viewing appointments.
+ * @author ting
+ * 
+ */
+
 @SuppressWarnings("serial")
 public class ViewAppointmentsPanel extends JPanel implements Panel {
 	private String calendarFor;
@@ -21,6 +28,12 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 	private WeekViewAppointments weekView;
 	private DayViewAppointments dayView;
 	
+	/**
+	 * Class constructor
+	 * Initialises panel
+	 * @param vt	Either "Week" or "Day"
+	 * @param cf	Either for "Dentist" or "Hygienist"
+	 */
 	public ViewAppointmentsPanel(String vt, String cf) {
 		viewType = vt;
 		calendarFor = cf;
@@ -28,6 +41,9 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 		addComponents();
 	}
 	
+	/**
+	 * Initialises components. Sets titleLbl, selectionPanel and table
+	 */
 	@Override
 	public void initComponents() {
 		if (calendarFor == "Dentist") {
@@ -51,7 +67,10 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 		tbl.getTableHeader().setReorderingAllowed(false);
 		tbl.setCellSelectionEnabled(false);
 	}
-
+	
+	/**
+	 * Lays out components in panel and add
+	 */
 	@Override
 	public void addComponents() {
 		GroupLayout layout = new GroupLayout(this);
@@ -87,6 +106,7 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 					.addComponent(scrollPane)
 				)
 		);
+		// Add action listeners to viewBtn according to view type
 		if (viewType == "Week") {
 			weekView.viewBtn.addActionListener(new ViewBtnHandler());
 		} else {
@@ -94,15 +114,19 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 		}
 	}
 	
-	// Event handler for drop down list for weeks
+	/**
+	 * Event handler for drop down list for weeks
+	 */
 	private class ViewBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Selection options changed");
+			// Update table model
+			// Get updated table model
 			if (viewType == "Week") {
-				weekView.makeTbl();
+				weekView.makeTblModel();
 				tblModel = weekView.getTblModel();
 			} else {
-				dayView.makeTbl();
+				dayView.makeTblModel();
 				tblModel = dayView.getTblModel();
 			}
 			tbl.setModel(tblModel);
