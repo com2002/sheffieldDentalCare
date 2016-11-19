@@ -52,7 +52,7 @@ public class CancelAppointmentFrame extends JFrame {
 	public CancelAppointmentFrame(int patientID) throws SQLException {
 		this.patientID = patientID;
 		setTitle("Cancel Appointments by Patient. Current Patient's ID is: "+patientID);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -60,7 +60,7 @@ public class CancelAppointmentFrame extends JFrame {
 		
 		JScrollPane futureAppsScrPane = new JScrollPane();
 		futureAppsScrPane.setBorder(BorderFactory.createTitledBorder("Patient's Future Appointments"));
-		
+		setVisible(true);
 		btnCancelApp = new JButton("<html>Cancel Selected <br>Appointment</html>");
 		btnCancelApp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
