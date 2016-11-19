@@ -72,10 +72,10 @@ public class BookAbsencePanel extends JPanel {
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i < 24; i++) {
 			startTimeCbox.addItem(timeFormat.format(cal.getTime()));
-			endTimeCbox.addItem(timeFormat.format(cal.getTime()));
 			cal.add(Calendar.MINUTE, 20);
+			endTimeCbox.addItem(timeFormat.format(cal.getTime()));
 		}
 		startTimeCbox.setEnabled(false);
 		endTimeCbox.setEnabled(false);
@@ -210,7 +210,7 @@ public class BookAbsencePanel extends JPanel {
 					String availability = null;
 					try {
 						System.out.println(patientID);
-						System.out.println(pHygienist);
+						System.out.println("Hygienist: " + pHygienist);
 						System.out.println(strDate);
 						System.out.println(startTime);
 						System.out.println(endTime);
@@ -222,10 +222,10 @@ public class BookAbsencePanel extends JPanel {
 					if (availability.equals("")) {
 						System.out.println("Available");
 						// Add absence as an appointment for blank patient in database
-						int addedRows = 0;
+						int appID = 0;
 						try {
-							addedRows = dpCal.addAppointment(patientID, pHygienist, strDate, startTime, endTime);
-							System.out.println("Added Rows: " + addedRows);
+							appID = dpCal.addAppointment(patientID, pHygienist, strDate, startTime, endTime);
+							System.out.println("Appointment ID: " + appID);
 						} catch (SQLException e1) {
 							// Output error message
 							JOptionPane.showMessageDialog(null, e1.toString(), "Error - Database", JOptionPane.ERROR_MESSAGE);
@@ -275,19 +275,28 @@ public class BookAbsencePanel extends JPanel {
 	
 	private boolean validateEndTime() {
 		boolean valid = true;
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		// Calculate end time
-		Calendar cal = Calendar.getInstance();
-		Date endTime = null;
-		try {
-			endTime = timeFormat.parse(endTimeCbox.getSelectedItem().toString());
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if (timePeriodRBtn.isSelected()) {
+			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+			Calendar cal = Calendar.getInstance();
+			Date startTime = null;
+			try {
+				startTime = timeFormat.parse(startTimeCbox.getSelectedItem().toString());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			cal.setTime(startTime);
+			Calendar cal2 = Calendar.getInstance();
+			Date endTime = null;
+			try {
+				endTime = timeFormat.parse(endTimeCbox.getSelectedItem().toString());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			cal2.setTime(endTime);
+			// Check if start time selected is before end time selected
+			valid = cal.getTime().before(cal2.getTime());
+			System.out.println("Valid End Time: " + valid);
 		}
-		cal.setTime(endTime);
-		// Check if end time selected is before start time selected
-		valid = cal.before(startTimeCbox.getSelectedItem());
-		System.out.println("Valid End Time: " + valid);
 		return valid;
 	}
 }
