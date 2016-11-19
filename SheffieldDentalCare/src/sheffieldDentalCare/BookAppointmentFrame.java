@@ -80,7 +80,7 @@ public class BookAppointmentFrame extends JFrame {
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i < 24; i++) {
 			startTimeCbox.addItem(timeFormat.format(cal.getTime()));
 			cal.add(Calendar.MINUTE, 20);
 		}
@@ -264,10 +264,5 @@ public class BookAppointmentFrame extends JFrame {
 				System.out.println("No");
 			}
 		}
-	}
-	
-	// Test frame
-	public static void main(String[] args) {
-		new BookAppointmentFrame(1);
 	}
 }
