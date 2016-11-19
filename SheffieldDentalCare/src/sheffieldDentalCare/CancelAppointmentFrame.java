@@ -36,7 +36,7 @@ public class CancelAppointmentFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CancelAppointmentFrame frame = new CancelAppointmentFrame(1);
+					CancelAppointmentFrame frame = new CancelAppointmentFrame(2);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -148,8 +148,8 @@ public class CancelAppointmentFrame extends JFrame {
 				+ "startTime as StartTime, "
 				+ "endTime as EndTime FROM Appointments "
 				+ "WHERE patientID = "+patientID
-				+ " AND date > CURDATE() "
-				+ "AND startTime > CURTIME()"
+				+ " AND date > CURDATE() OR "
+				+ "(date = CURDATE() AND startTime > CURTIME())"
 				+ ";");
 		
 		table.setModel(MyDbConverter.resultSetToMyTableModel(rs));
