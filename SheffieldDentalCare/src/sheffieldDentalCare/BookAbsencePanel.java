@@ -15,9 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SpinnerModel;
 
 /**
  * BookAbsencePanel.java
@@ -32,8 +29,7 @@ public class BookAbsencePanel extends JPanel {
 	private JRadioButton dentistRBtn = new JRadioButton("Dentist");
 	private JRadioButton hygienistRBtn = new JRadioButton("Hygienist");
 	private JLabel dateLbl = new JLabel("Date");
-	private SpinnerModel dateModel;
-	private JSpinner dateSpinner = new JSpinner();
+	private JComboBox<String> dateCbox = new JComboBox<String>();
 	private JLabel timeLbl = new JLabel("Time");
 	private JLabel startTimeLbl = new JLabel("Start Time");
 	private JRadioButton wholeDayRBtn = new JRadioButton("Whole Day");
@@ -68,11 +64,31 @@ public class BookAbsencePanel extends JPanel {
 		ButtonGroup timeBtnGroup = new ButtonGroup();
 		timeBtnGroup.add(wholeDayRBtn);
 		timeBtnGroup.add(timePeriodRBtn);
-		// Set up date selector
-		dateModel = new SpinnerDateModel();
-		dateSpinner = new JSpinner(dateModel);
-		JSpinner.DateEditor de = new JSpinner.DateEditor(dateSpinner, "E dd-MM-yyyy");
-		dateSpinner.setEditor(de);
+		// Set up date drop down list with dates Monday to Friday 4 weeks in advance
+		SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
+		Calendar cal = Calendar.getInstance();
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		// If Saturday then skip to Monday
+		if (dayOfWeek == Calendar.SATURDAY) {
+			cal.add(Calendar.DATE, 2);
+		// Else add one day
+		} else {
+			cal.add(Calendar.DATE, 1);
+		}
+		for (int i = 0; i < 20; i++) {
+			dateCbox.addItem(dateFormat.format(cal.getTime()));
+			dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+			// If Friday then skip to Monday
+			if (dayOfWeek == Calendar.FRIDAY) {
+				cal.add(Calendar.DATE, 3);
+			// If Saturday then skip to Monday
+			} else if (dayOfWeek == Calendar.SATURDAY) {
+				cal.add(Calendar.DATE, 2);
+			// Else add one day
+			} else {
+				cal.add(Calendar.DATE, 1);
+			}
+		}
 		// Add times to start time and end time drop down lists
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		String strTime = "09:00";
@@ -82,12 +98,12 @@ public class BookAbsencePanel extends JPanel {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(startTime);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(startTime);
 		for (int i = 0; i < 24; i++) {
-			startTimeCbox.addItem(timeFormat.format(cal.getTime()));
-			cal.add(Calendar.MINUTE, 20);
-			endTimeCbox.addItem(timeFormat.format(cal.getTime()));
+			startTimeCbox.addItem(timeFormat.format(cal2.getTime()));
+			cal2.add(Calendar.MINUTE, 20);
+			endTimeCbox.addItem(timeFormat.format(cal2.getTime()));
 		}
 		startTimeCbox.setEnabled(false);
 		endTimeCbox.setEnabled(false);
@@ -124,7 +140,7 @@ public class BookAbsencePanel extends JPanel {
 						.addComponent(dateLbl)
 					)
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(dateSpinner)
+						.addComponent(dateCbox)
 					)
 				)
 				.addGroup(layout.createSequentialGroup()
@@ -171,7 +187,7 @@ public class BookAbsencePanel extends JPanel {
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 					.addComponent(dateLbl)
-					.addComponent(dateSpinner)
+					.addComponent(dateCbox)
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 					.addComponent(timeLbl)
@@ -198,9 +214,9 @@ public class BookAbsencePanel extends JPanel {
 	private class BookBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Book button clicked");
-			boolean valid = validateEndTime();
-			if (valid) {
-				System.out.println("Valid End Time: "+ valid);
+			boolean validEndTime = validateEndTime();
+			if (validEndTime) {
+				System.out.println("Valid End Time: "+ validEndTime);
 				// Confirm with user booking of absence
 				int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to book this leave of absence?", "Confirm Absence", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				System.out.println(n);
@@ -209,8 +225,14 @@ public class BookAbsencePanel extends JPanel {
 					// Blank patient's ID by default is 1
 					int patientID = 1;
 					// Change date selected into database format
+					SimpleDateFormat dateFormat = new SimpleDateFormat("E dd-MM-yyyy");
+					Date date = null;
+					try {
+						date = dateFormat.parse(dateCbox.getSelectedItem().toString());
+					} catch (ParseException e2) {
+						e2.printStackTrace();
+					} 
 					SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-					Date date =	(Date) dateSpinner.getValue();
 					String strDate = dbDateFormat.format(date);
 					boolean pHygienist = false;
 					if (hygienistRBtn.isSelected()) {
