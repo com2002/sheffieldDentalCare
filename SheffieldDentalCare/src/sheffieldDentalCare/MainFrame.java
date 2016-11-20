@@ -3,8 +3,9 @@ package sheffieldDentalCare;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 /**
  * MainFrame.java
@@ -16,7 +17,7 @@ public class MainFrame extends JFrame {
 	WelcomePanel welcomePanel = new WelcomePanel();
 	public static String USER_TYPE;
 	private JMenuBar menuBar = new JMenuBar();
-	private JMenu logoutMenu = new JMenu("Logout");
+	private JMenuItem logoutMItem = new JMenuItem("Logout");
 	
 	/**
 	 * Class constructor
@@ -34,6 +35,8 @@ public class MainFrame extends JFrame {
 		welcomePanel.getEnterBtn().addActionListener(new EnterBtnHandler());
 		// Add action listener to Exit button from WelcomePanel
 		welcomePanel.getExitBtn().addActionListener(new ExitBtnHandler());
+		logoutMItem.addActionListener(new LogoutMItemHandler());
+		menuBar.add(logoutMItem);
 		setContentPane(welcomePanel);
 		setVisible(true);
 	}
@@ -44,7 +47,6 @@ public class MainFrame extends JFrame {
 	 */
 	private class EnterBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			menuBar.add(logoutMenu);
 			setJMenuBar(menuBar);
 			USER_TYPE = welcomePanel.getUserTypeCbox().getSelectedItem().toString();
 			if (USER_TYPE == "Secretary") {
@@ -63,17 +65,38 @@ public class MainFrame extends JFrame {
 				validate();
 				repaint();
 			}
-			//System.out.println(USER_TYPE);
+			System.out.println(USER_TYPE);
 		}
 	}
 
 	/**
-	 * Event handler for exitrBtn
+	 * Event handler for exitBtn
 	 * Closes application
 	 */
 	private class ExitBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			dispose();
+		}
+	}
+	
+	/**
+	 * Event handler for logoutMItem
+	 * Returns user to welcome panel
+	 */
+	private class LogoutMItemHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			System.out.println("Logout clicked");
+			int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (n == 0) {
+				System.out.println("Yes");
+				setJMenuBar(null);
+				setContentPane(welcomePanel);
+				validate();
+				repaint();
+			} else {
+				System.out.println("No");
+			}
 		}
 	}
 	
