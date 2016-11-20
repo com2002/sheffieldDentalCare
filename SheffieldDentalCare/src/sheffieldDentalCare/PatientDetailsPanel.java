@@ -42,6 +42,7 @@ public class PatientDetailsPanel extends JPanel {
 		this.postcode = postcode;
 		
 		setLayout(new GridLayout(0,1));
+		add(new JLabel(" "));
 		
 		// if the search input isn't valid, display 'not valid search', otherwise display results from inputs
 		if (!searchValid) {

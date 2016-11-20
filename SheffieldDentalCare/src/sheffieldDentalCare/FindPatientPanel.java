@@ -75,7 +75,7 @@ public class FindPatientPanel extends JPanel {
 				dOBMonth = dOBMonthField.getText();
 				dOBYear = dOBYearField.getText();
 				houseNoString = houseNoField.getText();
-				postcode = postcodeField.getText();
+				postcode = postcodeField.getText().replace(" ", "");
 				
 				// check that all the fields contain valid data for the specific details
 				String[] textFields = {firstName, surname, dOBDay, dOBMonth, dOBYear, houseNoString, postcode};

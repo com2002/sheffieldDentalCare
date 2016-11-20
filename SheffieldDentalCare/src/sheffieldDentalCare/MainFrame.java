@@ -24,6 +24,7 @@ public class MainFrame extends JFrame {
 		Dimension screenDimensions = toolkit.getScreenSize();
 		setSize(screenDimensions.width, screenDimensions.height);
 		setLocationByPlatform(true);
+		setLocation(new Point(0, 0));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Add action listener to Enter button from WelcomePanel
 		welcomePanel.getEnterBtn().addActionListener(new EnterBtnHandler());
