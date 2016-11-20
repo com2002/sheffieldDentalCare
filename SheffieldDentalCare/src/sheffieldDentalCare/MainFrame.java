@@ -19,6 +19,11 @@ public class MainFrame extends JFrame {
 	 * Initialises frame by setting size and first panel
 	 */
 	public MainFrame() {
+		goToHome();
+	}
+	
+	// method to go to home screen (also used to 'log out' from different parts of system)
+	public void goToHome() {
 		setTitle("Sheffield Dental Care");
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenDimensions = toolkit.getScreenSize();
