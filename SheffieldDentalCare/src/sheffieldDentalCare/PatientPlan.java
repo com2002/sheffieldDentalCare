@@ -114,9 +114,9 @@ public class PatientPlan {
 		}
 		
 		// display number of treatment credits remaining
-		pdPanel.add(new JLabel("Check-up Credits Remaining: " + checkupCount, JLabel.LEFT));
-		pdPanel.add(new JLabel("Hygiene Credits Remaining:   " + hygieneCount, JLabel.LEFT));
-		pdPanel.add(new JLabel("Repair Credits Remaining:     " + repairCount, JLabel.LEFT));
+		pdPanel.add(new JLabel("Check-up Credits Remaining:  " + checkupCount, JLabel.LEFT));
+		pdPanel.add(new JLabel("Hygiene Credits Remaining:     " + hygieneCount, JLabel.LEFT));
+		pdPanel.add(new JLabel("Repair Credits Remaining:        " + repairCount, JLabel.LEFT));
 	}
 	
 	private void subToPlan(String plan) throws SQLException {
@@ -204,10 +204,6 @@ public class PatientPlan {
 				hygieneCount = res.getInt(2);
 				repairCount = res.getInt(3);
 				planName = res.getString(4);
-				System.out.println("Check up count: " + checkupCount);
-				System.out.println("hygiene count: " + hygieneCount);
-				System.out.println("repair count" + repairCount);
-				System.out.println("plan name: "+planName);
 			}
 		}
 		catch (SQLException ex) {
