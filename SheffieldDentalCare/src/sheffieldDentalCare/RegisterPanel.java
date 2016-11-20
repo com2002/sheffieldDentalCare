@@ -2,6 +2,7 @@ package sheffieldDentalCare;
 
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class RegisterPanel extends JPanel implements Panel {
 
 	@Override

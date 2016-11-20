@@ -1,9 +1,6 @@
 package sheffieldDentalCare;
 
-import javax.swing.GroupLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
+import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class PartnerPanel extends JPanel implements Panel {

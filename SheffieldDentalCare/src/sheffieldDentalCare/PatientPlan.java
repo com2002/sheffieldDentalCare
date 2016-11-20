@@ -1,17 +1,8 @@
 package sheffieldDentalCare;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.awt.event.*;
+import java.sql.*;
+import javax.swing.*;
 
 public class PatientPlan {
 	private PatientDetailsPanel pdPanel;
@@ -28,11 +19,7 @@ public class PatientPlan {
 	
 	public void displayPlanDetails() {
 		String planNameString;
-		
-		// NEED TO ADD OPTIONS FOR HEALTHCARE PLAN
-		// IF NOT SUBSCRIBED TO A PLAN, DISPLAY A DROPDOWN MENU WITH THE POSSIBLE PLANS, WITH A 'SUBSCRIBE' BUTTON
-		// IF ALREADY SUBSCRIBED TO A PLAN, DISPLAY AN 'UNSUBSCRIBE' BUTTON
-		
+
 		// get the patient's plan name, or 'none' if they don't have one 
 		if (planName==null) {
 			planNameString = "None";	
@@ -68,29 +55,25 @@ public class PatientPlan {
 				public void actionPerformed(ActionEvent e) {
 					String planSelected = plansCbox.getSelectedItem().toString();
 					switch (planSelected) {
-	        			case "NHS Free Plan":  {
+	        			case "NHS Free Plan":
 	        				try {
 	        					subToPlan("nhsfPlan");
 	        				} catch (SQLException ex) {} 
-	        				}
 	        				break;
-	        			case "Maintenance Plan":  {
+	        			case "Maintenance Plan":
 	        				try {
 	        					subToPlan("maintPlan");
 	        				} catch (SQLException ex) {} 
-	        				}
 	         				break;
-	        			case "Oral Health Plan":  {
+	        			case "Oral Health Plan":
 	        				try {
 	        					subToPlan("ohPlan");
-	        				} catch (SQLException ex) {} 
-	        				}
+	        				} catch (SQLException ex) {}
 	        				break;
-	        			case "Dental Repair Plan": {
+	        			case "Dental Repair Plan":
 	        				try {
 	        					subToPlan("drPlan");
 	        				} catch (SQLException ex) {} 
-	        				}
 	        				break;
 	        			default: System.out.println("No plan selected");
 	        				break;

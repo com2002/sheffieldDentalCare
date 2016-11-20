@@ -29,6 +29,7 @@ public class DBBuilder {
 		} 
 	}
 	
+	@SuppressWarnings("static-access")
 	public void rebuild() throws SQLException{
 		DBController dbc = new DBController();
 		

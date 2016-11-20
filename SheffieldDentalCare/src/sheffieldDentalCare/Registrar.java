@@ -3,8 +3,6 @@ package sheffieldDentalCare;
 import java.sql.*;
 import java.util.ArrayList;
 
-import javax.swing.text.html.HTMLDocument.Iterator;
-
 public class Registrar {
 	
 	/**

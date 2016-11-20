@@ -1,10 +1,6 @@
 package sheffieldDentalCare;
 
-import javax.swing.GroupLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class SecretaryPanel extends JPanel implements Panel {

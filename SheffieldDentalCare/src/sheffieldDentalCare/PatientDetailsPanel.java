@@ -6,6 +6,7 @@ import java.sql.*;
 
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class PatientDetailsPanel extends JPanel {
 	private int patientID;
 	private String title;
@@ -32,6 +33,8 @@ public class PatientDetailsPanel extends JPanel {
 		this.postcode = postcode;
 		
 		setLayout(new GridLayout(0,1));
+		
+		// if the search input isn't valid, display 'not valid search', otherwise display results from inputs
 		if (!searchValid) {
 			add(new JLabel("Not valid search", JLabel.CENTER));
 		}
@@ -91,7 +94,7 @@ public class PatientDetailsPanel extends JPanel {
 			cancelAppointmentBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {					
-					new CancelAppointmentFrame(patientID);
+						new CancelAppointmentFrame(patientID);
 					}
 					catch (SQLException ex){
 						ex.printStackTrace();
@@ -109,6 +112,7 @@ public class PatientDetailsPanel extends JPanel {
 		}
 	}
 	
+	// method to check if an address exists in the database (sets the addressID if it does)
 	private boolean addressExists() {
 		try {
 			addressID=reg.getAddressID(houseNo, postcode);
@@ -122,6 +126,7 @@ public class PatientDetailsPanel extends JPanel {
 		return true;
 	}
 	
+	// method to check if a patient exists in the database (sets the patientsID if it does)
 	private boolean patientExists() {
 		try {
 			patientID=reg.getPatientID(firstName, surname, dOB, addressID);
@@ -135,6 +140,7 @@ public class PatientDetailsPanel extends JPanel {
 		return true;
 	}
 	
+	// method to get all patient details for a search
 	private void getPatientDetails() throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
@@ -171,6 +177,7 @@ public class PatientDetailsPanel extends JPanel {
 		}
 	}
 	
+	// method to redraw the results displayed
 	public void updateDetailsDisplayed() {
 		this.removeAll();
 		displayResults();
