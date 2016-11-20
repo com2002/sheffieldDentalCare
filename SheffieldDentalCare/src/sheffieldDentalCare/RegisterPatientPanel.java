@@ -191,7 +191,7 @@ public class RegisterPatientPanel extends JPanel {
 				street = streetField.getText();
 				district = districtField.getText();
 				city = cityField.getText();
-				pocode = pocodeField.getText();
+				pocode = pocodeField.getText().replace(" ", "");
 						
 				validHouseNum(houseNumString);
 			
