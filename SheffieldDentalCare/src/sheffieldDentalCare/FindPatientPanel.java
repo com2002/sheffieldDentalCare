@@ -4,6 +4,14 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ * FindPatientPanel.java
+ * Creates a panel for finding patients.
+ * Appears in PatientPanel.
+ * @author Lewis
+ * 
+ */
+
 @SuppressWarnings("serial")
 public class FindPatientPanel extends JPanel {
 	private boolean searchPerformed = false;

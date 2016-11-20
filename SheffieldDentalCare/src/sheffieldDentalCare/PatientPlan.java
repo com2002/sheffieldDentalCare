@@ -4,6 +4,14 @@ import java.awt.event.*;
 import java.sql.*;
 import javax.swing.*;
 
+/**
+ * PatientPlan.java
+ * Class which complements PatientDetailsPanel, allowing the patient's healthcare plan to be changed.
+ * Used in PatientDetailsPanel.
+ * @author Lewis
+ * 
+ */
+
 public class PatientPlan {
 	private PatientDetailsPanel pdPanel;
 	private int patientID;

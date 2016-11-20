@@ -3,6 +3,14 @@ package sheffieldDentalCare;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * PatientPanel.java
+ * Creates a panel for finding, viewing and making changes to patients.
+ * Contains sub-panels (FindPatientPanel and PatientDetailsPanel) to deal with the different parts.
+ * @author Lewis
+ * 
+ */
+
 @SuppressWarnings("serial")
 public class PatientPanel extends JPanel {
 	private FindPatientPanel searchPanel = new FindPatientPanel(this);

@@ -6,6 +6,15 @@ import java.sql.*;
 
 import javax.swing.*;
 
+/**
+ * PatientDetailsPanel.java
+ * Creates a panel for viewing patients details.
+ * Also uses PatientPlan class to make changes to the patient's healthcare plan.
+ * Appears in PatientPanel.
+ * @author Lewis
+ * 
+ */
+
 @SuppressWarnings("serial")
 public class PatientDetailsPanel extends JPanel {
 	private int patientID;
