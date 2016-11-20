@@ -188,7 +188,7 @@ public class DayViewAppointments extends ViewAppointments {
 	/**
 	 * Gets all patients from database and sets to patients variable
 	 */
-	private void setPatients() {
+	public void setPatients() {
 		Registrar reg = new Registrar();
 		try {
 			patients = reg.getForAllPatientsSomeDetails();

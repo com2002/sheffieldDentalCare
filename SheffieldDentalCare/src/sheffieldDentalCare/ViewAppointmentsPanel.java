@@ -118,9 +118,11 @@ public class ViewAppointmentsPanel extends JPanel implements Panel {
 			// Update table model
 			// Get updated table model
 			if (viewType == "Week") {
+				weekView.setPatients();
 				weekView.makeTblModel();
 				tblModel = weekView.getTblModel();
 			} else {
+				dayView.setPatients();
 				dayView.makeTblModel();
 				tblModel = dayView.getTblModel();
 			}
