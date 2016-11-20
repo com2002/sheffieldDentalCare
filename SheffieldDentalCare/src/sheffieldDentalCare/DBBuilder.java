@@ -121,7 +121,7 @@ public class DBBuilder {
 				+ "('Mrs', 'Phoebe', 'Buffay-Hannigan', '1964-03-01', '07145632587', 3) ;";
 		
 		// Healthcare plans
-		String q11 = "INSERT INTO HealthcarePlan Values('nhsfPlan', 2, 2, 6, 0),('maintPlan', 2, 2, 0, 15),('ohPlan', 2, 4, 0, 21),('drPlan', 2, 4, 2, 36);";
+		String q11 = "INSERT INTO HealthcarePlan Values('nhsfPlan', 2, 2, 6, 0),('maintPlan', 2, 2, 0, 15),('ohPlan', 2, 4, 0, 21),('drPlan', 2, 2, 2, 36);";
 		// Treatment
 		String q12 = "INSERT INTO Treatment Values('hygVisit', 45, 0), ('amalF', 90, 0), ('resinF', 150, 0), ('crown', 500, 1), ('checkup', 45 ,0);";
 		
