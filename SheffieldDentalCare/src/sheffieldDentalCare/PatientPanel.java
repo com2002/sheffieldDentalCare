@@ -10,7 +10,7 @@ public class PatientPanel extends JPanel {
 	
 	public PatientPanel() {
 		setLayout(new GridBagLayout());
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.VERTICAL;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.weightx = 1;
