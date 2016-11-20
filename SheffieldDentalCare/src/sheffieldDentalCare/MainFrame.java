@@ -3,6 +3,8 @@ package sheffieldDentalCare;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 
 /**
  * MainFrame.java
@@ -13,6 +15,8 @@ import javax.swing.JFrame;
 public class MainFrame extends JFrame {
 	WelcomePanel welcomePanel = new WelcomePanel();
 	public static String USER_TYPE;
+	private JMenuBar menuBar = new JMenuBar();
+	private JMenu logoutMenu = new JMenu("Logout");
 	
 	/**
 	 * Class constructor
@@ -45,6 +49,8 @@ public class MainFrame extends JFrame {
 	 */
 	private class EnterBtnHandler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			menuBar.add(logoutMenu);
+			setJMenuBar(menuBar);
 			USER_TYPE = welcomePanel.getUserTypeCbox().getSelectedItem().toString();
 			if (USER_TYPE == "Secretary") {
 				SecretaryPanel secretaryPanel = new SecretaryPanel();
