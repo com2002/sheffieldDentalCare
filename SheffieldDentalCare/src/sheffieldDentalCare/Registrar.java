@@ -28,7 +28,11 @@ public class Registrar {
 			ResultSet existsRes = stmt2.executeQuery("SELECT COUNT(*) AS total FROM Address "
 					+ "WHERE houseNumber = '"+housenum+"' AND postCode = '"+pocode+"';");
 			//if address doesn't already exist
-			if (existsRes.getInt("total") == 0) {
+			boolean exists = false;
+			while (existsRes.next()) {
+				exists = existsRes.getInt(1) != 0;
+			}
+			if (exists == false) {
 				System.out.println("Adding new address...");			
 				System.out.println("Rows updates: " + 
 						stmt.executeUpdate("INSERT INTO Address(houseNumber, streetName, district, city, postCode)" +
@@ -40,8 +44,8 @@ public class Registrar {
 			}
 			else {
 				System.out.println("Address already exists. Existing addressID returned.");
-				existsRes.next();
-				id = existsRes.getInt("addressID");
+				//existsRes.next();
+				id = getAddressID(housenum, pocode);
 			}
 		}
 		catch (SQLException ex){
@@ -274,17 +278,17 @@ public class Registrar {
 		//add a patient and their address at the same time
 		//reg.addPatient("Mr", "Donald", "Duck", "1934-06-9", "1-541-754-3010", reg.addAddress(1, "Park Street", "Disney Land", "Chicago", "QU4 CK1"));
 		
-		//System.out.println(reg.addAddress(4, "Privet Drive", "Surrey", "London", "RH7 8AJ"));
+		System.out.println(reg.addAddress(4, "Privet Drive", "Surrey", "London", "RH7 8AJ"));
 		
 		//System.out.println(reg.getAddressID(4, "RH7 8AJ"));
 		
 		//get a patients ID by their name, dob, housenumber and postcode
 		//System.out.println(reg.getPatientID("harry", "potter", "1980-07-31", reg.getAddressID(4, "rh7 8aj")));
 		
-		ArrayList<String> data = new ArrayList<String>();
-		data = reg.getForAllPatientsSomeDetails();
-		for (int i = 0; i < data.size(); i++) {
-			System.out.println(data.get(i));
-		}	
+		//ArrayList<String> data = new ArrayList<String>();
+		//data = reg.getForAllPatientsSomeDetails();
+		//for (int i = 0; i < data.size(); i++) {
+		//	System.out.println(data.get(i));
+		//}	
 	}
 }
