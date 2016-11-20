@@ -173,12 +173,11 @@ public class DentistCheckoutPanel extends JPanel {
 							// Output error message
 							JOptionPane.showMessageDialog(null, e1.toString(), "Error - Database", JOptionPane.ERROR_MESSAGE);
 							e1.printStackTrace();
-						} finally {
-							// Output confirmation for user
-							JOptionPane.showMessageDialog(null, "Patient checked out.", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
 						}
 					}
 				}
+				// Output confirmation for user
+				JOptionPane.showMessageDialog(null, "Patient checked out.", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
 			} else {
 				System.out.println("No");
 			}
