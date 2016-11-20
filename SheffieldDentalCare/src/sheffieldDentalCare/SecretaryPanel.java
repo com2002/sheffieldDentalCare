@@ -16,17 +16,17 @@ public class SecretaryPanel extends JPanel implements Panel {
 	
 	@Override
 	public void initComponents() {
-		RegisterPanel registerPanel = new RegisterPanel();
 		PatientPanel patientPanel = new PatientPanel();
+		RegisterPanel registerPanel = new RegisterPanel();
 		BookAbsencePanel bookAbsencePanel = new BookAbsencePanel();
 		ViewAppointmentsPanel dentistPanel = new ViewAppointmentsPanel("Week", "Dentist");
 		ViewAppointmentsPanel hygienistPanel = new ViewAppointmentsPanel("Week", "Hygienist");
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, patientsTPane, appointmentsTPane);
 		splitPane.setDividerLocation(0.5);
-		// Add register panel to patientsTPane
-		patientsTPane.add("Register New Patient", registerPanel);
 		// Add find patient panel to patientsTPane
 		patientsTPane.add("Find Patient", patientPanel);
+		// Add register panel to patientsTPane
+		patientsTPane.add("Register New Patient", registerPanel);
 		// Add book absence panel to patientsTPane
 		patientsTPane.add("Book Absence", bookAbsencePanel);
 		// Create tabbed pane for appointments side
