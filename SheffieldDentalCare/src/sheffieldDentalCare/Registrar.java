@@ -79,12 +79,26 @@ public class Registrar {
 			con = DriverManager.getConnection("jdbc:mysql://" + DBController.DB_Server + "/" + DBController.DB_Name, 
 					DBController.DB_User, DBController.DB_Password);
 			stmt = con.createStatement();
+			ResultSet exists1Res = stmt.executeQuery("SELECT COUNT(*) AS total FROM Patient "
+					+ "WHERE firstName = '"+fname+"' AND surName = '"+sname+"' AND dateOB = '"+dob+"';");
+			//if patient doesn't already exist
+			boolean exists1 = false;
+			while (exists1Res.next()) {
+				exists1 = exists1Res.getInt(1) != 0;
+			}
+			if (exists1 == false) {
 			System.out.println("Rows updates: " + 
 					stmt.executeUpdate("INSERT INTO Patient(title, firstName, surName, dateOB, phoneNumber, addressID)"
 							+ "VALUES('" + title + "','" + fname + "','" + sname + "','" + dob + "','" + phone + "'," + addressID +")"));
 			ResultSet res = stmt.executeQuery("SELECT MAX(patientID) FROM Patient;");
 			while (res.next()) {
 				id = res.getInt(1);
+			}
+			}
+			else {
+				System.out.println("Patient already exists. Existing patientID returned.");
+				//existsRes.next();
+				id = getPatientID(fname, sname, dob, addressID);
 			}
 		}
 		catch (SQLException ex){
