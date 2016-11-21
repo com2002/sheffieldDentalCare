@@ -58,6 +58,17 @@ public class RegisterDetailsPanel extends JPanel {
 	}
 	
 	private void registerPatient() {
+			try {				
+				addressID = reg.addAddress(houseNum, street, district, city, pocode);
+			} catch (SQLException x) {
+				System.out.println("address invalid");;
+			}
+			
+			try {
+				patientID = reg.addPatient(title, fName, sName, dOB, phone, addressID);
+			} catch (SQLException x) {
+				x.printStackTrace();
+			}
 			
 			this.add(new JLabel("Patient added", JLabel.CENTER));
 			
