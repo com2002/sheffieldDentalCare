@@ -14,12 +14,12 @@ import javax.swing.*;
  */
 @SuppressWarnings("serial")
 public class HygienistCheckoutPanel extends JPanel {
-	private final String £ = "\u00A3";
+	private final String poundSign = "\u00A3";
 	private JLabel titleLbl = new JLabel("Checkout Patient");
 	private JLabel appointmentLbl = new JLabel("Select Appointment");
 	private JComboBox<String> appointmentCbox = new JComboBox<String>();
 	private JLabel treatmentLbl = new JLabel("Treatments");
-	private JLabel hygieneVisitLbl = new JLabel("Hygiene Visit ("+ £ + "45)");
+	private JLabel hygieneVisitLbl = new JLabel("Hygiene Visit ("+ poundSign + "45)");
 	private JButton checkoutBtn = new JButton("Checkout");
 	private ArrayList<String> patients = new ArrayList<String>();
 	

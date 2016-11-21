@@ -14,15 +14,15 @@ import javax.swing.*;
  */
 @SuppressWarnings("serial")
 public class DentistCheckoutPanel extends JPanel {
-	private final String £ = "\u00A3";
+	private final String poundSign = "\u00A3";
 	private JLabel titleLbl = new JLabel("Checkout Patient");
 	private JLabel appointmentLbl = new JLabel("Select Appointment");
 	private JComboBox<String> appointmentCbox = new JComboBox<String>();
 	private JLabel treatmentsLbl = new JLabel("Treatments");
-	private JCheckBox checkUpChBox = new JCheckBox("Check-Up ("+ £ + "45)");
-	private JCheckBox amalgamChBox = new JCheckBox("Silver Amalgam Filling ("+ £ +"90)");
-	private JCheckBox resinChBox = new JCheckBox("White Composite Resin Filling ("+ £ +"150)");
-	private JCheckBox crownChBox = new JCheckBox("Gold Crown Fitting ("+ £ +"500)");
+	private JCheckBox checkUpChBox = new JCheckBox("Check-Up ("+ poundSign + "45)");
+	private JCheckBox amalgamChBox = new JCheckBox("Silver Amalgam Filling ("+ poundSign +"90)");
+	private JCheckBox resinChBox = new JCheckBox("White Composite Resin Filling ("+ poundSign +"150)");
+	private JCheckBox crownChBox = new JCheckBox("Gold Crown Fitting ("+ poundSign +"500)");
 	private JButton checkoutBtn = new JButton("Checkout");
 	private ArrayList<String> patients = new ArrayList<String>();
 	
