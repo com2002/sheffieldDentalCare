@@ -82,7 +82,8 @@ public class Checkout {
 	}
 
 	/**
-	 * sets that all treatments from a specific appointment have been paid for
+	 * sets that all treatments from a specific appointment have 
+	 * been paid for
 	 * @param appointmentID
 	 * @throws SQLException
 	 * @returns number of rows updated
@@ -136,6 +137,12 @@ public class Checkout {
 		return count;
 	}
 	
+	/**
+	 * 
+	 * @param pid patientID
+	 * @return returns true if the patient is subscribed to a healthcare plan 
+	 * @throws SQLException
+	 */
 	private static boolean isSubscribed(int pid) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
@@ -159,6 +166,12 @@ public class Checkout {
 		return count > 0;
 	}
 	
+	/**
+	 * 
+	 * @param appid appointmentID
+	 * @return patientID of patient whom's appointment has the provided appointmentID
+	 * @throws SQLException
+	 */
 	private static int getPatientID(int appid) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;

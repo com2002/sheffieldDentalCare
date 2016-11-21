@@ -6,7 +6,17 @@ import java.util.Date;
 import java.util.Calendar;
 
 public class DPCalendar {
-
+	/**
+	 * 
+	 * @param patientID
+	 * @param pHygienist
+	 * @param date
+	 * @param start
+	 * @param end
+	 * @return A string stating if the patient and partner are available for the duration of the appointment 
+	 * detailed by parameters. If not why not.
+	 * @throws SQLException
+	 */
 	public String checkAvailability(int patientID, boolean pHygienist, String date, String start, String end) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
@@ -94,6 +104,12 @@ public class DPCalendar {
 		return appointmentID;
 	}
 	
+	/**
+	 * removes the provided appointment from the DB
+	 * @param appointmentID
+	 * @return number of rows updated.
+	 * @throws SQLException
+	 */
 	public int deleteAppointment(int appointmentID) throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
@@ -170,6 +186,14 @@ public class DPCalendar {
 		return applots;		
 	}
 	
+	/**
+	 * gets a list of AppointmentPlots for a given partner on a given date
+	 * @param pHygeinist
+	 * @param date
+	 * @return AppointmentPlot[]
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
 	public AppointmentPlot[] getAppointmentForDate(boolean pHygeinist, String date) throws SQLException, ParseException {
 		AppointmentPlot[] applots = null;
 		String day = new String();

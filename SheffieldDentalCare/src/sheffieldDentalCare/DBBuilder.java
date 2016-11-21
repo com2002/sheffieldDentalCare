@@ -3,6 +3,11 @@ package sheffieldDentalCare;
 import java.sql.SQLException;
 
 public class DBBuilder {
+	
+	/**
+	 * Deletes the tables
+	 * @throws SQLException
+	 */
 	public void dropTables() throws SQLException{
 		DBController dbc = new DBController();
 		int rowsUpdated = 0;
@@ -29,6 +34,10 @@ public class DBBuilder {
 		} 
 	}
 	
+	/**
+	 * Builds all the tables and adds dummy data
+	 * @throws SQLException
+	 */
 	@SuppressWarnings("static-access")
 	public void rebuild() throws SQLException{
 		DBController dbc = new DBController();
