@@ -284,11 +284,11 @@ public class DBBuilder {
 		
 		dbc.closeConnection();
 	}
-	//test
-	public static void main(String args[]) throws SQLException {
+	//Main method used to re-set database (dummy data included)
+/*	public static void main(String args[]) throws SQLException {
 		DBBuilder dbb = new DBBuilder();
 		dbb.dropTables();
 		dbb.rebuild();
 	}
-
+*/
 }
